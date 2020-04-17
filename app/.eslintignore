@@ -1,0 +1,5 @@
+build/*
+public/*
+**/*{.,-}min.js
+src/serviceWorker.ts
+src/react-app-env.d.ts

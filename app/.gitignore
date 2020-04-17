@@ -1,0 +1,30 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependency directories
+node_modules
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Yarn integrity file
+.yarn-integrity
+
+
+# Build directory
+build
+dist
+
+# Dotenv configuration
+.env
+
+# Tests
+coverage
+.nyc_output
+
+.DS_Store
