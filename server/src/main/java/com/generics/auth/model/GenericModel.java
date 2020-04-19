@@ -9,7 +9,7 @@ public abstract class GenericModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
     @Column(nullable = false)
     private Boolean isActive = true;
@@ -31,11 +31,11 @@ public abstract class GenericModel implements Serializable {
         updatedAt = new Date();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -1,6 +1,6 @@
 package com.generics.auth.model;
 
-import com.generics.auth.constant.Gender;
+import com.generics.auth.store.Gender;
 
 import java.util.HashSet;
 import java.util.Set;
