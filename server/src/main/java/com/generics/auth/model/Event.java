@@ -4,31 +4,29 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
-@MappedSuperclass
-public abstract class GenericModel implements Serializable {
+@Entity
+public class Event implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Column(nullable = false)
-    private Boolean isActive = true;
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
-    @Column(nullable = false)
     private Date createdAt;
 
-    @Column(nullable = false)
-    private Date updatedAt;
+    @ManyToOne
+    @JoinColumn(name = "app_id")
+    private App app;
 
     @PrePersist
     protected void onCreate() {
         createdAt = new Date();
-        updatedAt = new Date();
     }
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = new Date();
+    public Event(String description) {
+        this.description = description;
     }
 
     public Integer getId() {
@@ -39,12 +37,12 @@ public abstract class GenericModel implements Serializable {
         this.id = id;
     }
 
-    public Boolean getActive() {
-        return isActive;
+    public String getDescription() {
+        return description;
     }
 
-    public void setActive(Boolean active) {
-        isActive = active;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Date getCreatedAt() {
@@ -55,11 +53,11 @@ public abstract class GenericModel implements Serializable {
         this.createdAt = createdAt;
     }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
+    public App getApp() {
+        return app;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setApp(App app) {
+        this.app = app;
     }
 }

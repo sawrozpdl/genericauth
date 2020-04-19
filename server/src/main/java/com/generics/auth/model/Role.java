@@ -1,9 +1,8 @@
 package com.generics.auth.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -13,12 +12,19 @@ public class Role extends GenericModel {
     @Column(unique = true, nullable = false)
     private String name;
 
-    @Size(min = 20, max = 65535)
+    @Column(columnDefinition = "TEXT")
     private String description;
 
-    @ManyToMany
-    private Set<User> users;
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users = new HashSet<>();
 
-    @ManyToMany
-    private Set<Permission> permissions;
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "role_permission",
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id")
+    )
+    private Set<Permission> permissions = new HashSet<>();
 }

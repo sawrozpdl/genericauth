@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -13,9 +14,37 @@ public class Permission extends GenericModel {
     @Column(unique = true, nullable = false)
     private String name;
 
-    @Size(min = 20, max = 65535)
+    @Column(columnDefinition = "TEXT")
     private String description;
 
-    @ManyToMany
-    private Set<Role> roles;
+    @ManyToMany(mappedBy ="permissions")
+    private Set<Role> roles = new HashSet<>();
+
+    public Permission(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 }

@@ -13,4 +13,28 @@ public class RefreshToken extends GenericModel {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch= FetchType.LAZY)
     private User user;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public Device getDevice() {
+        return device;
+    }
+
+    public void setDevice(Device device) {
+        this.device = device;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
