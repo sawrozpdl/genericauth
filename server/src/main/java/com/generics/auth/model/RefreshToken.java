@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 public class RefreshToken extends GenericModel {
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, length = 128)
     private String token;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch= FetchType.LAZY)
@@ -13,6 +13,8 @@ public class RefreshToken extends GenericModel {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch= FetchType.LAZY)
     private User user;
+
+    public RefreshToken() {}
 
     public String getToken() {
         return token;

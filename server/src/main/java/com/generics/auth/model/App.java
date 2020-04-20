@@ -1,5 +1,6 @@
 package com.generics.auth.model;
 
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
@@ -24,21 +25,65 @@ public class App extends GenericModel {
     @Column(columnDefinition = "TEXT")
     private String bannerUrl;
 
-    @OneToOne(mappedBy= "app", cascade = CascadeType.ALL, fetch= FetchType.LAZY, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY,orphanRemoval = true)
+    @JoinColumn(name = "redirect_url_id", referencedColumnName = "id")
     private RedirectUrl redirectUrl;
 
-    @OneToOne(mappedBy= "app", cascade = CascadeType.ALL, fetch= FetchType.LAZY, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "credential_id", referencedColumnName = "id")
     private Credential credential;
 
-    @OneToMany(mappedBy = "app")
+    @OneToMany(mappedBy = "app", fetch = FetchType.LAZY)
     private Set<AppRegistration> registrations = new HashSet<>();
 
     @OneToMany(mappedBy = "app")
     private Set<Event> events = new HashSet<>();
 
+    public App() {}
+
     public App(String name, Boolean isPrivate) {
         this.name = name;
         this.isPrivate = isPrivate;
+    }
+
+    public boolean isPrivate() {
+        return isPrivate;
+    }
+
+    public void setPrivate(boolean aPrivate) {
+        isPrivate = aPrivate;
+    }
+
+    public String getLogoUrl() {
+        return logoUrl;
+    }
+
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = logoUrl;
+    }
+
+    public String getBannerUrl() {
+        return bannerUrl;
+    }
+
+    public void setBannerUrl(String bannerUrl) {
+        this.bannerUrl = bannerUrl;
+    }
+
+    public RedirectUrl getRedirectUrl() {
+        return redirectUrl;
+    }
+
+    public void setRedirectUrl(RedirectUrl redirectUrl) {
+        this.redirectUrl = redirectUrl;
+    }
+
+    public Credential getCredential() {
+        return credential;
+    }
+
+    public void setCredential(Credential credential) {
+        this.credential = credential;
     }
 
     public String getName() {

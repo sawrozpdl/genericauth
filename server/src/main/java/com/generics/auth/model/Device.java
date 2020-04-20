@@ -21,6 +21,8 @@ public class Device extends GenericModel {
     @OneToMany(mappedBy = "device", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<RefreshToken> refreshTokens = new HashSet<>();
 
+    public Device() {}
+
     public Device(String name) {
         this.name = name;
     }

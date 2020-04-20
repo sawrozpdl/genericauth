@@ -33,14 +33,12 @@ public class User extends GenericModel {
     private String email;
 
     @Size(min = 8, message = "Minimum length: 8 characters")
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String password;
 
-    @Column(nullable = false)
     private Date lastLogin;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "profile_id", referencedColumnName = "id")
+    @OneToOne(mappedBy= "user", cascade = CascadeType.ALL, fetch= FetchType.LAZY, orphanRemoval = true)
     private Profile profile;
 
     @OneToMany(mappedBy = "user", fetch=FetchType.LAZY)
@@ -48,6 +46,18 @@ public class User extends GenericModel {
 
     @OneToMany(mappedBy = "user", fetch=FetchType.LAZY)
     private Set<RefreshToken> refreshTokens = new HashSet<>();
+
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    }, fetch=FetchType.LAZY)
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
+
+    public User() {}
 
     public User(String username, String email, String password) {
         this.username = username;
@@ -135,6 +145,7 @@ public class User extends GenericModel {
         this.profile = profile;
     }
 
+    //@JsonManagedReference
     public Set<AppRegistration> getRegistrations() {
         return registrations;
     }
@@ -158,16 +169,5 @@ public class User extends GenericModel {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
-
-    @ManyToMany(cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-    }, fetch=FetchType.LAZY)
-    @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles = new HashSet<>();
-
 
 }

@@ -20,6 +20,8 @@ public class Permission extends GenericModel {
     @ManyToMany(mappedBy ="permissions")
     private Set<Role> roles = new HashSet<>();
 
+    public Permission() {}
+
     public Permission(String name) {
         this.name = name;
     }

@@ -1,7 +1,6 @@
 package com.generics.auth.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @Entity
 public class Profile extends GenericModel {
@@ -12,8 +11,11 @@ public class Profile extends GenericModel {
     @Column(columnDefinition = "TEXT")
     private String address;
 
-    @OneToOne(mappedBy= "profile", cascade = CascadeType.ALL, fetch= FetchType.LAZY, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    public Profile() {}
 
     public String getAvatarUrl() {
         return avatarUrl;

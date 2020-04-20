@@ -31,6 +31,8 @@ public abstract class GenericModel implements Serializable {
         updatedAt = new Date();
     }
 
+    public GenericModel() {}
+
     public Long getId() {
         return id;
     }

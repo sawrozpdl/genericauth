@@ -3,12 +3,15 @@ package com.generics.auth.controller;
 import com.generics.auth.model.App;
 import com.generics.auth.model.AppRegistration;
 import com.generics.auth.model.User;
+import com.generics.auth.service.AppRegistrationService;
 import com.generics.auth.service.AppService;
 import com.generics.auth.service.UserService;
 import com.generics.auth.store.RequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+
+import javax.transaction.Transactional;
 
 
 @RestController
@@ -21,6 +24,9 @@ public class AppController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    AppRegistrationService appRegistrationService;
+
 
     @GetMapping("/api/apps")
     public Page<App> getApps(@RequestParam(defaultValue = "1") Integer page,
@@ -32,15 +38,17 @@ public class AppController {
     }
 
     @PostMapping("/api/apps")
-    public App createApp(@RequestParam String appName,
-                         @RequestParam Boolean isPrivate,
-                         @RequestBody User user) {
+    @Transactional
+    public AppRegistration createApp(@RequestParam String appName,
+                                     @RequestParam(defaultValue = "false") Boolean isPrivate,
+                                     @RequestBody User user) {
         App createdApp = appService.createApp(new App(appName, isPrivate));
-        User createdUser = userService.createUser(user);
-
-        AppRegistration reg = new AppRegistration(createdApp, createdUser);
-
-        return createdApp;
+        User adminUser = user;
+        System.out.println("ID before: " + adminUser.getId());
+        if (user.getId() == null)
+            adminUser = userService.createUser(user);
+        System.out.println("ID after: " + adminUser.getId());
+        return appRegistrationService.registerUser(createdApp, adminUser);
     }
 
     @GetMapping("/api/apps/{appName}")
