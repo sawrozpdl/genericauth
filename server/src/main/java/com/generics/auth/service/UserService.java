@@ -20,6 +20,10 @@ public class UserService {
         return userRepository.findAll(PageRequest.of(filter.page, filter.size));
     }
 
+    public User createUser(User user) {
+        return userRepository.save(user);
+    }
+
     public User getUserByUsername(String username) {
         User user = userRepository.findByUsername(username);
         if (user == null) {

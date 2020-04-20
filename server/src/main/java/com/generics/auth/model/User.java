@@ -16,13 +16,13 @@ public class User extends GenericModel {
     private String username;
 
     @Size(min = 2, max = 255, message = "Characters should be between 2 and 255")
-    private String firstName = "";
+    private String firstName;
 
     @Size(min = 2, max = 255, message = "Characters should be between 2 and 255")
-    private String middleName = "";
+    private String middleName;
 
     @Size(min = 2, max = 255, message = "Characters should be between 2 and 255")
-    private String lastName = "";
+    private String lastName;
 
     @Enumerated(EnumType.STRING)
     private Gender gender = Gender.PRIVATE;

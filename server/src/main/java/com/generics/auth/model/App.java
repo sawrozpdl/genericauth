@@ -15,9 +15,20 @@ public class App extends GenericModel {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "admin_id", referencedColumnName = "id")
-    private User admin;
+    @Column(nullable = false)
+    private boolean isPrivate = false;
+
+    @Column(columnDefinition = "TEXT")
+    private String logoUrl;
+
+    @Column(columnDefinition = "TEXT")
+    private String bannerUrl;
+
+    @OneToOne(mappedBy= "app", cascade = CascadeType.ALL, fetch= FetchType.LAZY, orphanRemoval = true)
+    private RedirectUrl redirectUrl;
+
+    @OneToOne(mappedBy= "app", cascade = CascadeType.ALL, fetch= FetchType.LAZY, orphanRemoval = true)
+    private Credential credential;
 
     @OneToMany(mappedBy = "app")
     private Set<AppRegistration> registrations = new HashSet<>();
@@ -25,9 +36,9 @@ public class App extends GenericModel {
     @OneToMany(mappedBy = "app")
     private Set<Event> events = new HashSet<>();
 
-    public App(String name, User admin) {
+    public App(String name, Boolean isPrivate) {
         this.name = name;
-        this.admin = admin;
+        this.isPrivate = isPrivate;
     }
 
     public String getName() {
@@ -44,14 +55,6 @@ public class App extends GenericModel {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public User getAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(User admin) {
-        this.admin = admin;
     }
 
     public Set<AppRegistration> getRegistrations() {

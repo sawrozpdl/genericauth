@@ -17,7 +17,7 @@ public class ExceptionController {
 
     @ExceptionHandler(HttpException.class)
     public void handleCustomException(HttpServletResponse response, HttpException ex) throws IOException{
-        Http.sendErrorResponse(response, ex);
+        response.sendError(ex.getHttpStatus().value(), ex.getMessage());
     }
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -29,7 +29,7 @@ public class ExceptionController {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public void handleException(HttpServletResponse res) throws IOException {
-        res.sendError(HttpStatus.BAD_REQUEST.value(), "Something went wrong");
+        res.sendError(HttpStatus.BAD_REQUEST.value(), "Invalid request received");
     }
 
 }
