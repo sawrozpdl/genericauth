@@ -1,5 +1,7 @@
 package com.generics.auth.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
@@ -15,19 +17,75 @@ public class App extends GenericModel {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "admin_id", referencedColumnName = "id")
-    private User admin;
+    @Column(nullable = false)
+    private boolean isPrivate = false;
 
-    @OneToMany(mappedBy = "app")
+    @Column(columnDefinition = "TEXT")
+    private String logoUrl;
+
+    @Column(columnDefinition = "TEXT")
+    private String bannerUrl;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY,orphanRemoval = true)
+    @JoinColumn(name = "redirect_url_id", referencedColumnName = "id")
+    private RedirectUrl redirectUrl;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "credential_id", referencedColumnName = "id")
+    private Credential credential;
+
+    @OneToMany(mappedBy = "app", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"app", "user"})
     private Set<AppRegistration> registrations = new HashSet<>();
 
     @OneToMany(mappedBy = "app")
     private Set<Event> events = new HashSet<>();
 
-    public App(String name, User admin) {
+    public App() {}
+
+    public App(String name, Boolean isPrivate) {
         this.name = name;
-        this.admin = admin;
+        this.isPrivate = isPrivate;
+    }
+
+    public boolean isPrivate() {
+        return isPrivate;
+    }
+
+    public void setPrivate(boolean aPrivate) {
+        isPrivate = aPrivate;
+    }
+
+    public String getLogoUrl() {
+        return logoUrl;
+    }
+
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = logoUrl;
+    }
+
+    public String getBannerUrl() {
+        return bannerUrl;
+    }
+
+    public void setBannerUrl(String bannerUrl) {
+        this.bannerUrl = bannerUrl;
+    }
+
+    public RedirectUrl getRedirectUrl() {
+        return redirectUrl;
+    }
+
+    public void setRedirectUrl(RedirectUrl redirectUrl) {
+        this.redirectUrl = redirectUrl;
+    }
+
+    public Credential getCredential() {
+        return credential;
+    }
+
+    public void setCredential(Credential credential) {
+        this.credential = credential;
     }
 
     public String getName() {
@@ -44,14 +102,6 @@ public class App extends GenericModel {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public User getAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(User admin) {
-        this.admin = admin;
     }
 
     public Set<AppRegistration> getRegistrations() {

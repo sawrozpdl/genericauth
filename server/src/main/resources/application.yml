@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://${DB_HOST:localhost}:3306/genericauth
+    url: jdbc:mysql://${DB_HOST:localhost}:3306/${DB_NAME:genericauth}
     username: ${DB_USERNAME:saroj}
     password: ${DB_PASSWORD:saroj}
   tomcat:
@@ -8,6 +8,9 @@ spring:
     max-active: 50
     max-idle: 20
     min-idle: 15
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
   jpa:
     hibernate:
       ddl-auto: update

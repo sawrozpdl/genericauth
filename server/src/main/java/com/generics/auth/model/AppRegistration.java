@@ -1,5 +1,8 @@
 package com.generics.auth.model;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -11,12 +14,14 @@ public class AppRegistration implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "app_id")
+    @JsonIgnoreProperties("registrations")
     private App app;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties("registrations")
     private User user;
 
     private Date registeredAt;
@@ -25,6 +30,8 @@ public class AppRegistration implements Serializable {
     protected void onCreate() {
         registeredAt = new Date();
     }
+
+    public AppRegistration() {}
 
     public AppRegistration(App app, User user) {
         this.app = app;
