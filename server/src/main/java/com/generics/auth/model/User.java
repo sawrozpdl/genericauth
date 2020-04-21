@@ -1,10 +1,11 @@
 package com.generics.auth.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.generics.auth.store.Gender;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.Date;
+import java.util.HashSet;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
@@ -42,6 +43,7 @@ public class User extends GenericModel {
     private Profile profile;
 
     @OneToMany(mappedBy = "user", fetch=FetchType.LAZY)
+    @JsonIgnoreProperties({"app", "user"})
     private Set<AppRegistration> registrations = new HashSet<>();
 
     @OneToMany(mappedBy = "user", fetch=FetchType.LAZY)

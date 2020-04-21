@@ -1,5 +1,6 @@
 package com.generics.auth.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -34,6 +35,7 @@ public class App extends GenericModel {
     private Credential credential;
 
     @OneToMany(mappedBy = "app", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"app", "user"})
     private Set<AppRegistration> registrations = new HashSet<>();
 
     @OneToMany(mappedBy = "app")

@@ -14,7 +14,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/api/users")
-    public Page<User> getUsers(@RequestParam(defaultValue = "1") Integer page,
+    public Page<User> getUsers(@RequestParam(defaultValue = "0") Integer page,
                                @RequestParam(defaultValue = "10") Integer size,
                                @RequestParam(defaultValue = "") String search,
                                @RequestParam(defaultValue = "") String sort,

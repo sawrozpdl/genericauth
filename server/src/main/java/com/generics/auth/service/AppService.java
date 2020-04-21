@@ -11,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class AppService {
 
@@ -26,11 +28,10 @@ public class AppService {
     }
 
     public App geAppByName(String name) {
-        App app = appRepository.findByName(name);
-        if (app == null) {
-            throw new HttpException(Error.missing("App", "name", name), HttpStatus.NOT_FOUND);
-        }
-        return app;
+        Optional<App> app = appRepository.findByName(name);
+        if (app.isPresent())
+            return app.get();
+        throw new HttpException(Error.missing("App", "name", name), HttpStatus.NOT_FOUND);
     }
 
     public App createApp(App app) {
@@ -42,20 +43,17 @@ public class AppService {
     }
 
     public App updateApp(String name, App newApp) {
-        App app = appRepository.findByName(name);
-        if (app == null) {
-            throw new HttpException(Error.missing("App", "name", name), HttpStatus.NOT_FOUND);
+        Optional<App> app = appRepository.findByName(name);
+        if (app.isPresent()) {
+            newApp.setId(app.get().getId());
+            return appRepository.save(newApp);
         }
-        newApp.setId(app.getId());
-        return appRepository.save(newApp);
+        throw new HttpException(Error.missing("App", "name", name), HttpStatus.NOT_FOUND);
     }
 
     public void deleteAppByName(String name) {
-        App app = appRepository.findByName(name);
-        if (app == null) {
-            throw new HttpException(Error.missing("App", "name", name), HttpStatus.NOT_FOUND);
-        }
-
-        appRepository.deleteByName(name);
+        if (appRepository.existsByName(name))
+            appRepository.deleteByName(name);
+        throw new HttpException(Error.missing("App", "name", name), HttpStatus.NOT_FOUND);
     }
 }

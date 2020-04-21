@@ -1,6 +1,7 @@
 package com.generics.auth.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,14 +14,14 @@ public class AppRegistration implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @JsonIgnore
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "app_id")
+    @JsonIgnoreProperties("registrations")
     private App app;
 
-    @JsonIgnore
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties("registrations")
     private User user;
 
     private Date registeredAt;

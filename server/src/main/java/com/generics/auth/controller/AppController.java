@@ -29,7 +29,7 @@ public class AppController {
 
 
     @GetMapping("/api/apps")
-    public Page<App> getApps(@RequestParam(defaultValue = "1") Integer page,
+    public Page<App> getApps(@RequestParam(defaultValue = "0") Integer page,
                              @RequestParam(defaultValue = "10") Integer size,
                              @RequestParam(defaultValue = "") String search,
                              @RequestParam(defaultValue = "") String sort,
@@ -44,10 +44,8 @@ public class AppController {
                                      @RequestBody User user) {
         App createdApp = appService.createApp(new App(appName, isPrivate));
         User adminUser = user;
-        System.out.println("ID before: " + adminUser.getId());
         if (user.getId() == null)
             adminUser = userService.createUser(user);
-        System.out.println("ID after: " + adminUser.getId());
         return appRegistrationService.registerUser(createdApp, adminUser);
     }
 

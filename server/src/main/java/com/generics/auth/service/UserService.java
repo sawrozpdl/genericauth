@@ -11,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -38,20 +40,18 @@ public class UserService {
     }
 
     public User getUserByUsername(String username) {
-        User user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new HttpException(Error.missing("User", "username", username), HttpStatus.NOT_FOUND);
-        }
-        return user;
+        Optional<User> user = userRepository.findByUsername(username);
+        if (user.isPresent())
+            return user.get();
+
+        throw new HttpException(Error.missing("User", "username", username), HttpStatus.NOT_FOUND);
     }
 
     public void deleteUserByUsername(String username) {
-        User user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new HttpException(Error.missing("User", "username", username), HttpStatus.NOT_FOUND);
-        }
+        if (userRepository.existsByUsername(username))
+            userRepository.deleteByUsername(username);
 
-        userRepository.deleteByUsername(username);
+        throw new HttpException(Error.missing("User", "username", username), HttpStatus.NOT_FOUND);
     }
 
 }
