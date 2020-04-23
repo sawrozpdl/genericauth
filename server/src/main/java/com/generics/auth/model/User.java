@@ -10,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 @Entity
+@Table(name = "\"user\"")
 public class User extends GenericModel {
 
     @Size(min = 3, max = 255, message = "Characters should be between 3 and 255")
