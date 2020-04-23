@@ -11,9 +11,8 @@ jobs:
       TERM: dumb
 
     steps:
-
-      - setup_remote_docker:   
-              docker_layer_caching: false
+      - setup_remote_docker:
+          docker_layer_caching: false
 
       - checkout:
           path: ~/repo
@@ -24,7 +23,6 @@ jobs:
             - v1-dependencies-{{ checksum "build.gradle" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
-      - run: cd server
 
       - run: gradle dependencies
 
@@ -33,45 +31,52 @@ jobs:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
-      - run: gradle test
+      # - run: gradle test
+
+      - run: gradle bootJar
 
       - run:
           name: "Heroku Install"
           command: |
-                if [[ $(command -v heroku) == "" ]]; then
-                curl https://cli-assets.heroku.com/install.sh | sh
-                else
-                echo "Heroku already exists!"
-                fi
+            if [[ $(command -v heroku) == "" ]]; then
+            curl https://cli-assets.heroku.com/install.sh | sh
+            else
+            echo "Heroku already exists!"
+            fi
       - run:
-            name: Login into Heroku Docker Repository
-            command: |
-                docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
+          name: Login into Heroku Docker Repository
+          command: |
+            docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
 
       - deploy:
           name: "Deploy Container to Heroku"
-          command: 'bash scripts/deploy-server.sh'
+          command: "bash scripts/deploy-server.sh"
 
-  
   app_s3_sync:
+
     docker:
       - image: circleci/node:12.9.1-browsers
+
     working_directory: ~/repo/app
+
     steps:
+      - setup_remote_docker:
+          docker_layer_caching: false
+
       - checkout:
           path: ~/repo
 
       - restore_cache:
-        keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          - v1-dependencies-
-      
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+
       - run: yarn install
-   
+
       - save_cache:
-        paths:
-          - node_modules
-        key: v1-dependencies-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
 
       - run:
           name: Run tests
