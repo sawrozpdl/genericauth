@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RootController {
 
-    @Value("${env.spring-env}")
+    @Value("${server.env}")
     String env;
 
     @GetMapping("/api")
