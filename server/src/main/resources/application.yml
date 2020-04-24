@@ -1,5 +1,5 @@
 spring:
-  env: ${SPRING_ENV}
+  env: ${SPRING_ENV:development}
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:genericks}
     username: ${DB_USERNAME:user}
@@ -25,3 +25,6 @@ spring:
 
 server:
   port: ${PORT:8080}
+  error:
+    whitelabel:
+      enabled: false

@@ -34,6 +34,10 @@ public class App extends GenericModel {
     @JoinColumn(name = "credential_id", referencedColumnName = "id")
     private Credential credential;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "location_id", referencedColumnName = "id")
+    private Location location;
+
     @OneToMany(mappedBy = "app", fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"app", "user"})
     private Set<AppRegistration> registrations = new HashSet<>();
