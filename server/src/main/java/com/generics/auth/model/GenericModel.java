@@ -1,5 +1,6 @@
 package com.generics.auth.model;
 
+import io.swagger.models.auth.In;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -16,13 +17,13 @@ public abstract class GenericModel implements Serializable {
             name = "genericSequenceGenerator",
             strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
             parameters = {
-                    @Parameter(name = "sequence_name", value = "GENERIC_SEQUENCE"),
+                    @Parameter(name = "sequence_name", value = "GG_SEQUENCE"),
                     @Parameter(name = "initial_value", value = "1"),
                     @Parameter(name = "increment_size", value = "1")
             }
     )
     @GeneratedValue(generator = "genericSequenceGenerator")
-    private Long id;
+    private Integer id;
 
     @Column(nullable = false)
     private Boolean isActive = true;
@@ -46,11 +47,11 @@ public abstract class GenericModel implements Serializable {
 
     public GenericModel() {}
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

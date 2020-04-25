@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.Id;
+
 @RestController
 public class UserController {
 
@@ -23,17 +25,17 @@ public class UserController {
         return userService.getAllUsers(new RequestFilter(page, size, search, sort, active));
     }
 
-    @GetMapping("/api/users/{username}")
-    public User getUserByUserName(@PathVariable String username) {
+    @GetMapping("/api/users/{id}")
+    public User getUserByUserName(@PathVariable Integer id) {
 
-        return userService.getUserByUsername(username);
+        return userService.getUserById(id);
     }
 
-    @DeleteMapping("/api/users/{username}")
-    public String  deleteUserByUserName(@PathVariable String  username) {
-        userService.deleteUserByUsername(username);
+    @DeleteMapping("/api/users/{id}")
+    public Integer deleteUserByUserName(@PathVariable Integer  id) {
+        userService.deleteUserById(id);
 
-        return username;
+        return id;
     }
 
 }

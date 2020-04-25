@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 public class User extends GenericModel {
 
     @Size(min = 3, max = 255, message = "Characters should be between 3 and 255")
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String username;
 
     @Size(min = 2, max = 255, message = "Characters should be between 2 and 255")
