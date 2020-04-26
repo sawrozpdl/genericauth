@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+@RestController
 public class AppUserController {
 
     @Autowired
@@ -22,7 +23,7 @@ public class AppUserController {
     @Autowired
     AppRegistrationService appRegistrationService;
 
-    @GetMapping("/api/apps/{appName}/users/")
+    @GetMapping("/api/apps/{appName}/users")
     public Page<User> usersInApp(@PathVariable String appName,
                              @RequestParam(defaultValue = "0") Integer page,
                              @RequestParam(defaultValue = "10") Integer size,
@@ -38,7 +39,7 @@ public class AppUserController {
         return userService.getUserByUsernameForApp(username, appName);
     }
 
-    @PostMapping("/api/apps/{appName}/users/")
+    @PostMapping("/api/apps/{appName}/users")
     public AppRegistration register(@PathVariable String appName, @RequestBody User user) {
         App app = appService.geAppByName(appName);
 

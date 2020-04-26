@@ -32,6 +32,7 @@ public class App extends GenericModel {
 
     @OneToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "credential_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"app"})
     private Credential credential;
 
     @OneToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY, orphanRemoval = true)
@@ -41,6 +42,10 @@ public class App extends GenericModel {
     @OneToMany(mappedBy = "app", fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"app", "user"})
     private Set<AppRegistration> registrations = new HashSet<>();
+
+    @OneToMany(mappedBy = "app", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"app", "user"})
+    private Set<UserRole> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "app")
     private Set<Event> events = new HashSet<>();
@@ -122,5 +127,13 @@ public class App extends GenericModel {
 
     public void setEvents(Set<Event> events) {
         this.events = events;
+    }
+
+    public Set<UserRole> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<UserRole> roles) {
+        this.roles = roles;
     }
 }

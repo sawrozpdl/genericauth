@@ -1,6 +1,7 @@
 package com.generics.auth.model;
 
 import io.swagger.models.auth.In;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.GenericGenerator;
 

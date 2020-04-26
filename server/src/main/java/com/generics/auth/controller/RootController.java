@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RootController {
 
-    @Value("${spring.env}")
+    @Value("${server.env}")
     String appEnv;
 
     @Value("${spring.app-name}")

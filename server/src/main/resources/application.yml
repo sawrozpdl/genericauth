@@ -1,5 +1,4 @@
 spring:
-  env: ${SPRING_ENV:development}
   app-name: Generic Auth
   version: 1.0.0
   datasource:
@@ -17,7 +16,7 @@ spring:
       fail-on-empty-beans: false
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -27,6 +26,20 @@ spring:
 
 server:
   port: ${PORT:8080}
+  env: ${SPRING_ENV:development}
+  secret: wd^=I3w0%/{ecrX8o)XZQo{_&L@8m#6iD
   error:
     whitelabel:
       enabled: false
+
+aws:
+  region: ${AWS_REGION:null}
+  bucketName: ${AWS_BUCKET_NAME:null}
+  accessKeyId: ${AWS_ACCESS_KEY_ID:null}
+  secretAccessKey: ${AWS_SECRET_ACCESS_KEY:null}
+
+logging:
+  level:
+    org:
+      springframework:
+        web: debug

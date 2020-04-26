@@ -52,17 +52,11 @@ public class User extends GenericModel {
     private Set<AppRegistration> registrations = new HashSet<>();
 
     @OneToMany(mappedBy = "user", fetch=FetchType.LAZY)
-    private Set<RefreshToken> refreshTokens = new HashSet<>();
+    @JsonIgnoreProperties({"app", "user"})
+    private Set<UserRole> roles = new HashSet<>();
 
-    @ManyToMany(cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-    }, fetch=FetchType.LAZY)
-    @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles = new HashSet<>();
+    @OneToMany(mappedBy = "user", fetch=FetchType.LAZY)
+    private Set<RefreshToken> refreshTokens = new HashSet<>();
 
     public User() {}
 
@@ -169,11 +163,11 @@ public class User extends GenericModel {
         this.refreshTokens = refreshTokens;
     }
 
-    public Set<Role> getRoles() {
+    public Set<UserRole> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(Set<UserRole> roles) {
         this.roles = roles;
     }
 

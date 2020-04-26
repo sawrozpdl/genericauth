@@ -2,6 +2,7 @@ package com.generics.auth.service;
 
 import com.generics.auth.exception.HttpException;
 import com.generics.auth.model.App;
+import com.generics.auth.model.Credential;
 import com.generics.auth.repository.AppRepository;
 import com.generics.auth.store.RequestFilter;
 import com.generics.auth.utils.Error;
@@ -38,6 +39,7 @@ public class AppService {
         if (appRepository.existsByName(app.getName())) {
             throw new  HttpException(Error.duplicate("App", "name", app.getName()), HttpStatus.BAD_REQUEST);
         }
+        app.setCredential(new Credential(app));
         appRepository.save(app);
         return  app;
     }

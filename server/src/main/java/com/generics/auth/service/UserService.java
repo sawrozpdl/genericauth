@@ -1,10 +1,12 @@
 package com.generics.auth.service;
 
+import com.amazonaws.services.apigateway.model.Op;
 import com.generics.auth.store.RequestFilter;
 import com.generics.auth.exception.HttpException;
 import com.generics.auth.model.User;
 import com.generics.auth.repository.UserRepository;
 import com.generics.auth.utils.Error;
+import com.generics.auth.utils.Gen;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,8 +31,7 @@ public class UserService {
     }
 
     public User createUser(User user, String appName) {
-        String[] userExists = userRepository.existsById(user.getId()) ?
-                new String[]{"id", user.getId().toString()} : userRepository.existsByEmail(user.getEmail()) ?
+        String[] userExists =  userRepository.existsByEmail(user.getEmail()) ?
                 new String[]{"email ", user.getEmail()} : null;
 
         if (userExists != null) {
@@ -40,11 +41,18 @@ public class UserService {
         if (usernameTakenForApp(appName, user.getUsername()))
             throw new HttpException("Username already taken", HttpStatus.BAD_REQUEST);
 
+        user.setPassword(Gen.getMD5From(user.getPassword()));
+
         return userRepository.save(user);
     }
 
     public boolean userExistsInApp(String username, String appName) {
         return userRepository.existsByUsernameInApp(username, appName);
+    }
+
+    public User authenticateUser(String username, String password, String appName) {
+        Optional<User> user = userRepository.findUserByUserNamePasswordAndAppName(username, password, appName);
+        return user.orElse(null);
     }
 
     public User getUserByUsernameForApp(String username, String appName) {
@@ -69,6 +77,7 @@ public class UserService {
 
         user.setId((oldUser.getId()));
         user.setEmail(oldUser.getEmail());
+        user.setPassword(oldUser.getPassword());
         user.setUsername(oldUser.getUsername());
 
         return userRepository.save(user);
@@ -82,6 +91,6 @@ public class UserService {
     }
 
     public Page<User> getAllUsersInApp(String appName, RequestFilter filter) {
-        return userRepository.findUsersByAppName(appName, (Pageable) PageRequest.of(filter.page, filter.size));
+        return userRepository.findUsersByAppName(appName, PageRequest.of(filter.page, filter.size));
     }
 }

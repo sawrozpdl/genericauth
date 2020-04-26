@@ -1,5 +1,10 @@
 package com.generics.auth.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.generics.auth.exception.HttpException;
+import com.generics.auth.utils.Gen;
+import org.springframework.http.HttpStatus;
+
 import javax.persistence.*;
 
 @Entity
@@ -12,18 +17,19 @@ public class Credential extends GenericModel {
     private String clientSecret;
 
     @OneToOne(mappedBy= "credential", cascade = CascadeType.ALL, fetch= FetchType.LAZY)
+    @JsonIgnoreProperties({"credential"})
     private App app;
 
     public Credential() {}
 
     public Credential(App app) {
         this.app = app;
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        clientId = "generate id";
-        clientSecret = "generate secret";
+        try {
+            this.clientSecret = Gen.getMD5From(app.getName());
+            this.clientId = Gen.base64Encode(app.getName() + app.getCreatedAt());
+        } catch (Exception ignored) {
+            throw new HttpException("Couldn't get credentials", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     public String getClientId() {
