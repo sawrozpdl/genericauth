@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import routes from '../constants/routes';
 
 import Home from './home';
@@ -22,6 +22,7 @@ const BaseRouter: React.FC<BaseRouterProps> = (props: BaseRouterProps) => {
         path={routes.APP_HOME}
         component={(): any => <Home user={user} />}
       />
+      <Redirect to={routes.HOME} />
     </Switch>
   );
 };

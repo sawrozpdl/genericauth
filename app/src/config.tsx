@@ -3,9 +3,12 @@ export default {
   auth: {
     baseUrl: process.env.REACT_APP_AUTH_BASE_URL,
     endpoints: {
-      refreshToken: '/refresh',
-      logout: '/logout',
-      authorizeUser: '/users/authorize',
+      apps: '/apps',
+      appHome: '/apps/:appName',
+      appUsers: '/apps/:appName/users',
+      userProfile: '/apps/:appName/users/:username',
+      authorize: '/apps/:appName/authorize',
+      logout: '/apps/:appName/logout',
     },
     clientId: process.env.REACT_APP_AUTH_CLIENT_ID,
   },
