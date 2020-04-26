@@ -1,28 +1,30 @@
 package com.generics.auth.model;
 
-import com.generics.auth.constant.Gender;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.generics.auth.store.Gender;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.Date;
+import java.util.HashSet;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 @Entity
+@Table(name = "\"user\"")
 public class User extends GenericModel {
 
     @Size(min = 3, max = 255, message = "Characters should be between 3 and 255")
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String username;
 
     @Size(min = 2, max = 255, message = "Characters should be between 2 and 255")
-    private String firstName = "";
+    private String firstName;
 
     @Size(min = 2, max = 255, message = "Characters should be between 2 and 255")
-    private String middleName = "";
+    private String middleName;
 
     @Size(min = 2, max = 255, message = "Characters should be between 2 and 255")
-    private String lastName = "";
+    private String lastName;
 
     @Enumerated(EnumType.STRING)
     private Gender gender = Gender.PRIVATE;
@@ -33,21 +35,30 @@ public class User extends GenericModel {
     private String email;
 
     @Size(min = 8, message = "Minimum length: 8 characters")
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String password;
 
-    @Column(nullable = false)
     private Date lastLogin;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "profile_id", referencedColumnName = "id")
+    @OneToOne(mappedBy= "user", cascade = CascadeType.ALL, fetch= FetchType.LAZY, orphanRemoval = true)
     private Profile profile;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "location_id", referencedColumnName = "id")
+    private Location location;
+
     @OneToMany(mappedBy = "user", fetch=FetchType.LAZY)
+    @JsonIgnoreProperties({"app", "user"})
     private Set<AppRegistration> registrations = new HashSet<>();
 
     @OneToMany(mappedBy = "user", fetch=FetchType.LAZY)
+    @JsonIgnoreProperties({"app", "user"})
+    private Set<UserRole> roles = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", fetch=FetchType.LAZY)
     private Set<RefreshToken> refreshTokens = new HashSet<>();
+
+    public User() {}
 
     public User(String username, String email, String password) {
         this.username = username;
@@ -135,6 +146,7 @@ public class User extends GenericModel {
         this.profile = profile;
     }
 
+    //@JsonManagedReference
     public Set<AppRegistration> getRegistrations() {
         return registrations;
     }
@@ -151,23 +163,12 @@ public class User extends GenericModel {
         this.refreshTokens = refreshTokens;
     }
 
-    public Set<Role> getRoles() {
+    public Set<UserRole> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(Set<UserRole> roles) {
         this.roles = roles;
     }
-
-    @ManyToMany(cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-    }, fetch=FetchType.LAZY)
-    @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles = new HashSet<>();
-
 
 }
