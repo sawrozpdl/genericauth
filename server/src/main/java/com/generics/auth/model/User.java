@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 public class User extends GenericModel {
 
     @Size(min = 3, max = 255, message = "Characters should be between 3 and 255")
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String username;
 
     @Size(min = 2, max = 255, message = "Characters should be between 2 and 255")
@@ -43,22 +43,20 @@ public class User extends GenericModel {
     @OneToOne(mappedBy= "user", cascade = CascadeType.ALL, fetch= FetchType.LAZY, orphanRemoval = true)
     private Profile profile;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "location_id", referencedColumnName = "id")
+    private Location location;
+
     @OneToMany(mappedBy = "user", fetch=FetchType.LAZY)
     @JsonIgnoreProperties({"app", "user"})
     private Set<AppRegistration> registrations = new HashSet<>();
 
     @OneToMany(mappedBy = "user", fetch=FetchType.LAZY)
-    private Set<RefreshToken> refreshTokens = new HashSet<>();
+    @JsonIgnoreProperties({"app", "user"})
+    private Set<UserRole> roles = new HashSet<>();
 
-    @ManyToMany(cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-    }, fetch=FetchType.LAZY)
-    @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles = new HashSet<>();
+    @OneToMany(mappedBy = "user", fetch=FetchType.LAZY)
+    private Set<RefreshToken> refreshTokens = new HashSet<>();
 
     public User() {}
 
@@ -165,11 +163,11 @@ public class User extends GenericModel {
         this.refreshTokens = refreshTokens;
     }
 
-    public Set<Role> getRoles() {
+    public Set<UserRole> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(Set<UserRole> roles) {
         this.roles = roles;
     }
 

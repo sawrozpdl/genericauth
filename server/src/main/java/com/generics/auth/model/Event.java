@@ -1,5 +1,9 @@
 package com.generics.auth.model;
 
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -8,8 +12,26 @@ import java.util.Date;
 public class Event implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GenericGenerator(
+            name = "genericSequenceGenerator",
+            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+            parameters = {
+                    @Parameter(name = "sequence_name", value = "EVENT_SEQUENCE"),
+                    @Parameter(name = "initial_value", value = "1"),
+                    @Parameter(name = "increment_size", value = "1")
+            }
+    )
+    @GeneratedValue(generator = "genericSequenceGenerator")
     private Integer id;
+
+    @Column(nullable = false)
+    private String producer;
+
+    @Column(nullable = false)
+    private String action;
+
+    @Column(nullable = false)
+    private  String consumer;
 
     @Column(columnDefinition = "TEXT")
     private String description;
@@ -27,8 +49,10 @@ public class Event implements Serializable {
 
     public Event() {}
 
-    public Event(String description) {
-        this.description = description;
+    public Event(String producer, String action, String consumer) {
+        this.producer = producer;
+        this.action = action;
+        this.consumer = consumer;
     }
 
     public Integer getId() {

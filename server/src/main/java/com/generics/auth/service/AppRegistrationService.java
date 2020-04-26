@@ -33,8 +33,20 @@ public class AppRegistrationService {
         throw new HttpException(Error.missing("App Registration", "id", id), HttpStatus.NOT_FOUND);
     }
 
+    public AppRegistration geAppRegistrationByAppNameAndUsername(String username, String appName) {
+        Optional<AppRegistration> appRegistration = appRegistrationRepository.findByUserNameAndAppName(username, appName);
+        if (appRegistration.isPresent())
+            return appRegistration.get();
+
+        throw new HttpException(Error.missing("Registration for" + appName, "username", username), HttpStatus.NOT_FOUND);
+    }
+
     public AppRegistration registerUser(App app, User user) {
         return appRegistrationRepository.save(new AppRegistration(app, user));
+    }
+
+    public boolean hasUserRegistered(Integer userId) {
+        return  appRegistrationRepository.existsByUserId(userId);
     }
 
     public void removeAppRegistration(Integer id) {

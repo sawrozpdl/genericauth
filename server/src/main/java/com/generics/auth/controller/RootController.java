@@ -1,18 +1,36 @@
 package com.generics.auth.controller;
 
-import org.springframework.beans.factory.annotation.Value;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RestController;
+
 
 @RestController
 public class RootController {
 
-    @Value("${spring.env}")
-    String env;
+    @Value("${server.env}")
+    String appEnv;
+
+    @Value("${spring.app-name}")
+    String appName;
+
+    @Value("${spring.version}")
+    String apiVersion;
+
+    @GetMapping("/")
+    public void index(HttpServletResponse httpServletResponse) {
+        httpServletResponse.setHeader("Location", "/api");
+        httpServletResponse.setStatus(302);
+    }
 
     @GetMapping("/api")
-    public String index() {
-        return "Hello from API! ENV: " + env;
+    public Object api() {
+        return new Object() {
+            public final String app = appName;
+            public final String version = apiVersion;
+            public final String environment = appEnv;
+        };
     }
 
 }
