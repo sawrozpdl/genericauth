@@ -14,6 +14,7 @@
     "@types/react-dom": "^16.9.6",
     "@types/react-router-dom": "^5.1.4",
     "axios": "^0.19.2",
+    "chart.js": "^2.9.3",
     "moment": "^2.24.0",
     "react": "^16.13.1",
     "react-chartjs-2": "^2.9.0",

@@ -6,7 +6,7 @@ import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import MoneyIcon from '@material-ui/icons/Money';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: any) => ({
   root: {
     height: '100%',
   },
@@ -40,10 +40,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Budget = (props) => {
+const Budget = (props: any) => {
   const { className, ...rest } = props;
 
-  const classes = useStyles();
+  const classes: any = useStyles();
 
   return (
     <Card {...rest} className={clsx(classes.root, className)}>

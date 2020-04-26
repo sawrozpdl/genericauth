@@ -22,9 +22,9 @@ import {
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
 import mockData from './data';
-import { StatusBullet } from 'components';
+import { StatusBullet } from '../../../../components';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: any) => ({
   root: {},
   content: {
     padding: 0,
@@ -44,16 +44,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const statusColors = {
+const statusColors: any = {
   delivered: 'success',
   pending: 'info',
   refunded: 'danger',
 };
 
-const LatestOrders = (props) => {
+const LatestOrders = (props: any) => {
   const { className, ...rest } = props;
 
-  const classes = useStyles();
+  const classes: any = useStyles();
 
   const [orders] = useState(mockData);
 

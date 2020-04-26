@@ -19,6 +19,7 @@ const RouteWithLayout = (props: any) => {
 
 RouteWithLayout.propTypes = {
   component: PropTypes.any.isRequired,
+  exact: PropTypes.any,
   layout: PropTypes.any.isRequired,
   path: PropTypes.string,
 };

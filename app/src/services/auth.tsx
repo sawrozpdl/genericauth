@@ -24,7 +24,7 @@ export async function logout(): Promise<void> {
  * @returns {Promise<{accessToken, refreshToken}>}
  */
 export async function authorizeUser(refreshToken: string): Promise<any> {
-  const url = `${config.auth.baseUrl}${config.auth.endpoints.authorizeUser}`;
+  const url = `${config.auth.baseUrl}${config.auth.endpoints.authorize}`;
   const clientId = config.auth.clientId;
 
   const { data } = await http.post(url, { refreshToken, clientId });
@@ -39,7 +39,7 @@ export async function authorizeUser(refreshToken: string): Promise<any> {
  * @returns {Promise<{accessToken, refreshToken}>}
  */
 export async function refresh(refreshToken: string): Promise<any> {
-  const url = `${config.auth.baseUrl}${config.auth.endpoints.refreshToken}`;
+  const url = `${config.auth.baseUrl}${config.auth.endpoints.authorize}`;
   const clientId = config.auth.clientId;
 
   const { data } = await http.post(url, { refreshToken, clientId });

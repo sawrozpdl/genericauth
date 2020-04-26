@@ -16,7 +16,7 @@ import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import TabletMacIcon from '@material-ui/icons/TabletMac';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: any) => ({
   root: {
     height: '100%',
   },
@@ -38,11 +38,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UsersByDevice = (props) => {
+const UsersByDevice = (props: any) => {
   const { className, ...rest } = props;
 
   const classes = useStyles();
-  const theme = useTheme();
+  const theme: any = useTheme();
 
   const data = {
     datasets: [

@@ -64,11 +64,7 @@ const App: React.FC = () => {
           <CssBaseline />
           <Suspense fallback={<Fragment />}>
             <Switch>
-              <Route
-                exact
-                path={routes.HOME}
-                component={(): any => <Main user={user} />}
-              />
+              <Main user={user} />
             </Switch>
           </Suspense>
         </Router>

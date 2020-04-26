@@ -27,7 +27,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const LatestSales = (props) => {
+const LatestSales = (props: any) => {
   const { className, ...rest } = props;
 
   const classes = useStyles();

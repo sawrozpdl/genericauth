@@ -1,8 +1,6 @@
-import uuid from 'uuid/v1';
-
 export default [
   {
-    id: uuid(),
+    id: 1,
     ref: 'CDD1049',
     amount: 30.5,
     customer: {
@@ -12,7 +10,7 @@ export default [
     status: 'pending',
   },
   {
-    id: uuid(),
+    id: 2,
     ref: 'CDD1048',
     amount: 25.1,
     customer: {
@@ -22,7 +20,7 @@ export default [
     status: 'delivered',
   },
   {
-    id: uuid(),
+    id: 3,
     ref: 'CDD1047',
     amount: 10.99,
     customer: {
@@ -32,7 +30,7 @@ export default [
     status: 'refunded',
   },
   {
-    id: uuid(),
+    id: 4,
     ref: 'CDD1046',
     amount: 96.43,
     customer: {
@@ -42,7 +40,7 @@ export default [
     status: 'pending',
   },
   {
-    id: uuid(),
+    id: 5,
     ref: 'CDD1045',
     amount: 32.54,
     customer: {
@@ -52,7 +50,7 @@ export default [
     status: 'delivered',
   },
   {
-    id: uuid(),
+    id: 6,
     ref: 'CDD1044',
     amount: 16.76,
     customer: {
