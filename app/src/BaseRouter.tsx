@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Redirect } from 'react-router-dom';
 import routes from './constants/routes';
 
 import Home from './views/home';
@@ -21,7 +21,12 @@ import {
 const BaseRouter: React.FC = (props) => {
   return (
     <Switch>
-      <Route exact path={routes.HOME} component={(): any => <Home />} />
+      <RouteWithLayout
+        layout={MinimalLayout}
+        exact
+        path={routes.HOME}
+        component={(): any => <Home />}
+      />
       <RouteWithLayout
         component={DashboardView}
         exact

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import validate from 'validate.js';
 import { makeStyles } from '@material-ui/styles';
 import {
-  Grid,
   Button,
   IconButton,
   TextField,
@@ -205,7 +204,7 @@ const SignIn = (props: any) => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h3">
-            Sign in
+            Log In
           </Typography>
           <form className={classes.form} onSubmit={handleSignIn}>
             <Typography

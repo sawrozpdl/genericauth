@@ -3,7 +3,16 @@ import { Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { AppBar, Toolbar, Hidden, IconButton } from '@material-ui/core';
+import {
+  AppBar,
+  Toolbar,
+  Hidden,
+  Divider,
+  IconButton,
+  Button,
+  Box,
+  Link,
+} from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import { SvgIcon } from '@material-ui/core';
 import Logo from '../../../../components/Logo';
@@ -26,6 +35,21 @@ const useStyles = makeStyles((theme: any) => ({
   },
   toolbar: {
     minHeight: 64,
+  },
+  logo: {
+    marginRight: theme.spacing(2),
+  },
+  link: {
+    fontWeight: theme.typography.fontWeightMedium,
+    '& + &': {
+      marginLeft: theme.spacing(2),
+    },
+  },
+  divider: {
+    width: 1,
+    height: 32,
+    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(2),
   },
 }));
 
@@ -52,6 +76,49 @@ const Topbar = (props: any): any => {
             <Logo />
           </RouterLink>
         </Hidden>
+        <Box flexGrow={1} />
+        <Link
+          className={classes.link}
+          color="textSecondary"
+          component={RouterLink}
+          to="/products"
+          underline="none"
+          variant="body2"
+        >
+          Apps
+        </Link>
+        <Link
+          className={classes.link}
+          color="textSecondary"
+          component={RouterLink}
+          to="/sign-in"
+          underline="none"
+          variant="body2"
+        >
+          Sign In
+        </Link>
+        <Link
+          className={classes.link}
+          color="textSecondary"
+          component={RouterLink}
+          to="/sign-up"
+          underline="none"
+          variant="body2"
+        >
+          Register
+        </Link>
+        <Divider className={classes.divider} />
+        <Button color="secondary" variant="contained" size="small">
+          <Link
+            color="textPrimary"
+            component={RouterLink}
+            to="/api-docs"
+            underline="none"
+            variant="body2"
+          >
+            API
+          </Link>
+        </Button>
       </Toolbar>
     </AppBar>
   );

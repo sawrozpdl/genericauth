@@ -13,7 +13,6 @@ import validate from 'validate.js';
 import roles from './constants/roles';
 import validators from './common/validators';
 
-import theme from './theme';
 import { createTheme } from './theme/create';
 
 import { createBrowserHistory } from 'history';

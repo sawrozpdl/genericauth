@@ -222,7 +222,7 @@ const SignUp = (props: any) => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h3">
-            Sign in
+            Register
           </Typography>
           <form className={classes.form} onSubmit={handleSignUp}>
             <TextField
