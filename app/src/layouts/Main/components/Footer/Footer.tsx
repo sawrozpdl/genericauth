@@ -7,6 +7,7 @@ import { Typography, Link } from '@material-ui/core';
 const useStyles = makeStyles((theme: any) => ({
   root: {
     padding: theme.spacing(4),
+    backgroundColor: theme.palette.background.dark,
   },
 }));
 
@@ -19,14 +20,10 @@ const Footer = (props: any) => {
     <div {...rest} className={clsx(classes.root, className)}>
       <Typography variant="body1">
         &copy;{' '}
-        <Link component="a" href="https://devias.io/" target="_blank">
-          Devias IO
+        <Link component="a" href="https://hamroauth.ml/" target="_blank">
+          Hamro Auth‎‎‎‏‏‎ ‎
         </Link>
-        . 2019
-      </Typography>
-      <Typography variant="caption">
-        Created with love for the environment. By designers and developers who
-        love to work together in offices!
+        ‎2020
       </Typography>
     </div>
   );

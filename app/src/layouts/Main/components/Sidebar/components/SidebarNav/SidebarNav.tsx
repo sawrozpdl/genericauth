@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: any) => ({
     paddingBottom: 0,
   },
   button: {
-    color: colors.blueGrey[800],
+    color: theme.palette.text.secondary,
     padding: '10px 8px',
     justifyContent: 'flex-start',
     textTransform: 'none',

@@ -1,11 +1,11 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import routes from '../constants/routes';
+import routes from './constants/routes';
 
-import Home from './home';
+import Home from './views/home';
 
-import { RouteWithLayout } from '../components';
-import { Main as MainLayout, Minimal as MinimalLayout } from '../layouts';
+import { RouteWithLayout } from './components';
+import { Main as MainLayout, Minimal as MinimalLayout } from './layouts';
 
 import {
   Dashboard as DashboardView,
@@ -17,21 +17,11 @@ import {
   SignUp as SignUpView,
   SignIn as SignInView,
   NotFound as NotFoundView,
-} from '../views';
-
-interface BaseRouterProps {
-  user: object | null;
-}
-
-const BaseRouter: React.FC<BaseRouterProps> = (props: BaseRouterProps) => {
-  const { user } = props;
+} from './views';
+const BaseRouter: React.FC = (props) => {
   return (
     <Switch>
-      <Route
-        exact
-        path={routes.HOME}
-        component={(): any => <Home user={user} />}
-      />
+      <Route exact path={routes.HOME} component={(): any => <Home />} />
       <RouteWithLayout
         component={DashboardView}
         exact

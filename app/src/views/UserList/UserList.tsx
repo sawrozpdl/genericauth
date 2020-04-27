@@ -7,6 +7,8 @@ import mockData from './data';
 const useStyles = makeStyles((theme: any) => ({
   root: {
     padding: theme.spacing(3),
+    backgroundColor: theme.palette.background.dark,
+    minHeight: '100vh',
   },
   content: {
     marginTop: theme.spacing(2),

@@ -1,7 +1,7 @@
-import React, { Fragment, Suspense, useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import { CssBaseline } from '@material-ui/core';
-import { Router, Switch, Route } from 'react-router-dom';
-import { ThemeProvider } from '@material-ui/styles';
+import { Router, Switch } from 'react-router-dom';
+import { ThemeProvider, makeStyles } from '@material-ui/styles';
 
 import * as storage from './utils/storage';
 import httpConstants from './constants/http';
@@ -9,24 +9,20 @@ import httpConstants from './constants/http';
 import { handleError } from './utils/error';
 
 import { authorizeUser } from './services/auth';
-// import Chart from 'react-chartjs-2';
-// import { chartjs } from './helpers';
 import validate from 'validate.js';
-
-import routes from './constants/routes';
+import roles from './constants/roles';
 import validators from './common/validators';
 
-import Main from './components/main';
 import theme from './theme';
-import { createBrowserHistory } from 'history';
+import { createTheme } from './theme/create';
 
-import useStyles from './styles/useStyles';
+import { createBrowserHistory } from 'history';
+import BaseRouter from './BaseRouter';
+import UserContext from './UserContext';
+import LoadingScreen from './components/LoadingScreen';
+import useSettings from './hooks/useSettings';
 
 const browserHistory = createBrowserHistory();
-
-// Chart.helpers.extend(Chart.elements.Rectangle.prototype, {
-//   draw: chartjs.draw,
-// });
 
 const App: React.FC = () => {
   const [user, setUser] = useState(null);
@@ -43,12 +39,49 @@ const App: React.FC = () => {
     return null;
   };
 
+  const getGuestUser = () => {
+    return {
+      id: -1,
+      firstName: 'Anon',
+      roles: [roles.GUEST],
+    };
+  };
+
   useEffect(() => {
     const userResponse = getActiveUser();
-    const { data } = userResponse;
-
+    let { data } = userResponse;
+    data = data ? data : getGuestUser();
     setUser(data);
   }, []);
+
+  const useStyles = makeStyles((theme: any) => ({
+    root: {
+      display: 'flex',
+      flexDirection: 'column',
+      minHeight: '100vh',
+    },
+    '@global': {
+      '*': {
+        boxSizing: 'border-box',
+        margin: 0,
+        padding: 0,
+      },
+      html: {
+        '-webkit-font-smoothing': 'antialiased',
+        '-moz-osx-font-smoothing': 'grayscale',
+        height: '100%',
+        width: '100%',
+      },
+      body: {
+        height: '100%',
+        width: '100%',
+      },
+      '#root': {
+        height: '100%',
+        width: '100%',
+      },
+    },
+  }));
 
   const classes = useStyles();
 
@@ -56,15 +89,17 @@ const App: React.FC = () => {
     ...validate.validators,
     ...validators,
   };
-
+  const { settings } = useSettings();
   return (
     <div className={classes.root}>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={createTheme(settings)}>
         <Router history={browserHistory}>
           <CssBaseline />
-          <Suspense fallback={<Fragment />}>
+          <Suspense fallback={<LoadingScreen />}>
             <Switch>
-              <Main user={user} />
+              <UserContext.Provider value={user}>
+                <BaseRouter />
+              </UserContext.Provider>
             </Switch>
           </Suspense>
         </Router>

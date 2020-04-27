@@ -1,58 +1,64 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { AppBar, Toolbar, Badge, Hidden, IconButton } from '@material-ui/core';
+import { AppBar, Toolbar, Hidden, IconButton } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
-import InputIcon from '@material-ui/icons/Input';
+import { Box, SvgIcon } from '@material-ui/core';
+import Logo from '../../../../components/Logo';
+import Account from './Account';
+import Settings from './Settings';
+import THEMES from '../../../../constants/themes';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
-    boxShadow: 'none',
+    zIndex: theme.zIndex.drawer + 100,
+    ...(theme.name === THEMES.LIGHT
+      ? {
+          boxShadow: 'none',
+          backgroundColor: theme.palette.primary.main,
+        }
+      : {}),
+    ...(theme.name === THEMES.DARK
+      ? {
+          backgroundColor: theme.palette.background.default,
+        }
+      : {}),
   },
-  flexGrow: {
-    flexGrow: 1,
-  },
-  signOutButton: {
-    marginLeft: theme.spacing(1),
+  toolbar: {
+    minHeight: 64,
   },
 }));
 
-const Topbar = (props: any) => {
+const Topbar = (props: any): any => {
   const { className, onSidebarOpen, ...rest } = props;
-
-  const classes = useStyles();
-
-  const [notifications] = useState([]);
+  const classes: any = useStyles();
 
   return (
-    <AppBar {...rest} className={clsx(classes.root, className)}>
-      <Toolbar>
-        <RouterLink to="/">
-          <img alt="Logo" src="/images/logos/logo--white.svg" />
-        </RouterLink>
-        <div className={classes.flexGrow} />
-        <Hidden mdDown>
-          <IconButton color="inherit">
-            <Badge
-              badgeContent={notifications.length}
-              color="primary"
-              variant="dot"
-            >
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          <IconButton className={classes.signOutButton} color="inherit">
-            <InputIcon />
-          </IconButton>
-        </Hidden>
+    <AppBar className={clsx(classes.root, className)} {...rest}>
+      <Toolbar className={classes.toolbar}>
         <Hidden lgUp>
-          <IconButton color="inherit" onClick={onSidebarOpen}>
-            <MenuIcon />
+          <IconButton
+            className={classes.menuButton}
+            color="inherit"
+            onClick={onSidebarOpen}
+          >
+            <SvgIcon fontSize="small">
+              <MenuIcon />
+            </SvgIcon>
           </IconButton>
         </Hidden>
+        <Hidden mdDown>
+          <RouterLink to="/">
+            <Logo />
+          </RouterLink>
+        </Hidden>
+        <Box ml={2} flexGrow={1} />
+        <Settings />
+        <Box ml={2}>
+          <Account />
+        </Box>
       </Toolbar>
     </AppBar>
   );

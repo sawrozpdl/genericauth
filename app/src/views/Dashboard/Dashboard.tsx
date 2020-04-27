@@ -7,15 +7,17 @@ import {
   TotalUsers,
   TasksProgress,
   TotalProfit,
-  LatestSales,
   UsersByDevice,
   LatestProducts,
   LatestOrders,
+  Performance,
 } from './components';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
     padding: theme.spacing(4),
+    backgroundColor: theme.palette.background.dark,
+    minHeight: '100vh',
   },
 }));
 
@@ -38,7 +40,7 @@ const Dashboard = () => {
           <TotalProfit />
         </Grid>
         <Grid item lg={8} md={12} xl={9} xs={12}>
-          <LatestSales />
+          <Performance />
         </Grid>
         <Grid item lg={4} md={6} xl={3} xs={12}>
           <UsersByDevice />

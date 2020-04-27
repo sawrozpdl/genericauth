@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: any) => ({
   },
   chartContainer: {
     position: 'relative',
-    height: '300px',
+    height: '250px',
   },
   stats: {
     marginTop: theme.spacing(2),
@@ -54,8 +54,8 @@ const UsersByDevice = (props: any) => {
           theme.palette.warning.main,
         ],
         borderWidth: 8,
-        borderColor: theme.palette.white,
-        hoverBorderColor: theme.palette.white,
+        borderColor: theme.palette.background.default,
+        hoverBorderColor: theme.palette.background.default,
       },
     ],
     labels: ['Desktop', 'Tablet', 'Mobile'],
@@ -74,12 +74,23 @@ const UsersByDevice = (props: any) => {
       enabled: true,
       mode: 'index',
       intersect: false,
+      caretSize: 10,
+      yPadding: 20,
+      xPadding: 20,
       borderWidth: 1,
       borderColor: theme.palette.divider,
-      backgroundColor: theme.palette.white,
+      backgroundColor: theme.palette.background.dark,
       titleFontColor: theme.palette.text.primary,
       bodyFontColor: theme.palette.text.secondary,
       footerFontColor: theme.palette.text.secondary,
+      callbacks: {
+        label(tooltipItem: any, _data: any) {
+          const label = _data.labels[tooltipItem.index];
+          const value = _data.datasets[0].data[tooltipItem.index];
+
+          return `${label}: ${value}%`;
+        },
+      },
     },
   };
 
@@ -98,7 +109,7 @@ const UsersByDevice = (props: any) => {
     },
     {
       title: 'Mobile',
-      value: '23',
+      value: '22',
       icon: <PhoneIphoneIcon />,
       color: theme.palette.warning.main,
     },
@@ -124,7 +135,7 @@ const UsersByDevice = (props: any) => {
             <div className={classes.device} key={device.title}>
               <span className={classes.deviceIcon}>{device.icon}</span>
               <Typography variant="body1">{device.title}</Typography>
-              <Typography style={{ color: device.color }} variant="h2">
+              <Typography style={{ color: device.color }} variant="h3">
                 {device.value}%
               </Typography>
             </div>

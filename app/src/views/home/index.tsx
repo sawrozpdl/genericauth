@@ -5,11 +5,7 @@ import Container from '@material-ui/core/Container';
 
 import useStyles from '../../styles/useStyles';
 
-interface HomeProps {
-  user: object | null;
-}
-
-const Home: React.FC<HomeProps> = (props: HomeProps) => {
+const Home: React.FC = (props) => {
   const classes = useStyles();
   return (
     <Container component="main" className={classes.main} maxWidth="sm">

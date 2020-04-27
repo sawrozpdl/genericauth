@@ -12,6 +12,9 @@ import {
   Typography,
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import Container from '@material-ui/core/Container';
+import Avatar from '@material-ui/core/Avatar';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
 const schema = {
   email: {
@@ -78,8 +81,6 @@ const useStyles = makeStyles((theme: any) => ({
     display: 'flex',
     alignItems: 'center',
     paddingTop: theme.spacing(5),
-    paddingBototm: theme.spacing(2),
-    paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
   },
   logoImage: {
@@ -93,10 +94,18 @@ const useStyles = makeStyles((theme: any) => ({
       justifyContent: 'center',
     },
   },
+  paper: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
   form: {
-    paddingLeft: 100,
-    paddingRight: 100,
-    paddingBottom: 125,
+    width: '100%',
+    marginTop: theme.spacing(1),
     flexBasis: 700,
     [theme.breakpoints.down('sm')]: {
       paddingLeft: theme.spacing(2),
@@ -184,97 +193,74 @@ const SignIn = (props: any) => {
     formState.touched[field] && formState.errors[field] ? true : false;
 
   return (
-    <div className={classes.root}>
-      <Grid className={classes.grid} container>
-        <Grid className={classes.quoteContainer} item lg={5}>
-          <div className={classes.quote}>
-            <div className={classes.quoteInner}>
-              <Typography className={classes.quoteText} variant="h1">
-                Hella narwhal Cosby sweater McSweeney&apos;s, salvia kitsch
-                before they sold out High Life.
-              </Typography>
-              <div className={classes.person}>
-                <Typography className={classes.name} variant="body1">
-                  Takamaru Ayako
-                </Typography>
-                <Typography className={classes.bio} variant="body2">
-                  Manager at inVision
-                </Typography>
-              </div>
-            </div>
-          </div>
-        </Grid>
-        <Grid className={classes.content} item lg={7} xs={12}>
-          <div className={classes.content}>
-            <div className={classes.contentHeader}>
-              <IconButton onClick={handleBack}>
-                <ArrowBackIcon />
-              </IconButton>
-            </div>
-            <div className={classes.contentBody}>
-              <form className={classes.form} onSubmit={handleSignIn}>
-                <Typography className={classes.title} variant="h2">
-                  Sign in
-                </Typography>
-                <Typography
-                  align="center"
-                  className={classes.sugestion}
-                  color="textSecondary"
-                  variant="body1"
-                >
-                  or login with email address
-                </Typography>
-                <TextField
-                  className={classes.textField}
-                  error={hasError('email')}
-                  fullWidth
-                  helperText={
-                    hasError('email') ? formState.errors.email[0] : null
-                  }
-                  label="Email address"
-                  name="email"
-                  onChange={handleChange}
-                  type="text"
-                  value={formState.values.email || ''}
-                  variant="outlined"
-                />
-                <TextField
-                  className={classes.textField}
-                  error={hasError('password')}
-                  fullWidth
-                  helperText={
-                    hasError('password') ? formState.errors.password[0] : null
-                  }
-                  label="Password"
-                  name="password"
-                  onChange={handleChange}
-                  type="password"
-                  value={formState.values.password || ''}
-                  variant="outlined"
-                />
-                <Button
-                  className={classes.signInButton}
-                  color="primary"
-                  disabled={!formState.isValid}
-                  fullWidth
-                  size="large"
-                  type="submit"
-                  variant="contained"
-                >
-                  Sign in now
-                </Button>
-                <Typography color="textSecondary" variant="body1">
-                  Don&apos;t have an account?{' '}
-                  <Link component={RouterLink} to="/sign-up" variant="h6">
-                    Sign up
-                  </Link>
-                </Typography>
-              </form>
-            </div>
-          </div>
-        </Grid>
-      </Grid>
-    </div>
+    <Container component="main" maxWidth="xs" className={classes.root}>
+      <div className={classes.content}>
+        <div className={classes.contentHeader}>
+          <IconButton onClick={handleBack}>
+            <ArrowBackIcon />
+          </IconButton>
+        </div>
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h3">
+            Sign in
+          </Typography>
+          <form className={classes.form} onSubmit={handleSignIn}>
+            <Typography
+              align="center"
+              className={classes.sugestion}
+              color="textSecondary"
+              variant="body1"
+            ></Typography>
+            <TextField
+              className={classes.textField}
+              error={hasError('email')}
+              fullWidth
+              helperText={hasError('email') ? formState.errors.email[0] : null}
+              label="Email address"
+              name="email"
+              onChange={handleChange}
+              type="text"
+              value={formState.values.email || ''}
+              variant="outlined"
+            />
+            <TextField
+              className={classes.textField}
+              error={hasError('password')}
+              fullWidth
+              helperText={
+                hasError('password') ? formState.errors.password[0] : null
+              }
+              label="Password"
+              name="password"
+              onChange={handleChange}
+              type="password"
+              value={formState.values.password || ''}
+              variant="outlined"
+            />
+            <Button
+              className={classes.signInButton}
+              color="primary"
+              disabled={!formState.isValid}
+              fullWidth
+              size="large"
+              type="submit"
+              variant="contained"
+            >
+              Sign in now
+            </Button>
+            <Typography color="textSecondary" variant="body1">
+              Don&apos;t have an account?{' '}
+              <Link component={RouterLink} to="/sign-up" variant="h6">
+                Sign up
+              </Link>
+            </Typography>
+          </form>
+        </div>
+      </div>
+    </Container>
   );
 };
 
