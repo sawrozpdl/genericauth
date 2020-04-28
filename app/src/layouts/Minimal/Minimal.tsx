@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 
 import { Topbar } from './components';
 import { Footer } from '../Main/components';
+import LoadingScreen from '../../components/LoadingScreen';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
@@ -24,8 +25,10 @@ const Minimal = (props: any) => {
   return (
     <div className={classes.root}>
       <Topbar />
-      <main className={classes.content}>{children}</main>
-      <Footer />
+      <Suspense fallback={<LoadingScreen />}>
+        <main className={classes.content}>{children}</main>
+        <Footer />
+      </Suspense>
     </div>
   );
 };

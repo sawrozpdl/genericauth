@@ -9,9 +9,8 @@ import { Main as MainLayout, Minimal as MinimalLayout } from './layouts';
 
 import {
   Dashboard as DashboardView,
-  ProductList as ProductListView,
+  AppList as AppListView,
   UserList as UserListView,
-  Icons as IconsView,
   Account as AccountView,
   Settings as SettingsView,
   SignUp as SignUpView,
@@ -40,16 +39,10 @@ const BaseRouter: React.FC = (props) => {
         path="/users"
       />
       <RouteWithLayout
-        component={ProductListView}
+        component={AppListView}
         exact
-        layout={MainLayout}
-        path="/products"
-      />
-      <RouteWithLayout
-        component={IconsView}
-        exact
-        layout={MainLayout}
-        path="/icons"
+        layout={MinimalLayout}
+        path="/apps"
       />
       <RouteWithLayout
         component={AccountView}

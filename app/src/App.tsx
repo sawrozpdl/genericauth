@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CssBaseline } from '@material-ui/core';
 import { Router, Switch } from 'react-router-dom';
 import { ThemeProvider, makeStyles } from '@material-ui/styles';
@@ -18,7 +18,6 @@ import { createTheme } from './theme/create';
 import { createBrowserHistory } from 'history';
 import BaseRouter from './BaseRouter';
 import UserContext from './UserContext';
-import LoadingScreen from './components/LoadingScreen';
 import useSettings from './hooks/useSettings';
 
 const browserHistory = createBrowserHistory();
@@ -94,13 +93,11 @@ const App: React.FC = () => {
       <ThemeProvider theme={createTheme(settings)}>
         <Router history={browserHistory}>
           <CssBaseline />
-          <Suspense fallback={<LoadingScreen />}>
-            <Switch>
-              <UserContext.Provider value={user}>
-                <BaseRouter />
-              </UserContext.Provider>
-            </Switch>
-          </Suspense>
+          <Switch>
+            <UserContext.Provider value={user}>
+              <BaseRouter />
+            </UserContext.Provider>
+          </Switch>
         </Router>
       </ThemeProvider>
     </div>

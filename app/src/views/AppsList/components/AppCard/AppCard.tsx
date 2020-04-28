@@ -9,17 +9,27 @@ import {
   Typography,
   Grid,
   Divider,
+  Avatar,
 } from '@material-ui/core';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import GetAppIcon from '@material-ui/icons/GetApp';
+import { PublicRounded, LockRounded } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme: any) => ({
-  root: {},
+  root: {
+    cursor: 'pointer',
+    border: `2px solid rgba(0,0,0,0)`,
+    transition: '0.2s ease',
+    '&:hover': {
+      border: `2px solid ${theme.palette.divider}`,
+      transition: '0.2s ease',
+    },
+  },
   imageContainer: {
-    height: 64,
-    width: 64,
+    height: 50,
+    width: 50,
     margin: '0 auto',
-    border: `1px solid ${theme.palette.divider}`,
+    marginBottom: theme.spacing(2),
+    border: `2px solid ${theme.palette.divider}`,
     borderRadius: '5px',
     overflow: 'hidden',
     display: 'flex',
@@ -39,22 +49,30 @@ const useStyles = makeStyles((theme: any) => ({
   },
 }));
 
-const ProductCard = (props: any) => {
-  const { className, product, ...rest } = props;
+const AppCard = (props: any) => {
+  const { className, app, history, ...rest } = props;
 
-  const classes = useStyles();
+  const classes: any = useStyles();
+
+  const handleAppClick = (event: any) => {
+    history.push('/sign-in');
+  };
 
   return (
-    <Card {...rest} className={clsx(classes.root, className)}>
+    <Card
+      {...rest}
+      className={clsx(classes.root, className)}
+      onClick={!app.isPrivate && handleAppClick}
+    >
       <CardContent>
-        <div className={classes.imageContainer}>
-          <img alt="Product" className={classes.image} src={product.imageUrl} />
-        </div>
+        <Avatar className={classes.imageContainer} src={app.logoUrl}>
+          {app.name.charAt(0)}
+        </Avatar>
         <Typography align="center" gutterBottom variant="h4">
-          {product.title}
+          {app.title}
         </Typography>
         <Typography align="center" variant="body1">
-          {product.description}
+          {app.description}
         </Typography>
       </CardContent>
       <Divider />
@@ -63,13 +81,17 @@ const ProductCard = (props: any) => {
           <Grid className={classes.statsItem} item>
             <AccessTimeIcon className={classes.statsIcon} />
             <Typography display="inline" variant="body2">
-              Updated 2hr ago
+              Created: {app.createdAt}
             </Typography>
           </Grid>
           <Grid className={classes.statsItem} item>
-            <GetAppIcon className={classes.statsIcon} />
+            {app.isPrivate ? (
+              <LockRounded className={classes.statsIcon} />
+            ) : (
+              <PublicRounded className={classes.statsIcon} />
+            )}
             <Typography display="inline" variant="body2">
-              {product.totalDownloads} Downloads
+              {app.totalUsers} Users
             </Typography>
           </Grid>
         </Grid>
@@ -78,9 +100,9 @@ const ProductCard = (props: any) => {
   );
 };
 
-ProductCard.propTypes = {
+AppCard.propTypes = {
   className: PropTypes.string,
-  product: PropTypes.object.isRequired,
+  app: PropTypes.object.isRequired,
 };
 
-export default ProductCard;
+export default AppCard;

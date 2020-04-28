@@ -81,7 +81,7 @@ const Topbar = (props: any): any => {
           className={classes.link}
           component={RouterLink}
           color="inherit"
-          to="/products"
+          to="/apps"
           underline="none"
           variant="body2"
         >
@@ -98,7 +98,7 @@ const Topbar = (props: any): any => {
           Sign In
         </Link>
         <Divider className={classes.divider} />
-        <Button variant="contained" size="small">
+        <Button color="primary" variant="contained" size="small">
           <Link
             component={RouterLink}
             color="inherit"

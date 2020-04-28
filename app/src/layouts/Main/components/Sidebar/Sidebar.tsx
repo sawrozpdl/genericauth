@@ -11,6 +11,7 @@ import ImageIcon from '@material-ui/icons/Image';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import SettingsIcon from '@material-ui/icons/Settings';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
+import { AppsRounded } from '@material-ui/icons';
 
 import { Profile, SidebarNav } from './components';
 
@@ -54,24 +55,9 @@ const Sidebar = (props: any) => {
       icon: <PeopleIcon />,
     },
     {
-      title: 'Products',
-      href: '/products',
-      icon: <ShoppingBasketIcon />,
-    },
-    {
-      title: 'Authentication',
-      href: '/sign-in',
-      icon: <LockOpenIcon />,
-    },
-    {
-      title: 'Typography',
-      href: '/typography',
-      icon: <TextFieldsIcon />,
-    },
-    {
-      title: 'Icons',
-      href: '/icons',
-      icon: <ImageIcon />,
+      title: 'Apps',
+      href: '/apps',
+      icon: <AppsRounded />,
     },
     {
       title: 'Account',

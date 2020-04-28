@@ -17,42 +17,35 @@ const useStyles = makeStyles((theme: any) => ({
   spacer: {
     flexGrow: 1,
   },
-  importButton: {
-    marginRight: theme.spacing(1),
-  },
-  exportButton: {
-    marginRight: theme.spacing(1),
-  },
   searchInput: {
     marginRight: theme.spacing(1),
   },
 }));
 
-const ProductsToolbar = (props: any) => {
-  const { className, ...rest } = props;
+const AppsToolbar = (props: any) => {
+  const { className, history, ...rest } = props;
 
   const classes = useStyles();
 
   return (
     <div {...rest} className={clsx(classes.root, className)}>
       <div className={classes.row}>
-        <SearchInput
-          className={classes.searchInput}
-          placeholder="Search product"
-        />
+        <SearchInput className={classes.searchInput} placeholder="Search app" />
         <span className={classes.spacer} />
-        <Button className={classes.importButton}>Import</Button>
-        <Button className={classes.exportButton}>Export</Button>
-        <Button color="primary" variant="contained">
-          Add product
+        <Button
+          color="primary"
+          variant="contained"
+          onClick={() => history.push('/')}
+        >
+          Create App
         </Button>
       </div>
     </div>
   );
 };
 
-ProductsToolbar.propTypes = {
+AppsToolbar.propTypes = {
   className: PropTypes.string,
 };
 
-export default ProductsToolbar;
+export default AppsToolbar;

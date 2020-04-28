@@ -41,7 +41,6 @@ const UsersToolbar = (props: any) => {
           placeholder="Search user"
         />
         <span className={classes.spacer} />
-        <Button className={classes.importButton}>Import</Button>
         <Button className={classes.exportButton}>Export</Button>
         <Button color="primary" variant="contained">
           Add user
