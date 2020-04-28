@@ -5,13 +5,14 @@ import { makeStyles } from '@material-ui/styles';
 import { Topbar } from './components';
 import { Footer } from '../Main/components';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: any) => ({
   root: {
     paddingTop: 64,
     height: '100%',
   },
   content: {
     height: '100%',
+    backgroundColor: theme.palette.background.dark,
   },
 }));
 

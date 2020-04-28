@@ -1,6 +1,8 @@
-import React from 'react';
-
+import React, { useState, useEffect } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import validate from 'validate.js';
 import clsx from 'clsx';
+import toast from '../../utils/toast';
 import {
   Box,
   Container,
@@ -8,12 +10,22 @@ import {
   Typography,
   makeStyles,
 } from '@material-ui/core';
+import { Button, TextField, Link } from '@material-ui/core';
+
+const schema = {
+  email: {
+    presence: { allowEmpty: false, message: 'is required' },
+    email: true,
+    length: {
+      maximum: 64,
+    },
+  },
+};
 
 const Home: React.FC = (props: any) => {
-  const { className, ...rest } = props;
+  const { className, history, ...rest } = props;
   const useStyles = makeStyles((theme: any) => ({
     root: {
-      backgroundColor: theme.palette.background.dark,
       paddingTop: 200,
       minHeight: '100vh',
       paddingBottom: 200,
@@ -21,6 +33,28 @@ const Home: React.FC = (props: any) => {
         paddingTop: 60,
         paddingBottom: 60,
       },
+    },
+    paper: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    form: {
+      width: '70%',
+      marginTop: theme.spacing(1),
+      [theme.breakpoints.down('sm')]: {
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(2),
+      },
+    },
+    signUpButton: {
+      margin: theme.spacing(2, 0),
+    },
+    textField: {
+      marginTop: theme.spacing(2),
+    },
+    typoSend: {
+      marginTop: theme.spacing(1),
     },
     image: {
       perspectiveOrigin: 'left center',
@@ -44,6 +78,59 @@ const Home: React.FC = (props: any) => {
       },
     },
   }));
+
+  interface FormState {
+    isValid: boolean;
+    values: any;
+    touched: any;
+    errors: any;
+  }
+
+  const [formState, setFormState] = useState<FormState>({
+    isValid: false,
+    values: {},
+    touched: {},
+    errors: {},
+  });
+
+  useEffect(() => {
+    const errors = validate(formState.values, schema);
+
+    setFormState((formState: FormState) => ({
+      ...formState,
+      isValid: errors ? false : true,
+      errors: errors || {},
+    }));
+  }, [formState.values]);
+
+  const handleChange = (event: any) => {
+    event.persist();
+
+    setFormState((formState) => ({
+      ...formState,
+      values: {
+        ...formState.values,
+        [event.target.name]: event.target.value,
+      },
+      touched: {
+        ...formState.touched,
+        [event.target.name]: true,
+      },
+    }));
+  };
+
+  const handleAppCreate = (event: any) => {
+    event.preventDefault();
+    setFormState((formState: any) => {
+      return { errors: {}, touched: {}, values: {}, isValid: false };
+    });
+    toast.success(
+      'Link sent! Please check your email and follow the instructions'
+    );
+  };
+
+  const hasError = (field: any) =>
+    formState.touched[field] && formState.errors[field] ? true : false;
   const classes: any = useStyles();
 
   return (
@@ -103,11 +190,52 @@ const Home: React.FC = (props: any) => {
           </Grid>
           <Grid item xs={12} md={7}>
             <Box position="relative">
-              <div className={classes.shape}>
-                <img alt="Shapes" src="/static/home/shapes.svg" />
-              </div>
-              <div className={classes.image}>
-                <img alt="Presentation" src="/static/home/dark-light.png" />
+              <div className={classes.paper}>
+                <Typography component="h1" variant="h3">
+                  Create your own app here
+                </Typography>
+                <Typography
+                  component="h3"
+                  color="textSecondary"
+                  variant="body1"
+                  className={classes.typoSend}
+                >
+                  We will send you &apos;IAM&apos; link to the email and you are
+                  almost there!
+                </Typography>
+                <form className={classes.form} onSubmit={handleAppCreate}>
+                  <TextField
+                    className={classes.textField}
+                    error={hasError('email')}
+                    fullWidth
+                    helperText={
+                      hasError('email') ? formState.errors.email[0] : null
+                    }
+                    label="Email address"
+                    name="email"
+                    onChange={handleChange}
+                    type="text"
+                    value={formState.values.email || ''}
+                    variant="outlined"
+                  />
+                  <Button
+                    className={classes.signUpButton}
+                    color="primary"
+                    disabled={!formState.isValid}
+                    fullWidth
+                    size="large"
+                    type="submit"
+                    variant="contained"
+                  >
+                    Create App
+                  </Button>
+                  <Typography color="textSecondary" variant="body1">
+                    Already Have an app? Sign in{' '}
+                    <Link component={RouterLink} to="/sign-in" variant="h6">
+                      Here
+                    </Link>
+                  </Typography>
+                </form>
               </div>
             </Box>
           </Grid>

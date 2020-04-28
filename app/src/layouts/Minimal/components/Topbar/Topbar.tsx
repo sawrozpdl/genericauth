@@ -79,8 +79,8 @@ const Topbar = (props: any): any => {
         <Box flexGrow={1} />
         <Link
           className={classes.link}
-          color="textSecondary"
           component={RouterLink}
+          color="inherit"
           to="/products"
           underline="none"
           variant="body2"
@@ -89,30 +89,22 @@ const Topbar = (props: any): any => {
         </Link>
         <Link
           className={classes.link}
-          color="textSecondary"
           component={RouterLink}
+          color="inherit"
           to="/sign-in"
           underline="none"
           variant="body2"
         >
           Sign In
         </Link>
-        <Link
-          className={classes.link}
-          color="textSecondary"
-          component={RouterLink}
-          to="/sign-up"
-          underline="none"
-          variant="body2"
-        >
-          Register
-        </Link>
         <Divider className={classes.divider} />
-        <Button color="secondary" variant="contained" size="small">
+        <Button variant="contained" size="small">
           <Link
-            color="textPrimary"
             component={RouterLink}
+            color="inherit"
+            className={classes.link}
             to="/api-docs"
+            target="_blank"
             underline="none"
             variant="body2"
           >

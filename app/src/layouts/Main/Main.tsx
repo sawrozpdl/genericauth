@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme: any) => ({
   },
   content: {
     height: '100%',
+    backgroundColor: theme.palette.background.dark,
   },
 }));
 

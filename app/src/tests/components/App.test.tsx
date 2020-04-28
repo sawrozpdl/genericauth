@@ -4,6 +4,6 @@ import App from '../../App';
 
 test('renders learn react link', () => {
   const { getByText } = render(<App />);
-  const linkElement = getByText(/Copyright/i);
+  const linkElement = getByText(/Hamro Auth/i);
   expect(linkElement).toBeInTheDocument();
 });
