@@ -15,7 +15,9 @@ import {
   Settings as SettingsView,
   SignUp as SignUpView,
   SignIn as SignInView,
+  ForgotPassword as ForgotPasswordView,
   NotFound as NotFoundView,
+  CreateApp as CreateAppView,
 } from './views';
 const BaseRouter: React.FC = (props) => {
   return (
@@ -57,6 +59,12 @@ const BaseRouter: React.FC = (props) => {
         path="/settings"
       />
       <RouteWithLayout
+        component={CreateAppView}
+        exact
+        layout={MinimalLayout}
+        path="/create-app"
+      />
+      <RouteWithLayout
         component={SignUpView}
         exact
         layout={MinimalLayout}
@@ -67,6 +75,12 @@ const BaseRouter: React.FC = (props) => {
         exact
         layout={MinimalLayout}
         path="/sign-in"
+      />
+      <RouteWithLayout
+        component={ForgotPasswordView}
+        exact
+        layout={MinimalLayout}
+        path="/forgot-password"
       />
       <RouteWithLayout
         component={NotFoundView}

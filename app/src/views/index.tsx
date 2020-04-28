@@ -8,6 +8,8 @@ const Settings = React.lazy(() => import('./Settings'));
 const SignIn = React.lazy(() => import('./SignIn'));
 const SignUp = React.lazy(() => import('./SignUp'));
 const UserList = React.lazy(() => import('./UserList'));
+const CreateApp = React.lazy(() => import('./CreateApp'));
+const ForgotPassword = React.lazy(() => import('./ForgotPassword'));
 
 export {
   Account,
@@ -16,6 +18,8 @@ export {
   AppList,
   Settings,
   SignIn,
+  CreateApp,
   SignUp,
+  ForgotPassword,
   UserList,
 };

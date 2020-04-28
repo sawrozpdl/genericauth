@@ -78,7 +78,9 @@ const useStyles = makeStyles((theme: any) => ({
   contentHeader: {
     display: 'flex',
     alignItems: 'center',
-    paddingTop: theme.spacing(5),
+    paddingTop: theme.spacing(10),
+    marginLeft: theme.spacing(-2),
+    marginBottom: theme.spacing(-3),
     paddingRight: theme.spacing(2),
   },
   logoImage: {

@@ -1,51 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Link as RouterLink, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
-import Avatar from '@material-ui/core/Avatar';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/styles';
-import {
-  Button,
-  IconButton,
-  TextField,
-  Link,
-  FormHelperText,
-  Checkbox,
-  Typography,
-} from '@material-ui/core';
+import { Button, IconButton, TextField, Typography } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Container from '@material-ui/core/Container';
+import Avatar from '@material-ui/core/Avatar';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import toast from '../../utils/toast';
 
 const schema = {
-  firstName: {
-    presence: { allowEmpty: false, message: 'is required' },
-    length: {
-      maximum: 32,
-    },
-  },
-  lastName: {
-    presence: { allowEmpty: false, message: 'is required' },
-    length: {
-      maximum: 32,
-    },
-  },
-  email: {
-    presence: { allowEmpty: false, message: 'is required' },
-    email: true,
-    length: {
-      maximum: 64,
-    },
-  },
   password: {
     presence: { allowEmpty: false, message: 'is required' },
     length: {
       maximum: 128,
+      minimum: 8,
     },
   },
-  policy: {
+  rpassword: {
     presence: { allowEmpty: false, message: 'is required' },
-    checked: true,
   },
 };
 
@@ -96,7 +70,6 @@ const useStyles = makeStyles((theme: any) => ({
   contentHeader: {
     display: 'flex',
     alignItems: 'center',
-    marginRight: theme.spacing(2),
     paddingTop: theme.spacing(10),
     marginLeft: theme.spacing(-2),
     marginBottom: theme.spacing(-3),
@@ -134,23 +107,24 @@ const useStyles = makeStyles((theme: any) => ({
   title: {
     marginTop: theme.spacing(3),
   },
+  socialButtons: {
+    marginTop: theme.spacing(3),
+  },
+  socialIcon: {
+    marginRight: theme.spacing(1),
+  },
+  sugestion: {
+    marginTop: theme.spacing(2),
+  },
   textField: {
     marginTop: theme.spacing(2),
   },
-  policy: {
-    marginTop: theme.spacing(1),
-    display: 'flex',
-    alignItems: 'center',
-  },
-  policyCheckbox: {
-    marginLeft: '-14px',
-  },
-  signUpButton: {
+  signInButton: {
     margin: theme.spacing(2, 0),
   },
 }));
 
-const SignUp = (props: any) => {
+const SignIn = (props: any) => {
   const { history } = props;
 
   const classes: any = useStyles();
@@ -179,6 +153,10 @@ const SignUp = (props: any) => {
     }));
   }, [formState.values]);
 
+  const handleBack = () => {
+    history.goBack();
+  };
+
   const handleChange = (event: any) => {
     event.persist();
 
@@ -186,10 +164,7 @@ const SignUp = (props: any) => {
       ...formState,
       values: {
         ...formState.values,
-        [event.target.name]:
-          event.target.type === 'checkbox'
-            ? event.target.checked
-            : event.target.value,
+        [event.target.name]: event.target.value,
       },
       touched: {
         ...formState.touched,
@@ -198,13 +173,16 @@ const SignUp = (props: any) => {
     }));
   };
 
-  const handleBack = () => {
-    history.goBack();
-  };
-
-  const handleSignUp = (event: any) => {
+  const handlePasswordChange = (event: any) => {
     event.preventDefault();
-    history.push('/');
+    const { password, rpassword } = formState.values;
+
+    if (password !== rpassword) {
+      toast.warning('Passwords donot match, Please try again!');
+      return;
+    }
+    toast.success('Password change Successful! You may now log in');
+    history.push('/sign-in');
   };
 
   const hasError = (field: any) =>
@@ -223,49 +201,15 @@ const SignUp = (props: any) => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h3">
-            Register
+            Change Password
           </Typography>
-          <form className={classes.form} onSubmit={handleSignUp}>
-            <TextField
-              className={classes.textField}
-              error={hasError('firstName')}
-              fullWidth
-              helperText={
-                hasError('firstName') ? formState.errors.firstName[0] : null
-              }
-              label="First name"
-              name="firstName"
-              onChange={handleChange}
-              type="text"
-              value={formState.values.firstName || ''}
-              variant="outlined"
-            />
-            <TextField
-              className={classes.textField}
-              error={hasError('lastName')}
-              fullWidth
-              helperText={
-                hasError('lastName') ? formState.errors.lastName[0] : null
-              }
-              label="Last name"
-              name="lastName"
-              onChange={handleChange}
-              type="text"
-              value={formState.values.lastName || ''}
-              variant="outlined"
-            />
-            <TextField
-              className={classes.textField}
-              error={hasError('email')}
-              fullWidth
-              helperText={hasError('email') ? formState.errors.email[0] : null}
-              label="Email address"
-              name="email"
-              onChange={handleChange}
-              type="text"
-              value={formState.values.email || ''}
-              variant="outlined"
-            />
+          <form className={classes.form} onSubmit={handlePasswordChange}>
+            <Typography
+              align="center"
+              className={classes.sugestion}
+              color="textSecondary"
+              variant="body1"
+            ></Typography>
             <TextField
               className={classes.textField}
               error={hasError('password')}
@@ -273,45 +217,29 @@ const SignUp = (props: any) => {
               helperText={
                 hasError('password') ? formState.errors.password[0] : null
               }
-              label="Password"
+              label="New Password"
               name="password"
               onChange={handleChange}
               type="password"
               value={formState.values.password || ''}
               variant="outlined"
             />
-            <div className={classes.policy}>
-              <Checkbox
-                checked={formState.values.policy || false}
-                className={classes.policyCheckbox}
-                color="primary"
-                name="policy"
-                onChange={handleChange}
-              />
-              <Typography
-                className={classes.policyText}
-                color="textSecondary"
-                variant="body1"
-              >
-                I have read the{' '}
-                <Link
-                  color="primary"
-                  component={RouterLink}
-                  to="#"
-                  underline="always"
-                  variant="h6"
-                >
-                  Terms and Conditions
-                </Link>
-              </Typography>
-            </div>
-            {hasError('policy') && (
-              <FormHelperText error>
-                {formState.errors.policy[0]}
-              </FormHelperText>
-            )}
+            <TextField
+              className={classes.textField}
+              error={hasError('rpassword')}
+              fullWidth
+              helperText={
+                hasError('rpassword') ? formState.errors.rpassword[0] : null
+              }
+              label="Re type New Password"
+              name="rpassword"
+              onChange={handleChange}
+              type="password"
+              value={formState.values.rpassword || ''}
+              variant="outlined"
+            />
             <Button
-              className={classes.signUpButton}
+              className={classes.signInButton}
               color="primary"
               disabled={!formState.isValid}
               fullWidth
@@ -319,14 +247,8 @@ const SignUp = (props: any) => {
               type="submit"
               variant="contained"
             >
-              Sign up now
+              Change Password
             </Button>
-            <Typography color="textSecondary" variant="body1">
-              Have an account?{' '}
-              <Link component={RouterLink} to="/sign-in" variant="h6">
-                Sign in
-              </Link>
-            </Typography>
           </form>
         </div>
       </div>
@@ -334,8 +256,8 @@ const SignUp = (props: any) => {
   );
 };
 
-SignUp.propTypes = {
+SignIn.propTypes = {
   history: PropTypes.object,
 };
 
-export default withRouter(SignUp);
+export default withRouter(SignIn);
