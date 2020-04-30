@@ -32,6 +32,12 @@ server:
     whitelabel:
       enabled: false
 
+smtp:
+  port: 587
+  server: smtp-relay.sendinblue.com
+  username: sarojpaudyal53@gmail.com
+  password: Fk2MYfbSrHxs1BEU
+
 aws:
   region: ${AWS_REGION:null}
   bucketName: ${AWS_BUCKET_NAME:null}

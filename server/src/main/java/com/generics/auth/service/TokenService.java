@@ -41,8 +41,27 @@ public class TokenService {
         Claims claims = getClaims(token);
         if (new Date().compareTo(claims.getExpiration()) >= 0)
             throw new HttpException("Token has expired", HttpStatus.UNAUTHORIZED);
-        Integer userId = Integer.parseInt((String) claims.get("userId"));
-        return userService.getUserById(userId);
+        User user;
+        if (claims.containsKey("userId")) {
+            Integer userId = Integer.parseInt((String) claims.get("userId"));
+            user = userService.getUserById(userId);
+        }
+        else user = new User(null, claims.getSubject(), null);
+        return user;
+    }
+
+    public String createFor(String email) {
+        try {
+        Claims claims = Jwts.claims().setSubject(email);
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date())
+                .setExpiration(getExpiryDate(true))
+                .signWith(SignatureAlgorithm.HS256, secret).compact();
+        }
+        catch (Exception e) {
+            throw new HttpException("Failed to generate token", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     private Date getExpiryDate(boolean isAccessToken) {
