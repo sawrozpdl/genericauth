@@ -1,12 +1,12 @@
 package com.generics.auth.controller;
 
-import com.generics.auth.exception.HttpException;
 import com.generics.auth.model.*;
+import com.generics.auth.constant.Roles;
+import com.generics.auth.security.AuthenticationService;
 import com.generics.auth.service.*;
-import com.generics.auth.store.RequestFilter;
+import com.generics.auth.object.RequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +25,9 @@ public class AppController {
 
     @Autowired
     RoleService roleService;
+
+    @Autowired
+    LocationService locationService;
 
     @Autowired
     UserRoleService userRoleService;
@@ -47,15 +50,18 @@ public class AppController {
 
     @PostMapping("/api/apps")
     @Transactional
-    public AppRegistration createApp(@RequestParam String appName,
+    public AppRegistration createApp(HttpServletRequest request,
+                                     @RequestParam String appName,
                                      @RequestParam(defaultValue = "false") Boolean isPrivate,
                                      @RequestBody User user) {
+        User requestUser = authenticationService.authorizeRequest(request, null, null);
+        user.setEmail(requestUser.getEmail());
         App createdApp = appService.createApp(new App(appName, isPrivate));
         User adminUser = user;
         if (user.getId() == null)
-            adminUser = userService.createUser(user, appName);
-        Role admin = roleService.getOrCreateRole(new Role("ADMIN"));
-        userRoleService.createUserRole(new UserRole(createdApp, admin, adminUser));
+            adminUser = userService.createUser(user, createdApp);
+        Role adminRole = roleService.getOrCreateRole(new Role(Roles.ADMIN.name()));
+        userRoleService.createUserRole(new UserRole(createdApp, adminRole, adminUser));
         return appRegistrationService.registerUser(createdApp, adminUser);
     }
 
@@ -78,6 +84,11 @@ public class AppController {
     @PostMapping("/api/apps/{appName}/logout")
     public Object logout(@PathVariable String appName, HttpServletRequest request, HttpServletResponse response) {
        return authenticationService.logoutRequest(request, response, appName);
+    }
+
+    @PutMapping("/api/apps/{appName}/location")
+    public Location updateAppLocation(@PathVariable String  appName, @RequestBody Location location) {
+        return locationService.updateLocation(location.getId(), location);
     }
 
     @DeleteMapping(value = "/api/apps/{appName}")

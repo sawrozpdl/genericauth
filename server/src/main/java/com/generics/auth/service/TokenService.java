@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class TokenService {
@@ -22,7 +23,7 @@ public class TokenService {
     @Autowired
     private UserService userService;
 
-    private final Integer ACCESS_TOKEN_EXPIRATION = 60000;
+    private final Integer ACCESS_TOKEN_EXPIRATION = 600000;
     private final Integer REFRESH_TOKEN_EXPIRATION = 864000000;
 
     public Claims getClaims(String token) {
@@ -41,8 +42,23 @@ public class TokenService {
         Claims claims = getClaims(token);
         if (new Date().compareTo(claims.getExpiration()) >= 0)
             throw new HttpException("Token has expired", HttpStatus.UNAUTHORIZED);
-        Integer userId = Integer.parseInt((String) claims.get("userId"));
-        return userService.getUserById(userId);
+        String email = claims.getSubject();
+        Optional<User> user = userService.getUserByEmail(email);
+        return user.orElseGet(() -> new User(null, email, null));
+    }
+
+    public String createFor(String email) {
+        try {
+        Claims claims = Jwts.claims().setSubject(email);
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date())
+                .setExpiration(getExpiryDate(true))
+                .signWith(SignatureAlgorithm.HS256, secret).compact();
+        }
+        catch (Exception e) {
+            throw new HttpException("Failed to generate token", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     private Date getExpiryDate(boolean isAccessToken) {

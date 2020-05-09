@@ -19,6 +19,8 @@ public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecifi
 
     boolean existsByEmail(String email);
 
+    Optional<User> findByEmail(String email);
+
     @Query(value = "SELECT us.* from \"user\" as us " +
             "inner join app_registration as ar on us.id = ar.user_id " +
             "inner join app on app.id = ar.app_id " +

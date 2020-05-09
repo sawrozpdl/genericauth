@@ -1,6 +1,7 @@
-import React, { Fragment, Suspense, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CssBaseline } from '@material-ui/core';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { Router, Switch } from 'react-router-dom';
+import { ThemeProvider, makeStyles } from '@material-ui/styles';
 
 import * as storage from './utils/storage';
 import httpConstants from './constants/http';
@@ -8,12 +9,18 @@ import httpConstants from './constants/http';
 import { handleError } from './utils/error';
 
 import { authorizeUser } from './services/auth';
+import validate from 'validate.js';
+import roles from './constants/roles';
+import validators from './common/validators';
 
-import routes from './constants/routes';
+import { createTheme } from './theme/create';
 
-import Main from './components/main';
+import { createBrowserHistory } from 'history';
+import BaseRouter from './BaseRouter';
+import UserContext from './UserContext';
+import useSettings from './hooks/useSettings';
 
-import useStyles from './styles/useStyles';
+const browserHistory = createBrowserHistory();
 
 const App: React.FC = () => {
   const [user, setUser] = useState(null);
@@ -30,29 +37,69 @@ const App: React.FC = () => {
     return null;
   };
 
+  const getGuestUser = () => {
+    return {
+      id: -1,
+      firstName: 'Anon',
+      roles: [roles.GUEST],
+    };
+  };
+
   useEffect(() => {
     const userResponse = getActiveUser();
-    const { data } = userResponse;
-
+    let { data } = userResponse;
+    data = data ? data : getGuestUser();
     setUser(data);
   }, []);
 
+  const useStyles = makeStyles((theme: any) => ({
+    root: {
+      display: 'flex',
+      flexDirection: 'column',
+      minHeight: '100vh',
+    },
+    '@global': {
+      '*': {
+        boxSizing: 'border-box',
+        margin: 0,
+        padding: 0,
+      },
+      html: {
+        '-webkit-font-smoothing': 'antialiased',
+        '-moz-osx-font-smoothing': 'grayscale',
+        height: '100%',
+        width: '100%',
+      },
+      body: {
+        height: '100%',
+        width: '100%',
+      },
+      '#root': {
+        height: '100%',
+        width: '100%',
+      },
+    },
+  }));
+
   const classes = useStyles();
 
+  validate.validators = {
+    ...validate.validators,
+    ...validators,
+  };
+  const { settings } = useSettings();
   return (
     <div className={classes.root}>
-      <BrowserRouter>
-        <CssBaseline />
-        <Suspense fallback={<Fragment />}>
+      <ThemeProvider theme={createTheme(settings)}>
+        <Router history={browserHistory}>
+          <CssBaseline />
           <Switch>
-            <Route
-              exact
-              path={routes.HOME}
-              component={(): any => <Main user={user} />}
-            />
+            <UserContext.Provider value={user}>
+              <BaseRouter />
+            </UserContext.Provider>
           </Switch>
-        </Suspense>
-      </BrowserRouter>
+        </Router>
+      </ThemeProvider>
     </div>
   );
 };

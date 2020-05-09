@@ -1,7 +1,7 @@
 package com.generics.auth.service;
 
-import com.amazonaws.services.apigateway.model.Op;
-import com.generics.auth.store.RequestFilter;
+import com.generics.auth.model.App;
+import com.generics.auth.object.RequestFilter;
 import com.generics.auth.exception.HttpException;
 import com.generics.auth.model.User;
 import com.generics.auth.repository.UserRepository;
@@ -13,7 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
 import java.util.Optional;
 
 @Service
@@ -30,7 +29,8 @@ public class UserService {
         return userRepository.findAll(PageRequest.of(filter.page, filter.size));
     }
 
-    public User createUser(User user, String appName) {
+    public User createUser(User user, App app) {
+        String appName = app.getName();
         String[] userExists =  userRepository.existsByEmail(user.getEmail()) ?
                 new String[]{"email ", user.getEmail()} : null;
 
@@ -72,6 +72,11 @@ public class UserService {
         throw new HttpException(Error.missing("User", "id", id), HttpStatus.NOT_FOUND);
     }
 
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+
     public User updateUserByUsernameForApp(String username, String appName, User user) {
         User oldUser  = getUserByUsernameForApp(username, appName);
 
@@ -92,5 +97,10 @@ public class UserService {
 
     public Page<User> getAllUsersInApp(String appName, RequestFilter filter) {
         return userRepository.findUsersByAppName(appName, PageRequest.of(filter.page, filter.size));
+    }
+
+    public void changePassword(User user, String password) {
+        user.setPassword(Gen.getMD5From(password));
+        userRepository.save(user);
     }
 }

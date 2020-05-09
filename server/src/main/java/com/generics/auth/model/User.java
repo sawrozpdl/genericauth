@@ -1,7 +1,7 @@
 package com.generics.auth.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.generics.auth.store.Gender;
+import com.generics.auth.constant.Gender;
 
 import java.util.Set;
 import java.util.Date;
@@ -52,7 +52,7 @@ public class User extends GenericModel {
     private Set<AppRegistration> registrations = new HashSet<>();
 
     @OneToMany(mappedBy = "user", fetch=FetchType.LAZY)
-    @JsonIgnoreProperties({"app", "user"})
+    @JsonIgnoreProperties({"user", "app", "role"})
     private Set<UserRole> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "user", fetch=FetchType.LAZY)
@@ -64,6 +64,13 @@ public class User extends GenericModel {
         this.username = username;
         this.email = email;
         this.password = password;
+    }
+
+    @PrePersist
+    @Override
+    protected void onCreate() {
+        super.onCreate();
+        this.location = new Location();
     }
 
     public String getUsername() {

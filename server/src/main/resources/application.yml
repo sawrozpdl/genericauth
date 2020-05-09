@@ -6,17 +6,23 @@ spring:
     username: ${DB_USERNAME:user}
     password: ${DB_PASSWORD:pass}
     driverClassName: org.postgresql.Driver
-  tomcat:
-    max-wait: 20000
-    max-active: 50
-    max-idle: 20
-    min-idle: 15
+    maxActive: 10
+    maxIdle: 5
+    minIdle: 2
+    initialSize: 5
+    removeAbandoned: true
+    testOnBorrow: true
+    validationQuery: SELECT 1
+    validationInterval: 30000
+    testWhileIdle: true
+    timeBetweenEvictionRunsMillis: 60000
+    removeAbandonedTimeout: 60
   jackson:
     serialization:
       fail-on-empty-beans: false
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -31,6 +37,12 @@ server:
   error:
     whitelabel:
       enabled: false
+
+smtp:
+  port: 587
+  server: smtp-relay.sendinblue.com
+  username: sarojpaudyal53@gmail.com
+  password: Fk2MYfbSrHxs1BEU
 
 aws:
   region: ${AWS_REGION:null}

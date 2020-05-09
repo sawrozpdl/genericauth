@@ -15,7 +15,7 @@ public class AppRegistration implements Serializable {
 
     @Id
     @GenericGenerator(
-            name = "genericSequenceGenerator",
+            name = "registrationSequenceGenerator",
             strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
             parameters = {
                     @Parameter(name = "sequence_name", value = "REGISTRATION_SEQUENCE"),
@@ -23,7 +23,7 @@ public class AppRegistration implements Serializable {
                     @Parameter(name = "increment_size", value = "1")
             }
     )
-    @GeneratedValue(generator = "genericSequenceGenerator")
+    @GeneratedValue(generator = "registrationSequenceGenerator")
     private Integer id;
 
     @ManyToOne(fetch=FetchType.LAZY)

@@ -3,7 +3,7 @@ package com.generics.auth.service;
 import com.generics.auth.exception.HttpException;
 import com.generics.auth.model.Role;
 import com.generics.auth.repository.RoleRepository;
-import com.generics.auth.store.RequestFilter;
+import com.generics.auth.object.RequestFilter;
 import com.generics.auth.utils.Error;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -59,7 +59,6 @@ public class RoleService {
 
     public Role getOrCreateRole(Role role) {
         Optional<Role> existingRole = roleRepository.findByName(role.getName());
-
-        return existingRole.orElse(roleRepository.save(role));
+        return existingRole.orElseGet(() -> roleRepository.save(role));
     }
 }

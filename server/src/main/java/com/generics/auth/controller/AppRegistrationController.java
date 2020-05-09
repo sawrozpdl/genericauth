@@ -2,7 +2,7 @@ package com.generics.auth.controller;
 
 import com.generics.auth.model.AppRegistration;
 import com.generics.auth.service.AppRegistrationService;
-import com.generics.auth.store.RequestFilter;
+import com.generics.auth.object.RequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;

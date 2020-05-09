@@ -1,7 +1,5 @@
 package com.generics.auth.model;
 
-import org.omg.CORBA.PUBLIC_MEMBER;
-
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
