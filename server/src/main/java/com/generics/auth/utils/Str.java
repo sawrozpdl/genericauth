@@ -26,4 +26,8 @@ public class Str {
         }
         return  raw;
     }
+
+    public static <T> String interpolate(String original, String from, T to) {
+        return original.replaceAll(":" + from, String.valueOf(to));
+    }
 }

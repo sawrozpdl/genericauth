@@ -16,12 +16,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
 
-//@Configuration
-//@EnableSwagger2
+@Configuration
+@EnableSwagger2
 public class SwaggerConfiguration {
 
 
-//    @Bean
+    @Bean
     public Docket authApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()

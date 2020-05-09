@@ -5,7 +5,7 @@ import com.generics.auth.model.App;
 import com.generics.auth.model.AppRegistration;
 import com.generics.auth.model.User;
 import com.generics.auth.repository.AppRegistrationRepository;
-import com.generics.auth.store.RequestFilter;
+import com.generics.auth.object.RequestFilter;
 import com.generics.auth.utils.Error;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,7 +33,7 @@ public class AppRegistrationService {
         throw new HttpException(Error.missing("App Registration", "id", id), HttpStatus.NOT_FOUND);
     }
 
-    public AppRegistration geAppRegistrationByAppNameAndUsername(String username, String appName) {
+    public AppRegistration getAppRegistrationByAppNameAndUsername(String username, String appName) {
         Optional<AppRegistration> appRegistration = appRegistrationRepository.findByUserNameAndAppName(username, appName);
         if (appRegistration.isPresent())
             return appRegistration.get();

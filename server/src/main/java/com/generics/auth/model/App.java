@@ -44,10 +44,11 @@ public class App extends GenericModel {
     private Set<AppRegistration> registrations = new HashSet<>();
 
     @OneToMany(mappedBy = "app", fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({"app", "user"})
+    @JsonIgnoreProperties({"user", "app", "role"})
     private Set<UserRole> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "app")
+    @JsonIgnoreProperties({"app"})
     private Set<Event> events = new HashSet<>();
 
     public App() {}

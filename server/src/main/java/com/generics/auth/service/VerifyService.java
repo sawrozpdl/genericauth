@@ -23,7 +23,7 @@ public class VerifyService {
     @Autowired
     ResourceLoader resourceLoader;
 
-    public Object verifyEmail(String email, String redirect, HttpServletRequest request) {
+    public Object verifyEmail(String email, String redirect, String action, HttpServletRequest request) {
         String token = tokenService.createFor(email);
         String[] reqInfo = Http.getInfo(request);
         try {
@@ -31,14 +31,14 @@ public class VerifyService {
             Resource resource = resourceLoader.getResource("classpath:templates/verify.html");
             String body = Str.asString(resource);
 
-            String[] args = {"action_name::Verify Email",
+            String[] args = {"action_name::" + action,
                     "action_url::" + redirectUrl,
                     "browser_name::" + reqInfo[1],
                     "operating_system::" + reqInfo[0]};
 
             body = Str.format(body, args);
 
-            mailService.send(email, "Email Verification", body);
+            mailService.send(email, action, body);
             return new Object() {
                 public final String message = "Mail Sent!";
                 public final boolean ok = true;

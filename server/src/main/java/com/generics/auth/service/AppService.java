@@ -4,7 +4,7 @@ import com.generics.auth.exception.HttpException;
 import com.generics.auth.model.App;
 import com.generics.auth.model.Credential;
 import com.generics.auth.repository.AppRepository;
-import com.generics.auth.store.RequestFilter;
+import com.generics.auth.object.RequestFilter;
 import com.generics.auth.utils.Error;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

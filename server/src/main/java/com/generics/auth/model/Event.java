@@ -1,5 +1,6 @@
 package com.generics.auth.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -13,7 +14,7 @@ public class Event implements Serializable {
 
     @Id
     @GenericGenerator(
-            name = "genericSequenceGenerator",
+            name = "eventSequenceGenerator",
             strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
             parameters = {
                     @Parameter(name = "sequence_name", value = "EVENT_SEQUENCE"),
@@ -21,7 +22,7 @@ public class Event implements Serializable {
                     @Parameter(name = "increment_size", value = "1")
             }
     )
-    @GeneratedValue(generator = "genericSequenceGenerator")
+    @GeneratedValue(generator = "eventSequenceGenerator")
     private Integer id;
 
     @Column(nullable = false)
@@ -40,7 +41,32 @@ public class Event implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "app_id")
+    @JsonIgnoreProperties({"events"})
     private App app;
+
+    public String getProducer() {
+        return producer;
+    }
+
+    public void setProducer(String producer) {
+        this.producer = producer;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public String getConsumer() {
+        return consumer;
+    }
+
+    public void setConsumer(String consumer) {
+        this.consumer = consumer;
+    }
 
     @PrePersist
     protected void onCreate() {
@@ -49,10 +75,11 @@ public class Event implements Serializable {
 
     public Event() {}
 
-    public Event(String producer, String action, String consumer) {
+    public Event(String producer, String action, String consumer, App app) {
         this.producer = producer;
         this.action = action;
         this.consumer = consumer;
+        this.app = app;
     }
 
     public Integer getId() {

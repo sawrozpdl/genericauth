@@ -1,6 +1,7 @@
 package com.generics.auth.configuration;
 
 import com.generics.auth.model.*;
+import com.generics.auth.constant.Roles;
 import com.generics.auth.service.*;
 import com.generics.auth.utils.Gen;
 import org.slf4j.Logger;
@@ -42,8 +43,8 @@ public class PostInit implements ApplicationRunner {
     @Transactional
     public void seedDB() {
         try {
-            setRoles();
-            setSuperAdmin();
+//            setRoles();
+//            setSuperAdmin();
         } catch (Exception exc) {
             logger.info("DB Seed failed, Exception: ", exc);
         }
@@ -55,13 +56,13 @@ public class PostInit implements ApplicationRunner {
     Role superAdmin, admin, moderator, user, guest;
 
     private void setRoles() {
-        Role superRole = new Role("SUPER_ADMIN");
+        Role superRole = new Role(Roles.SUPER_ADMIN.name());
         superRole.setActive(false);
         superAdmin = roleService.getOrCreateRole(superRole);
-        admin = roleService.getOrCreateRole(new Role("ADMIN"));
-        moderator = roleService.getOrCreateRole(new Role("MODERATOR"));
-        user = roleService.getOrCreateRole(new Role("USER"));
-        guest = roleService.getOrCreateRole(new Role("GUEST"));
+        admin = roleService.getOrCreateRole(new Role(Roles.ADMIN.name()));
+        moderator = roleService.getOrCreateRole(new Role(Roles.MODERATOR.name()));
+        user = roleService.getOrCreateRole(new Role(Roles.USER.name()));
+        guest = roleService.getOrCreateRole(new Role(Roles.GUEST.name()));
     }
 
     private void setSuperAdmin() {
@@ -70,7 +71,7 @@ public class PostInit implements ApplicationRunner {
                 new User("supersauce",
                         "sarojpaudyal53@gmail.com",
                         Gen.getMD5From("wabalabadubdub")),
-                godApp.getName());
+                godApp);
         reg = appRegistrationService.registerUser(godApp, godAdmin);
 
         userRoleService.createUserRole(new UserRole(godApp, superAdmin, godAdmin));

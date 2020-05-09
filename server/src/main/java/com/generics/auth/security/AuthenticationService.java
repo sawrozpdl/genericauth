@@ -1,7 +1,11 @@
-package com.generics.auth.service;
+package com.generics.auth.security;
 
 import com.generics.auth.exception.HttpException;
 import com.generics.auth.model.User;
+import com.generics.auth.service.AppService;
+import com.generics.auth.service.TokenService;
+import com.generics.auth.service.UserRoleService;
+import com.generics.auth.service.UserService;
 import com.generics.auth.utils.Gen;
 import com.generics.auth.utils.Http;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +15,8 @@ import com.generics.auth.utils.Error;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class AuthenticationService {
@@ -22,7 +28,39 @@ public class AuthenticationService {
     AppService appService;
 
     @Autowired
+    UserRoleService userRoleService;
+
+    @Autowired
     TokenService tokenService;
+
+    public User authorizeRequest(HttpServletRequest request, String appName, String[] roles) {
+        String header = request.getHeader("Authorization");
+
+        String error = "Not authorized";
+
+        if (header == null) error = "No Authorization credentials provided";
+        else {
+            String[] str = header.split(" ");
+            String tokenTag = str[0];
+            String token = str[1];
+
+            if (tokenTag == null || !tokenTag.equals("Bearer")) error = "Invalid authorization schema";
+            else {
+                error = "Invalid token or expired";
+                User user = tokenService.parseToken(token);
+                if (appName == null && roles == null) return  user;
+                if (user != null) {
+                    List<String> userRoles = userRoleService.getUserRolesForApp(user.getUsername(), appName);
+                    if (userRoles.containsAll(Arrays.asList(roles))) {
+                        return user;
+                    }
+                    error = "Access Denied";
+                }
+            }
+        }
+
+        throw new HttpException(error, HttpStatus.UNAUTHORIZED);
+    }
 
     public User authenticateRequest(HttpServletRequest request, HttpServletResponse response, String appName) {
         if (!appService.appExists(appName))

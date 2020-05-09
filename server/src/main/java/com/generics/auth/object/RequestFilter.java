@@ -1,4 +1,4 @@
-package com.generics.auth.store;
+package com.generics.auth.object;
 
 public class RequestFilter {
 

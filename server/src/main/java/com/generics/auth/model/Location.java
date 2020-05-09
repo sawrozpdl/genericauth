@@ -13,7 +13,6 @@ public class Location  extends  GenericModel {
 
     private String stateProvince;
 
-    @Column(nullable = false)
     private String country;
 
     public Location() {}
