@@ -11,6 +11,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import { Button, TextField, Link } from '@material-ui/core';
+import routes from '../../constants/routes';
 
 const schema = {
   email: {
@@ -152,10 +153,10 @@ const Home: React.FC = (props: any) => {
               </Typography>
               <Box mt={3}>
                 <Typography variant="body1" color="textSecondary">
-                  A professional kit that comes with ready-to-use Material-UI©
-                  components developed with one common goal in mind, help you
-                  build faster &amp; beautiful applications. Each component is
-                  fully customizable, responsive and easy to integrate.
+                  A generic authentication service which provides API interfaces
+                  which can be intergrated easily to almost every application
+                  &amp; is easy to use &amp; also provides generic login/signup
+                  forms, generic mail system &amp; the list goes on
                 </Typography>
               </Box>
               <Box mt={3}>
@@ -231,7 +232,7 @@ const Home: React.FC = (props: any) => {
                   </Button>
                   <Typography color="textSecondary" variant="body1">
                     Already Have an app? Sign in{' '}
-                    <Link component={RouterLink} to="/sign-in" variant="h6">
+                    <Link component={RouterLink} to={routes.APPS} variant="h6">
                       Here
                     </Link>
                   </Typography>

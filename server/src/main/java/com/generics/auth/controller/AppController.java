@@ -1,10 +1,13 @@
 package com.generics.auth.controller;
 
+import com.generics.auth.constant.Events;
+import com.generics.auth.constant.Models;
 import com.generics.auth.model.*;
 import com.generics.auth.constant.Roles;
 import com.generics.auth.security.AuthenticationService;
 import com.generics.auth.service.*;
 import com.generics.auth.object.RequestFilter;
+import com.generics.auth.utils.Str;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import java.lang.reflect.Array;
 
 
 @RestController
@@ -25,6 +29,9 @@ public class AppController {
 
     @Autowired
     RoleService roleService;
+
+    @Autowired
+    EventService eventService;
 
     @Autowired
     LocationService locationService;
@@ -54,7 +61,7 @@ public class AppController {
                                      @RequestParam String appName,
                                      @RequestParam(defaultValue = "false") Boolean isPrivate,
                                      @RequestBody User user) {
-        User requestUser = authenticationService.authorizeRequest(request, null, null);
+        User requestUser = authenticationService.authorizeRequest(request, null, null, null);
         user.setEmail(requestUser.getEmail());
         App createdApp = appService.createApp(new App(appName, isPrivate));
         User adminUser = user;
@@ -65,20 +72,25 @@ public class AppController {
         return appRegistrationService.registerUser(createdApp, adminUser);
     }
 
-
     @GetMapping("/api/apps/{appName}")
     public App getAppByName(@PathVariable String appName) {
         return appService.geAppByName(appName);
     }
 
     @PutMapping("/api/apps/{appName}")
-    public App updateAppByName(@PathVariable String appName, @RequestBody App app) {
-        return appService.updateApp(appName, app);
+    public App updateAppByName(HttpServletRequest request,@PathVariable String appName, @RequestBody App app) {
+        User requestUser = authenticationService.authorizeRequest(request, appName,  new String[] {Roles.ADMIN.name()}, null);
+        App updatedApp =  appService.updateApp(appName, app);
+        eventService.track(Str.interpolate(Models.USER, "id", requestUser.getId()),
+                Events.UPDATED,
+                Str.interpolate(Models.APP, "id", updatedApp.getId()),
+                updatedApp);
+        return updatedApp;
     }
 
-    @PostMapping("/api/apps/{appName}/authorize")
-    public User login(@PathVariable String appName, HttpServletRequest request, HttpServletResponse response) {
-        return authenticationService.authenticateRequest(request, response, appName);
+    @PostMapping("/api/apps/{appName}/login")
+    public Object login(@PathVariable String appName, HttpServletRequest request, HttpServletResponse response) {
+        return authenticationService.loginRequest(request, appName);
     }
 
     @PostMapping("/api/apps/{appName}/logout")

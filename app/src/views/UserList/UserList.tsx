@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
+import UserContext from '../../context/UserContext';
 
 import { UsersToolbar, UsersTable } from './components';
 import mockData from './data';
@@ -18,6 +19,9 @@ const useStyles = makeStyles((theme: any) => ({
 const UserList = () => {
   const classes = useStyles();
 
+  const user = useContext(UserContext);
+
+  console.log('you are : ', user);
   const [users] = useState(mockData);
 
   return (

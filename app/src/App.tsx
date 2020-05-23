@@ -3,11 +3,6 @@ import { CssBaseline } from '@material-ui/core';
 import { Router, Switch } from 'react-router-dom';
 import { ThemeProvider, makeStyles } from '@material-ui/styles';
 
-import * as storage from './utils/storage';
-import httpConstants from './constants/http';
-
-import { handleError } from './utils/error';
-
 import { authorizeUser } from './services/auth';
 import validate from 'validate.js';
 import roles from './constants/roles';
@@ -17,39 +12,38 @@ import { createTheme } from './theme/create';
 
 import { createBrowserHistory } from 'history';
 import BaseRouter from './BaseRouter';
-import UserContext from './UserContext';
+import UserContext from './context/UserContext';
 import useSettings from './hooks/useSettings';
+import toast from './utils/toast';
 
 const browserHistory = createBrowserHistory();
 
 const App: React.FC = () => {
   const [user, setUser] = useState(null);
 
-  const getActiveUser = (): any => {
-    try {
-      const accessToken = storage.get(httpConstants.ACCESS_TOKEN);
-
-      return authorizeUser(accessToken);
-    } catch (err) {
-      handleError(err);
-    }
-
-    return null;
-  };
-
-  const getGuestUser = () => {
+  const getGuestUser = (): any => {
     return {
       id: -1,
       firstName: 'Anon',
-      roles: [roles.GUEST],
+      activeRoles: [roles.GUEST],
     };
   };
 
+  const fetchUser = async (): Promise<any> => {
+    let user = getGuestUser();
+    try {
+      const activeUser = await authorizeUser();
+      if (activeUser) {
+        user = activeUser;
+      }
+    } catch (err) {
+      toast.info('Login/Signup via apps section!');
+    }
+    setUser(user);
+  };
+
   useEffect(() => {
-    const userResponse = getActiveUser();
-    let { data } = userResponse;
-    data = data ? data : getGuestUser();
-    setUser(data);
+    fetchUser();
   }, []);
 
   const useStyles = makeStyles((theme: any) => ({

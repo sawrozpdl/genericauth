@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import { Paper, Input } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
@@ -17,6 +18,11 @@ const useStyles = makeStyles((theme: any) => ({
     marginRight: theme.spacing(1),
     color: theme.palette.text.secondary,
   },
+  search: {
+    marginLeft: theme.spacing(1),
+    color: theme.palette.text.secondary,
+    cursor: 'pointer',
+  },
   input: {
     flexGrow: 1,
     fontSize: '14px',
@@ -26,9 +32,11 @@ const useStyles = makeStyles((theme: any) => ({
 }));
 
 const SearchInput = (props: any) => {
-  const { className, onChange, style, placeholder, ...rest } = props;
+  const { className, onChange, onSearch, style, placeholder, ...rest } = props;
 
   const classes = useStyles();
+
+  const [value, setValue] = useState('');
 
   return (
     <Paper {...rest} className={clsx(classes.root, className)} style={style}>
@@ -38,7 +46,12 @@ const SearchInput = (props: any) => {
         className={classes.input}
         placeholder={placeholder}
         disableUnderline
-        onChange={onChange}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+      <ArrowForwardIcon
+        className={classes.search}
+        onClick={() => onSearch(value)}
       />
     </Paper>
   );
@@ -47,6 +60,7 @@ const SearchInput = (props: any) => {
 SearchInput.propTypes = {
   className: PropTypes.string,
   onChange: PropTypes.func,
+  onSearch: PropTypes.func,
   style: PropTypes.object,
   placeholder: PropTypes.string,
 };

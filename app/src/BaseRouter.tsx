@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Switch, Redirect } from 'react-router-dom';
 import routes from './constants/routes';
 
@@ -19,76 +19,91 @@ import {
   NotFound as NotFoundView,
   CreateApp as CreateAppView,
 } from './views';
-const BaseRouter: React.FC = (props) => {
+import UserContext from './context/UserContext';
+import roles from './constants/roles';
+
+const BaseRouter: React.FC = () => {
+  const user: any = useContext(UserContext);
   return (
     <Switch>
       <RouteWithLayout
         layout={MinimalLayout}
+        allow={[roles.GUEST]}
         exact
         path={routes.HOME}
-        component={(): any => <Home />}
+        component={Home}
       />
       <RouteWithLayout
         component={DashboardView}
         exact
+        allow={[roles.ADMIN]}
         layout={MainLayout}
-        path="/dashboard"
+        path={routes.DASHBOARD}
       />
       <RouteWithLayout
         component={UserListView}
         exact
+        allow={[roles.USER]}
         layout={MainLayout}
-        path="/users"
+        path={routes.USERS}
       />
       <RouteWithLayout
         component={AppListView}
         exact
-        layout={MinimalLayout}
-        path="/apps"
+        allow={[]}
+        layout={user && user.email ? MainLayout : MinimalLayout}
+        path={routes.APPS}
       />
       <RouteWithLayout
         component={AccountView}
         exact
+        allow={[roles.USER]}
         layout={MainLayout}
-        path="/account"
+        path={routes.USER_ACCOUNT}
       />
       <RouteWithLayout
         component={SettingsView}
         exact
+        allow={[roles.USER]}
         layout={MainLayout}
-        path="/settings"
+        path={routes.USER_SETTINGS}
       />
       <RouteWithLayout
         component={CreateAppView}
         exact
+        allow={[roles.USER]}
         layout={MinimalLayout}
-        path="/create-app"
+        path={routes.CREATE_APP}
       />
       <RouteWithLayout
         component={SignUpView}
         exact
+        allow={[roles.GUEST]}
         layout={MinimalLayout}
-        path="/sign-up"
+        path={routes.REGISTER}
       />
       <RouteWithLayout
         component={SignInView}
         exact
+        allow={[roles.GUEST]}
         layout={MinimalLayout}
-        path="/sign-in"
+        path={routes.LOGIN}
       />
       <RouteWithLayout
         component={ForgotPasswordView}
         exact
+        allow={[roles.GUEST]}
         layout={MinimalLayout}
-        path="/forgot-password"
+        path={routes.FORGOT_PASSWORD}
       />
       <RouteWithLayout
         component={NotFoundView}
         exact
+        allow={[]}
         layout={MinimalLayout}
-        path="/not-found"
+        path={routes.NOT_FOUND}
       />
-      <Redirect to="/not-found" />
+      <Redirect to={routes.NOT_FOUND} />
     </Switch>
   );
 };

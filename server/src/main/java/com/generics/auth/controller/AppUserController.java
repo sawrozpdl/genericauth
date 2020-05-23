@@ -64,6 +64,9 @@ public class AppUserController {
 
         User newUser = userService.createUser(user, app);
 
+        Role role = roleService.getOrCreateRole(new Role(Roles.USER.name()));
+        userRoleService.createUserRole(new UserRole(app, role, newUser));
+
         return  appRegistrationService.registerUser(app, newUser);
     }
 
@@ -72,7 +75,7 @@ public class AppUserController {
                            @PathVariable String appName,
                            @PathVariable String username,
                            @RequestBody User user) {
-        User activeUser = authenticationService.authorizeRequest(request, appName, new String[] {Roles.USER.name()});
+        User activeUser = authenticationService.authorizeRequest(request, appName, new String[] {Roles.USER.name()}, username);
         User updated = userService.updateUserByUsernameForApp(username, appName, user);
 
         App app = appService.geAppByName(appName);

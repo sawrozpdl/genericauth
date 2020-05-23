@@ -13,20 +13,39 @@ import {
   FormHelperText,
   Checkbox,
   Typography,
+  capitalize,
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Container from '@material-ui/core/Container';
+import http from '../../utils/http';
+import { interpolate } from '../../utils/string';
+import routes from '../../constants/routes';
+import toast from '../../utils/toast';
+import { USERS_URL } from '../../constants/endpoints';
 
 const schema = {
   firstName: {
-    presence: { allowEmpty: false, message: 'is required' },
+    presence: { allowEmpty: true },
+    length: {
+      maximum: 32,
+    },
+  },
+  middleName: {
+    presence: { allowEmpty: true },
     length: {
       maximum: 32,
     },
   },
   lastName: {
+    presence: { allowEmpty: true },
+    length: {
+      maximum: 32,
+    },
+  },
+  username: {
     presence: { allowEmpty: false, message: 'is required' },
     length: {
+      minimum: 3,
       maximum: 32,
     },
   },
@@ -43,9 +62,11 @@ const schema = {
       maximum: 128,
     },
   },
-  policy: {
+  rPassword: {
     presence: { allowEmpty: false, message: 'is required' },
-    checked: true,
+    length: {
+      maximum: 128,
+    },
   },
 };
 
@@ -97,7 +118,7 @@ const useStyles = makeStyles((theme: any) => ({
     display: 'flex',
     alignItems: 'center',
     marginRight: theme.spacing(2),
-    paddingTop: theme.spacing(10),
+    paddingTop: theme.spacing(5),
     marginLeft: theme.spacing(-2),
     marginBottom: theme.spacing(-3),
     paddingRight: theme.spacing(2),
@@ -153,6 +174,8 @@ const useStyles = makeStyles((theme: any) => ({
 const SignUp = (props: any) => {
   const { history } = props;
 
+  const appName = props.match.params.appName;
+
   const classes: any = useStyles();
 
   interface FormState {
@@ -202,9 +225,40 @@ const SignUp = (props: any) => {
     history.goBack();
   };
 
-  const handleSignUp = (event: any) => {
+  const handleSignUp = async (event: any) => {
     event.preventDefault();
-    history.push('/');
+    const {
+      email,
+      username,
+      firstName,
+      lastName,
+      middleName,
+      password,
+      rPassword,
+    } = formState.values;
+    if (password !== rPassword) {
+      return toast.error("Passwords don't match, Please try again");
+    }
+    try {
+      const { data } = await http.post(interpolate(USERS_URL, { appName }), {
+        body: {
+          email,
+          username,
+          firstName,
+          lastName,
+          middleName,
+          password,
+        },
+      });
+      console.log(data);
+      toast.success('Registration successful, You may now log in!');
+    } catch (error) {
+      const { message } = error.response.data;
+      return toast.error(
+        message || 'Unknown error occured, Please try again later'
+      );
+    }
+    history.push(interpolate(routes.LOGIN, { appName }));
   };
 
   const hasError = (field: any) =>
@@ -223,7 +277,7 @@ const SignUp = (props: any) => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h3">
-            Register
+            {`Register for ${capitalize(appName)}`}
           </Typography>
           <form className={classes.form} onSubmit={handleSignUp}>
             <TextField
@@ -242,6 +296,20 @@ const SignUp = (props: any) => {
             />
             <TextField
               className={classes.textField}
+              error={hasError('middleName')}
+              fullWidth
+              helperText={
+                hasError('middleName') ? formState.errors.middleName[0] : null
+              }
+              label="Middle name"
+              name="middleName"
+              onChange={handleChange}
+              type="text"
+              value={formState.values.middleName || ''}
+              variant="outlined"
+            />
+            <TextField
+              className={classes.textField}
               error={hasError('lastName')}
               fullWidth
               helperText={
@@ -252,6 +320,20 @@ const SignUp = (props: any) => {
               onChange={handleChange}
               type="text"
               value={formState.values.lastName || ''}
+              variant="outlined"
+            />
+            <TextField
+              className={classes.textField}
+              error={hasError('username')}
+              fullWidth
+              helperText={
+                hasError('username') ? formState.errors.username[0] : null
+              }
+              label="Username"
+              name="username"
+              onChange={handleChange}
+              type="text"
+              value={formState.values.username || ''}
               variant="outlined"
             />
             <TextField
@@ -280,6 +362,20 @@ const SignUp = (props: any) => {
               value={formState.values.password || ''}
               variant="outlined"
             />
+            <TextField
+              className={classes.textField}
+              error={hasError('rPassword')}
+              fullWidth
+              helperText={
+                hasError('rPassword') ? formState.errors.rPassword[0] : null
+              }
+              label="Confirm password"
+              name="rPassword"
+              onChange={handleChange}
+              type="rPassword"
+              value={formState.values.rPassword || ''}
+              variant="outlined"
+            />
             <div className={classes.policy}>
               <Checkbox
                 checked={formState.values.policy || false}
@@ -293,7 +389,7 @@ const SignUp = (props: any) => {
                 color="textSecondary"
                 variant="body1"
               >
-                I have read the{' '}
+                Make my profile public{' '}
                 <Link
                   color="primary"
                   component={RouterLink}
@@ -301,7 +397,7 @@ const SignUp = (props: any) => {
                   underline="always"
                   variant="h6"
                 >
-                  Terms and Conditions
+                  Learn More
                 </Link>
               </Typography>
             </div>

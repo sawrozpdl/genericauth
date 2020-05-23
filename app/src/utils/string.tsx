@@ -4,7 +4,7 @@
  * @param {any} object
  * @returns {string}
  */
-const interpolate = (string: string, object: any): string => {
+export const interpolate = (string: string, object: any): string => {
   Object.keys(object).forEach((key) => {
     string = string.replace(new RegExp(`:${key}`, 'g'), object[key]);
   });
@@ -12,4 +12,6 @@ const interpolate = (string: string, object: any): string => {
   return string;
 };
 
-export { interpolate };
+export const capitalize = (string: string): string => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};

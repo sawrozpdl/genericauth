@@ -1,6 +1,6 @@
 import http from '../utils/http';
 
-import config from '../config';
+import { AUTHENTICATE_URL, LOGOUT_URL } from '../constants/endpoints';
 
 import * as tokenService from './token';
 
@@ -10,9 +10,7 @@ import * as tokenService from './token';
  * @param {string} refreshToken
  */
 export async function logout(): Promise<void> {
-  const url = `${config.auth.baseUrl}${config.auth.endpoints.logout}`;
-
-  url && (await http.get(url));
+  // await http.post(LOGOUT_URL); TODO: track lastLogin
 
   tokenService.clear();
 }
@@ -20,14 +18,10 @@ export async function logout(): Promise<void> {
 /**
  * Refresh access token.
  *
- * @param {string} refreshToken
  * @returns {Promise<{accessToken, refreshToken}>}
  */
-export async function authorizeUser(refreshToken: string): Promise<any> {
-  const url = `${config.auth.baseUrl}${config.auth.endpoints.authorize}`;
-  const clientId = config.auth.clientId;
-
-  const { data } = await http.post(url, { refreshToken, clientId });
+export async function authorizeUser(): Promise<any> {
+  const { data } = await http.post(AUTHENTICATE_URL);
 
   return data;
 }
@@ -39,10 +33,9 @@ export async function authorizeUser(refreshToken: string): Promise<any> {
  * @returns {Promise<{accessToken, refreshToken}>}
  */
 export async function refresh(refreshToken: string): Promise<any> {
-  const url = `${config.auth.baseUrl}${config.auth.endpoints.authorize}`;
-  const clientId = config.auth.clientId;
-
-  const { data } = await http.post(url, { refreshToken, clientId });
+  const { data } = await http.post(AUTHENTICATE_URL, {
+    headers: { Authorization: `Refresh ${refreshToken}` },
+  });
 
   return data;
 }

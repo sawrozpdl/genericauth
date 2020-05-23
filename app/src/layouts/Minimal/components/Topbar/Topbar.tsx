@@ -17,6 +17,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { SvgIcon } from '@material-ui/core';
 import Logo from '../../../../components/Logo';
 import THEMES from '../../../../constants/themes';
+import { GITHUB_URL } from '../../../../constants/endpoints';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
@@ -90,10 +91,10 @@ const Topbar = (props: any): any => {
         <Divider className={classes.divider} />
         <Button color="primary" variant="contained" size="small">
           <Link
-            component={RouterLink}
+            component="a"
             color="inherit"
             className={classes.link}
-            to="/api-docs"
+            href={GITHUB_URL}
             target="_blank"
             underline="none"
             variant="body2"

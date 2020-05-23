@@ -23,14 +23,18 @@ const useStyles = makeStyles((theme: any) => ({
 }));
 
 const AppsToolbar = (props: any) => {
-  const { className, history, ...rest } = props;
+  const { className, history, onSearch, ...rest } = props;
 
   const classes = useStyles();
 
   return (
     <div {...rest} className={clsx(classes.root, className)}>
       <div className={classes.row}>
-        <SearchInput className={classes.searchInput} placeholder="Search app" />
+        <SearchInput
+          className={classes.searchInput}
+          onSearch={onSearch}
+          placeholder="Search app"
+        />
         <span className={classes.spacer} />
         <Button
           color="primary"
@@ -46,6 +50,7 @@ const AppsToolbar = (props: any) => {
 
 AppsToolbar.propTypes = {
   className: PropTypes.string,
+  onSearch: PropTypes.func,
 };
 
 export default AppsToolbar;

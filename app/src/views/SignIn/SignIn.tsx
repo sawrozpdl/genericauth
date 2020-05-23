@@ -9,18 +9,25 @@ import {
   TextField,
   Link,
   Typography,
+  capitalize,
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Container from '@material-ui/core/Container';
 import Avatar from '@material-ui/core/Avatar';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import routes from '../../constants/routes';
+import { interpolate } from '../../utils/string';
+import http from '../../utils/http';
+import toast from '../../utils/toast';
+import { LOGIN_URL } from '../../constants/endpoints';
+import { persist } from '../../services/token';
+import { Buffer } from 'buffer';
 
 const schema = {
   email: {
     presence: { allowEmpty: false, message: 'is required' },
-    email: true,
     length: {
-      maximum: 64,
+      maximum: 128,
     },
   },
   password: {
@@ -78,7 +85,7 @@ const useStyles = makeStyles((theme: any) => ({
   contentHeader: {
     display: 'flex',
     alignItems: 'center',
-    paddingTop: theme.spacing(10),
+    paddingTop: theme.spacing(5),
     marginLeft: theme.spacing(-2),
     marginBottom: theme.spacing(-3),
     paddingRight: theme.spacing(2),
@@ -135,6 +142,8 @@ const useStyles = makeStyles((theme: any) => ({
 const SignIn = (props: any) => {
   const { history } = props;
 
+  const appName = props.match.params.appName;
+
   const classes: any = useStyles();
 
   interface FormState {
@@ -184,9 +193,23 @@ const SignIn = (props: any) => {
     }));
   };
 
-  const handleSignIn = (event: any) => {
+  const handleSignIn = async (event: any) => {
     event.preventDefault();
-    history.push('/');
+    const { email, password } = formState.values;
+    const key = new Buffer(`${email}:${password}`).toString('base64');
+    try {
+      const { data } = await http.post(interpolate(LOGIN_URL, { appName }), {
+        accessToken: false,
+        headers: { Authorization: `Basic ${key}` },
+      });
+      persist(data.refreshToken, data.refreshToken);
+      history.push(routes.HOME);
+      toast.success('Login successful, Welcome back!');
+    } catch (exception) {
+      console.log('ex: ', exception);
+      const { message } = exception.response.data;
+      toast.error(message || 'Unknow error occured');
+    }
   };
 
   const hasError = (field: any) =>
@@ -205,7 +228,7 @@ const SignIn = (props: any) => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h3">
-            Log In
+            {`Log in to ${capitalize(appName)}`}
           </Typography>
           <form className={classes.form} onSubmit={handleSignIn}>
             <Typography
@@ -219,7 +242,7 @@ const SignIn = (props: any) => {
               error={hasError('email')}
               fullWidth
               helperText={hasError('email') ? formState.errors.email[0] : null}
-              label="Email address"
+              label="Email Address or Username"
               name="email"
               onChange={handleChange}
               type="text"
@@ -253,7 +276,11 @@ const SignIn = (props: any) => {
             </Button>
             <Typography color="textSecondary" variant="body1">
               Don&apos;t have an account?{' '}
-              <Link component={RouterLink} to="/sign-up" variant="h6">
+              <Link
+                component={RouterLink}
+                to={interpolate(routes.REGISTER, { appName })}
+                variant="h6"
+              >
                 Sign up
               </Link>
             </Typography>

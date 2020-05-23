@@ -2,6 +2,7 @@ package com.generics.auth.service;
 
 import com.generics.auth.exception.HttpException;
 import com.generics.auth.model.User;
+import com.generics.auth.model.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -11,8 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class TokenService {
@@ -43,7 +43,13 @@ public class TokenService {
         if (new Date().compareTo(claims.getExpiration()) >= 0)
             throw new HttpException("Token has expired", HttpStatus.UNAUTHORIZED);
         String email = claims.getSubject();
+        String appName = (String) claims.get("appName");
+        ArrayList<String> roles = (ArrayList<String>) claims.get("roles");
         Optional<User> user = userService.getUserByEmail(email);
+        user.ifPresent(value -> {
+            value.setActiveApp(appName);
+            value.setActiveRoles(roles);
+        });
         return user.orElseGet(() -> new User(null, email, null));
     }
 
@@ -70,7 +76,13 @@ public class TokenService {
             Claims claims = Jwts.claims().setSubject(user.getEmail());
             claims.put("userId", user.getId() + "");
             claims.put("appName", appName);
-            claims.put("roles", user.getRoles());
+            Set<UserRole> userRoles = user.getRoles();
+            ArrayList<String> roles = new ArrayList<>();
+            userRoles.forEach(userRole -> {
+                if (userRole.getApp().getName().equals(appName))
+                    roles.add(userRole.getRole().getName());
+            });
+            claims.put("roles", roles);
 
             return Jwts.builder()
                     .setClaims(claims)

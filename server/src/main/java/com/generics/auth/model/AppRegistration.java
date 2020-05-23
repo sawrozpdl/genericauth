@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class AppRegistration implements Serializable {
 
     @Id

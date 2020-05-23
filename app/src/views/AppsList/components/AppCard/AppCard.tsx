@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -10,9 +11,14 @@ import {
   Grid,
   Divider,
   Avatar,
+  capitalize,
 } from '@material-ui/core';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import { PublicRounded, LockRounded } from '@material-ui/icons';
+
+import { DISPLAY_DATE_FORMAT } from '../../../../constants/schemas';
+import { interpolate } from '../../../../utils/string';
+import routes from '../../../../constants/routes';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
@@ -54,22 +60,21 @@ const AppCard = (props: any) => {
 
   const classes: any = useStyles();
 
-  const handleAppClick = (event: any) => {
-    history.push('/sign-in');
-  };
+  const handleAppClick = () =>
+    history.push(interpolate(routes.LOGIN, { appName: app.name }));
 
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
-      onClick={!app.isPrivate && handleAppClick}
+      onClick={handleAppClick}
     >
       <CardContent>
         <Avatar className={classes.imageContainer} src={app.logoUrl}>
-          {app.name.charAt(0)}
+          {app.name.charAt(0).toUpperCase()}
         </Avatar>
         <Typography align="center" gutterBottom variant="h4">
-          {app.title}
+          {capitalize(app.name)}
         </Typography>
         <Typography align="center" variant="body1">
           {app.description}
@@ -80,18 +85,18 @@ const AppCard = (props: any) => {
         <Grid container justify="space-between">
           <Grid className={classes.statsItem} item>
             <AccessTimeIcon className={classes.statsIcon} />
-            <Typography display="inline" variant="body2">
-              Created: {app.createdAt}
+            <Typography display="inline" variant="body2" title="Created">
+              {moment(app.createdAt).format(DISPLAY_DATE_FORMAT)}
             </Typography>
           </Grid>
           <Grid className={classes.statsItem} item>
-            {app.isPrivate ? (
+            {app.private ? (
               <LockRounded className={classes.statsIcon} />
             ) : (
               <PublicRounded className={classes.statsIcon} />
             )}
             <Typography display="inline" variant="body2">
-              {app.totalUsers} Users
+              {app.registrations.length} users
             </Typography>
           </Grid>
         </Grid>
