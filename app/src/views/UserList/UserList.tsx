@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/styles';
 import UserContext from '../../context/UserContext';
 
 import { UsersToolbar, UsersTable } from './components';
-import mockData from './data';
 import http from '../../utils/http';
 import { USERS_URL } from '../../constants/endpoints';
 import { interpolate } from '../../utils/string';
