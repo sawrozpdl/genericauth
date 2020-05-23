@@ -34,7 +34,6 @@ const useStyles = makeStyles((theme: any) => ({
 const Topbar = (props: any): any => {
   const { className, onSidebarOpen, ...rest } = props;
   const classes: any = useStyles();
-
   return (
     <AppBar className={clsx(classes.root, className)} {...rest}>
       <Toolbar className={classes.toolbar}>

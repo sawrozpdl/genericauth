@@ -39,6 +39,9 @@ public class User extends GenericModel {
     @Column(nullable = false, length = 255)
     private String password;
 
+    @Column(length = 10)
+    private Integer phoneNumber;
+
     private Date lastLogin;
 
     private transient String activeApp;

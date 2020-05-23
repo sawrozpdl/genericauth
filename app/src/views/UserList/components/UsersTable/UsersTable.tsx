@@ -20,6 +20,8 @@ import {
 } from '@material-ui/core';
 
 import { getInitials } from '../../../../helpers';
+import { extractInitials, extractFullName } from '../../../../utils/string';
+import { DISPLAY_DATE_FORMAT } from '../../../../constants/schemas';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {},
@@ -113,7 +115,7 @@ const UsersTable = (props: any) => {
                   </TableCell>
                   <TableCell>Name</TableCell>
                   <TableCell>Email</TableCell>
-                  <TableCell>Location</TableCell>
+                  <TableCell>Username</TableCell>
                   <TableCell>Phone</TableCell>
                   <TableCell>Registration date</TableCell>
                 </TableRow>
@@ -137,19 +139,18 @@ const UsersTable = (props: any) => {
                     <TableCell>
                       <div className={classes.nameContainer}>
                         <Avatar className={classes.avatar} src={user.avatarUrl}>
-                          {getInitials(user.name)}
+                          {extractInitials(user, false) || 'A'}
                         </Avatar>
-                        <Typography variant="body1">{user.name}</Typography>
+                        <Typography variant="body1">
+                          {extractFullName(user, false) || 'Anonymous'}
+                        </Typography>
                       </div>
                     </TableCell>
                     <TableCell>{user.email}</TableCell>
+                    <TableCell>{user.username}</TableCell>
+                    <TableCell>{user.phoneNumber || 'Private'}</TableCell>
                     <TableCell>
-                      {user.address.city}, {user.address.state},{' '}
-                      {user.address.country}
-                    </TableCell>
-                    <TableCell>{user.phone}</TableCell>
-                    <TableCell>
-                      {moment(user.createdAt).format('DD/MM/YYYY')}
+                      {moment(user.createdAt).format(DISPLAY_DATE_FORMAT)}
                     </TableCell>
                   </TableRow>
                 ))}

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { useHistory } from 'react-router';
+import UserContext from '../../../../context/UserContext';
 import {
   Avatar,
   Box,
@@ -11,6 +12,13 @@ import {
   Typography,
   makeStyles,
 } from '@material-ui/core';
+import { logout } from '../../../../services/auth';
+import routes from '../../../../constants/routes';
+import {
+  interpolate,
+  extractFullName,
+  extractInitials,
+} from '../../../../utils/string';
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -24,25 +32,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Account = () => {
-  const account = {
-    user: {
-      id: '5e86809283e28b96d2d38537',
-      avatar: '/static/images/avatars/avatar_6.png',
-      bio: 'Sales Manager',
-      canHire: false,
-      country: 'USA',
-      email: 'katarina.smith@devias.io',
-      username: 'admin',
-      password: 'admin',
-      firstName: 'Katarina',
-      isPublic: true,
-      lastName: 'Smith',
-      phone: '+40 777666555',
-      role: 'admin',
-      state: 'New York',
-      timezone: '4:32PM (GMT-4)',
-    },
-  };
+  const user: any = useContext(UserContext);
+
+  const { username, activeApp: appName } = user;
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const classes: any = useStyles();
   const history = useHistory();
@@ -56,7 +49,8 @@ const Account = () => {
   };
 
   const handleLogout = async () => {
-    history.push('/');
+    await logout();
+    history.push(routes.HOME);
   };
 
   return (
@@ -67,14 +61,12 @@ const Account = () => {
         component={ButtonBase}
         onClick={handleOpen}
       >
-        <Avatar
-          alt="User"
-          className={classes.avatar}
-          src={account.user.avatar}
-        />
+        <Avatar alt="User" className={classes.avatar} src={user.avatarUrl}>
+          {extractInitials(user, false)}
+        </Avatar>
         <Hidden smDown>
           <Typography variant="h6" color="inherit">
-            {`${account.user.firstName} ${account.user.lastName}`}
+            {extractFullName(user, false)}
           </Typography>
         </Hidden>
       </Box>
@@ -90,11 +82,17 @@ const Account = () => {
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
       >
-        <MenuItem component={RouterLink} to="/app/social/profile">
-          Profile
-        </MenuItem>
-        <MenuItem component={RouterLink} to="/app/account">
+        <MenuItem
+          component={RouterLink}
+          to={interpolate(routes.USER_ACCOUNT, { appName, username })}
+        >
           Account
+        </MenuItem>
+        <MenuItem
+          component={RouterLink}
+          to={interpolate(routes.USER_SETTINGS, { appName, username })}
+        >
+          Settings
         </MenuItem>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>

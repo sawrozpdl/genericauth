@@ -5,6 +5,7 @@ import { makeStyles, useTheme } from '@material-ui/styles';
 import { useMediaQuery } from '@material-ui/core';
 import { Sidebar, Topbar, Footer } from './components';
 import LoadingScreen from '../../components/LoadingScreen';
+import Loading from '../../components/Loading';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
@@ -51,12 +52,16 @@ const Main = (props: any) => {
         [classes.shiftContent]: isDesktop,
       })}
     >
-      <Topbar onSidebarOpen={handleSidebarOpen} />
-      <Sidebar
-        onClose={handleSidebarClose}
-        open={shouldOpenSidebar}
-        variant={isDesktop ? 'persistent' : 'temporary'}
-      />
+      <Suspense fallback={<div />}>
+        <Topbar onSidebarOpen={handleSidebarOpen} />
+      </Suspense>
+      <Suspense fallback={<div />}>
+        <Sidebar
+          onClose={handleSidebarClose}
+          open={shouldOpenSidebar}
+          variant={isDesktop ? 'persistent' : 'temporary'}
+        />
+      </Suspense>
       <Suspense fallback={<LoadingScreen />}>
         <main className={classes.content}>
           {children}

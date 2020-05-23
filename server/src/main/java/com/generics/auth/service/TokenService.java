@@ -23,9 +23,6 @@ public class TokenService {
     @Autowired
     private UserService userService;
 
-    private final Integer ACCESS_TOKEN_EXPIRATION = 600000;
-    private final Integer REFRESH_TOKEN_EXPIRATION = 864000000;
-
     public Claims getClaims(String token) {
         try {
             return Jwts.parser()
@@ -68,7 +65,9 @@ public class TokenService {
     }
 
     private Date getExpiryDate(boolean isAccessToken) {
-       return new Date(System.currentTimeMillis() + (isAccessToken ? ACCESS_TOKEN_EXPIRATION : REFRESH_TOKEN_EXPIRATION));
+        int ACCESS_TOKEN_EXPIRATION = 600000;
+        int REFRESH_TOKEN_EXPIRATION = 864000000;
+        return new Date(System.currentTimeMillis() + (isAccessToken ? ACCESS_TOKEN_EXPIRATION : REFRESH_TOKEN_EXPIRATION));
     }
 
     public String generateToken(User user,String appName, boolean isAccessToken) {

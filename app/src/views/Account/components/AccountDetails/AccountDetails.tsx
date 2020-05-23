@@ -13,22 +13,40 @@ import {
   TextField,
 } from '@material-ui/core';
 
+const genders = [
+  { label: 'Private', value: 'PRIVATE' },
+  { label: 'Male', value: 'MALE' },
+  { label: 'Female', value: 'FEMALE' },
+  { label: 'Other', value: 'OTHER' },
+];
+
 const useStyles = makeStyles(() => ({
   root: {},
 }));
 
 const AccountDetails = (props: any) => {
-  const { className, ...rest } = props;
+  const { className, user, ...rest } = props;
+
+  const {
+    firstName,
+    middleName,
+    lastName,
+    email,
+    phoneNumber,
+    gender,
+    birthDate,
+  } = user;
 
   const classes = useStyles();
 
   const [values, setValues] = useState({
-    firstName: 'Shen',
-    lastName: 'Zhi',
-    email: 'shen.zhi@devias.io',
-    phone: '',
-    state: 'Alabama',
-    country: 'USA',
+    firstName,
+    middleName,
+    lastName,
+    email,
+    phoneNumber,
+    gender,
+    birthDate,
   });
 
   const handleChange = (event: any) => {
@@ -38,51 +56,79 @@ const AccountDetails = (props: any) => {
     });
   };
 
-  const states = [
-    {
-      value: 'alabama',
-      label: 'Alabama',
-    },
-    {
-      value: 'new-york',
-      label: 'New York',
-    },
-    {
-      value: 'san-francisco',
-      label: 'San Francisco',
-    },
-  ];
-
   return (
     <Card {...rest} className={clsx(classes.root, className)}>
       <form autoComplete="off" noValidate>
-        <CardHeader subheader="The information can be edited" title="Profile" />
+        <CardHeader
+          subheader="Basic information about oneself"
+          title="Profile"
+        />
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item md={6} xs={12}>
+            <Grid item md={4} xs={12}>
               <TextField
                 fullWidth
-                helperText="Please specify the first name"
                 label="First name"
                 margin="dense"
                 name="firstName"
                 onChange={handleChange}
-                required
                 value={values.firstName}
                 variant="outlined"
               />
             </Grid>
-            <Grid item md={6} xs={12}>
+            <Grid item md={4} xs={12}>
+              <TextField
+                fullWidth
+                label="Middle name"
+                margin="dense"
+                name="middleName"
+                onChange={handleChange}
+                value={values.middleName}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item md={4} xs={12}>
               <TextField
                 fullWidth
                 label="Last name"
                 margin="dense"
                 name="lastName"
                 onChange={handleChange}
-                required
                 value={values.lastName}
                 variant="outlined"
+              />
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <TextField
+                fullWidth
+                label="Gender"
+                margin="dense"
+                name="gender"
+                onChange={handleChange}
+                select
+                SelectProps={{ native: true }}
+                value={values.gender}
+                variant="outlined"
+              >
+                {genders.map((gender) => (
+                  <option key={gender.label} value={gender.value}>
+                    {gender.label}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <TextField
+                fullWidth
+                label="Birth Date"
+                margin="dense"
+                name="birthDate"
+                type="date"
+                onChange={handleChange}
+                value={values.birthDate}
+                variant="outlined"
+                InputLabelProps={{ shrink: true }}
               />
             </Grid>
             <Grid item md={6} xs={12}>
@@ -91,6 +137,7 @@ const AccountDetails = (props: any) => {
                 label="Email Address"
                 margin="dense"
                 name="email"
+                disabled={true}
                 onChange={handleChange}
                 required
                 value={values.email}
@@ -102,43 +149,10 @@ const AccountDetails = (props: any) => {
                 fullWidth
                 label="Phone Number"
                 margin="dense"
-                name="phone"
+                name="phoneNumber"
                 onChange={handleChange}
                 type="number"
-                value={values.phone}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="Select State"
-                margin="dense"
-                name="state"
-                onChange={handleChange}
-                required
-                select
-                // eslint-disable-next-line react/jsx-sort-props
-                SelectProps={{ native: true }}
-                value={values.state}
-                variant="outlined"
-              >
-                {states.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="Country"
-                margin="dense"
-                name="country"
-                onChange={handleChange}
-                required
-                value={values.country}
+                value={values.phoneNumber}
                 variant="outlined"
               />
             </Grid>
@@ -147,7 +161,7 @@ const AccountDetails = (props: any) => {
         <Divider />
         <CardActions>
           <Button color="primary" variant="contained">
-            Save details
+            Update Profile
           </Button>
         </CardActions>
       </form>
@@ -157,6 +171,7 @@ const AccountDetails = (props: any) => {
 
 AccountDetails.propTypes = {
   className: PropTypes.string,
+  user: PropTypes.object,
 };
 
 export default AccountDetails;

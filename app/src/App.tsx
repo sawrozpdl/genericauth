@@ -29,6 +29,8 @@ const App: React.FC = () => {
     };
   };
 
+  console.log('mounts!');
+
   const fetchUser = async (): Promise<any> => {
     let user = getGuestUser();
     try {
@@ -43,6 +45,7 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
+    console.log('hola');
     fetchUser();
   }, []);
 

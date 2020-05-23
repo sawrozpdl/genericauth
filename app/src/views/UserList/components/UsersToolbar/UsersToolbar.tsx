@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: any) => ({
 }));
 
 const UsersToolbar = (props: any) => {
-  const { className, ...rest } = props;
+  const { className, onSearch, ...rest } = props;
 
   const classes: any = useStyles();
 
@@ -39,6 +39,7 @@ const UsersToolbar = (props: any) => {
         <SearchInput
           className={classes.searchInput}
           placeholder="Search user"
+          onSearch={onSearch}
         />
         <span className={classes.spacer} />
         <Button className={classes.exportButton}>Export</Button>
@@ -52,6 +53,7 @@ const UsersToolbar = (props: any) => {
 
 UsersToolbar.propTypes = {
   className: PropTypes.string,
+  onSearch: PropTypes.func,
 };
 
 export default UsersToolbar;

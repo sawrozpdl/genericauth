@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
@@ -9,7 +9,12 @@ import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { AppsRounded } from '@material-ui/icons';
 
+import UserContext from '../../../../context/UserContext';
+
 import { Profile, SidebarNav } from './components';
+import { interpolate } from '../../../../utils/string';
+import routes from '../../../../constants/routes';
+import roles from '../../../../constants/roles';
 
 const useStyles = makeStyles((theme: any) => ({
   drawer: {
@@ -37,32 +42,36 @@ const useStyles = makeStyles((theme: any) => ({
 const Sidebar = (props: any) => {
   const { open, variant, onClose, className, ...rest } = props;
 
+  const user: any = useContext(UserContext);
+
+  const { username, activeApp: appName } = user;
+
   const classes = useStyles();
 
   const pages = [
-    {
+    user.activeRoles.includes(roles.ADMIN) && {
       title: 'Dashboard',
-      href: '/dashboard',
+      href: interpolate(routes.DASHBOARD, { username, appName }),
       icon: <DashboardIcon />,
     },
     {
       title: 'Users',
-      href: '/users',
+      href: interpolate(routes.USERS, { appName }),
       icon: <PeopleIcon />,
     },
     {
       title: 'Apps',
-      href: '/apps',
+      href: routes.APPS,
       icon: <AppsRounded />,
     },
     {
       title: 'Account',
-      href: '/account',
+      href: interpolate(routes.USER_ACCOUNT, { username, appName }),
       icon: <AccountBoxIcon />,
     },
     {
       title: 'Settings',
-      href: '/settings',
+      href: interpolate(routes.USER_SETTINGS, { username, appName }),
       icon: <SettingsIcon />,
     },
   ];
@@ -76,7 +85,7 @@ const Sidebar = (props: any) => {
       variant={variant}
     >
       <div {...rest} className={clsx(classes.root, className)}>
-        <Profile />
+        <Profile user={user} />
         <Divider className={classes.divider} />
         <SidebarNav className={classes.nav} pages={pages} />
       </div>
