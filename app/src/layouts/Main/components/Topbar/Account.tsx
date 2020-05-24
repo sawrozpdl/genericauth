@@ -1,7 +1,6 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { useHistory } from 'react-router';
-import UserContext from '../../../../context/UserContext';
 import {
   Avatar,
   Box,
@@ -12,13 +11,14 @@ import {
   Typography,
   makeStyles,
 } from '@material-ui/core';
-import { logout } from '../../../../services/auth';
+import * as authService from '../../../../services/auth';
 import routes from '../../../../constants/routes';
 import {
   interpolate,
   extractFullName,
   extractInitials,
 } from '../../../../utils/string';
+import toast from '../../../../utils/toast';
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -31,14 +31,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Account = () => {
-  const user: any = useContext(UserContext);
-
-  const { username, activeApp: appName } = user;
-
+const Account = (props: any) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const classes: any = useStyles();
-  const history = useHistory();
 
   const handleOpen = (event: any) => {
     setAnchorEl(event.currentTarget);
@@ -48,10 +42,26 @@ const Account = () => {
     setAnchorEl(null);
   };
 
+  const history = useHistory();
+
+  const { user, onLogout } = props;
+
   const handleLogout = async () => {
-    await logout();
-    history.push(routes.HOME);
+    try {
+      await authService.logout();
+      onLogout();
+      history.push(routes.HOME);
+      toast.success('Logout successfull!');
+    } catch (error) {
+      toast.error('Unknown error occured');
+    }
   };
+
+  const classes: any = useStyles();
+
+  if (!user) return <div />;
+
+  const { username, activeApp: appName } = user;
 
   return (
     <>

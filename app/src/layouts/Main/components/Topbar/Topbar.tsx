@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -7,6 +7,7 @@ import { AppBar, Toolbar, Hidden, IconButton } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Box, SvgIcon } from '@material-ui/core';
 import Logo from '../../../../components/Logo';
+import UserContext from '../../../../context/UserContext';
 import Account from './Account';
 import Settings from './Settings';
 import THEMES from '../../../../constants/themes';
@@ -33,6 +34,8 @@ const useStyles = makeStyles((theme: any) => ({
 
 const Topbar = (props: any): any => {
   const { className, onSidebarOpen, ...rest } = props;
+  const userCtx: any = useContext(UserContext);
+  const { user, logout } = userCtx;
   const classes: any = useStyles();
   return (
     <AppBar className={clsx(classes.root, className)} {...rest}>
@@ -56,7 +59,7 @@ const Topbar = (props: any): any => {
         <Box ml={2} flexGrow={1} />
         <Settings />
         <Box ml={2}>
-          <Account />
+          <Account user={user} onLogout={logout} />
         </Box>
       </Toolbar>
     </AppBar>

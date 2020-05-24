@@ -1,5 +1,11 @@
 const config: any = {
   env: process.env.NODE_ENV,
+  app: {
+    baseUrl: process.env.REACT_APP_BASE_URL,
+    endpoints: {
+      createApp: '/create',
+    },
+  },
   auth: {
     baseUrl: process.env.REACT_APP_AUTH_BASE_URL,
     endpoints: {

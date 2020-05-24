@@ -24,8 +24,9 @@ public class VerifyService {
     ResourceLoader resourceLoader;
 
     public Object verifyEmail(String email, String redirect, String action, HttpServletRequest request) {
+        System.out.println(email + redirect + action);
         String token = tokenService.createFor(email);
-        String[] reqInfo = Http.getInfo(request);
+//        String[] reqInfo = Http.getInfo(request);
         try {
             String redirectUrl = String.format("%s?token=%s", redirect, token);
             Resource resource = resourceLoader.getResource("classpath:templates/verify.html");
@@ -33,8 +34,8 @@ public class VerifyService {
 
             String[] args = {"action_name::" + action,
                     "action_url::" + redirectUrl,
-                    "browser_name::" + reqInfo[1],
-                    "operating_system::" + reqInfo[0]};
+                    "browser_name::" + "reqInfo[1]",
+                    "operating_system::" + "reqInfo[0]"};
 
             body = Str.format(body, args);
 

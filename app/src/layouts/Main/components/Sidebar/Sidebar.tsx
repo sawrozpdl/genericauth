@@ -42,7 +42,8 @@ const useStyles = makeStyles((theme: any) => ({
 const Sidebar = (props: any) => {
   const { open, variant, onClose, className, ...rest } = props;
 
-  const user: any = useContext(UserContext);
+  const userCtx: any = useContext(UserContext);
+  const { user } = userCtx;
 
   const { username, activeApp: appName } = user;
 

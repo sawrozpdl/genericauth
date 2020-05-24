@@ -26,6 +26,7 @@ public class MailService {
 
     public void send(String to, String subject, String text) throws MessagingException {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+
         mailSender.setHost(host);
         mailSender.setPort(port);
 

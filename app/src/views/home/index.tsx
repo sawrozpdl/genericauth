@@ -10,8 +10,11 @@ import {
   Typography,
   makeStyles,
 } from '@material-ui/core';
+import { Buffer } from 'buffer';
 import { Button, TextField, Link } from '@material-ui/core';
 import routes from '../../constants/routes';
+import http from '../../utils/http';
+import { APP_CREATE_URL, VERIFY_URL } from '../../constants/endpoints';
 
 const schema = {
   email: {
@@ -94,6 +97,8 @@ const Home: React.FC = (props: any) => {
     errors: {},
   });
 
+  const [sending, setSending] = useState(false);
+
   useEffect(() => {
     const errors = validate(formState.values, schema);
 
@@ -120,14 +125,33 @@ const Home: React.FC = (props: any) => {
     }));
   };
 
-  const handleAppCreate = (event: any) => {
+  const handleAppCreate = async (event: any) => {
     event.preventDefault();
-    setFormState((formState: any) => {
-      return { errors: {}, touched: {}, values: {}, isValid: false };
-    });
-    toast.success(
-      'Link sent! Please check your email and follow the instructions'
-    );
+    setSending(true);
+    try {
+      const email = formState.values.email;
+      const { data } = await http.post(VERIFY_URL, {
+        accessToken: false,
+        params: {
+          id: new Buffer(email).toString('base64'),
+          actionName: 'Create App',
+          redirectTo: APP_CREATE_URL,
+        },
+      });
+      console.log('Sent email: ', data);
+      setFormState((formState: any) => {
+        return { errors: {}, touched: {}, values: {}, isValid: false };
+      });
+      toast.success(
+        'Link sent! Please check your email and follow the instructions'
+      );
+    } catch (error) {
+      if (!error.response) return toast.error('Unknown error occured!');
+      const { message } = error.response.data;
+      toast.error(message || 'Internal server error!');
+    } finally {
+      setSending(false);
+    }
   };
 
   const hasError = (field: any) =>
@@ -222,7 +246,7 @@ const Home: React.FC = (props: any) => {
                   <Button
                     className={classes.signUpButton}
                     color="primary"
-                    disabled={!formState.isValid}
+                    disabled={!formState.isValid || sending}
                     fullWidth
                     size="large"
                     type="submit"

@@ -64,11 +64,13 @@ public class AppController {
         User requestUser = authenticationService.authorizeRequest(request, null, null, null);
         user.setEmail(requestUser.getEmail());
         App createdApp = appService.createApp(new App(appName, isPrivate));
-        User adminUser = user;
-        if (user.getId() == null)
+        User adminUser = requestUser;
+        if (adminUser.getId() == null)
             adminUser = userService.createUser(user, createdApp);
         Role adminRole = roleService.getOrCreateRole(new Role(Roles.ADMIN.name()));
+        Role userRole = roleService.getOrCreateRole(new Role(Roles.USER.name()));
         userRoleService.createUserRole(new UserRole(createdApp, adminRole, adminUser));
+        userRoleService.createUserRole(new UserRole(createdApp, userRole, adminUser));
         return appRegistrationService.registerUser(createdApp, adminUser);
     }
 

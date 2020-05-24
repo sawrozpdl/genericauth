@@ -23,7 +23,8 @@ import UserContext from './context/UserContext';
 import roles from './constants/roles';
 
 const BaseRouter: React.FC = () => {
-  const user: any = useContext(UserContext);
+  const userCtx: any = useContext(UserContext);
+  const { user } = userCtx;
   return (
     <Switch>
       <RouteWithLayout
@@ -71,7 +72,7 @@ const BaseRouter: React.FC = () => {
       <RouteWithLayout
         component={CreateAppView}
         exact
-        allow={[roles.USER]}
+        allow={[]}
         layout={MinimalLayout}
         path={routes.CREATE_APP}
       />

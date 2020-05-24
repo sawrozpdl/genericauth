@@ -46,6 +46,4 @@ SettingsProvider.propTypes = {
   settings: PropTypes.object,
 };
 
-export const SettingsConsumer = SettingsContext.Consumer;
-
 export default SettingsContext;

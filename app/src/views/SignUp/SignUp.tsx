@@ -240,7 +240,7 @@ const SignUp = (props: any) => {
       return toast.error("Passwords don't match, Please try again");
     }
     try {
-      const { data } = await http.post(interpolate(USERS_URL, { appName }), {
+      await http.post(interpolate(USERS_URL, { appName }), {
         body: {
           email,
           username,
@@ -250,7 +250,6 @@ const SignUp = (props: any) => {
           password,
         },
       });
-      console.log(data);
       toast.success('Registration successful, You may now log in!');
     } catch (error) {
       const { message } = error.response.data;
@@ -372,7 +371,7 @@ const SignUp = (props: any) => {
               label="Confirm password"
               name="rPassword"
               onChange={handleChange}
-              type="rPassword"
+              type="password"
               value={formState.values.rPassword || ''}
               variant="outlined"
             />

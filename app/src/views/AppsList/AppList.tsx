@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme: any) => ({
   },
   content: {
     marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
   },
   results: { marginTop: theme.spacing(1) },
   searchLabel: { color: theme.palette.text.secondary },
@@ -41,7 +42,10 @@ const AppList = (props: any) => {
 
       setPage(data);
     } catch (error) {
-      toast.error('Failed to load apps!');
+      const { response } = error;
+      if (!response) {
+        toast.error('Network Error!');
+      } else toast.error(response.data.message || 'Failed to load apps!');
     } finally {
       setLoading(false);
     }
@@ -96,7 +100,7 @@ const AppList = (props: any) => {
         handlePrevious={handlePreviousPageClick}
         page={query.page}
         disabled={loading}
-        totalPages={page.totalPages}
+        totalPages={page.totalPages || 1}
         isFirst={page.first}
         isLast={page.last}
       />

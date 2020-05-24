@@ -38,30 +38,16 @@ const UserDetails = (props: any) => {
       <Box mt={2}>
         <TextField
           className={classes.textField}
-          error={hasError('firstName')}
+          error={hasError('username')}
           fullWidth
           helperText={
-            hasError('firstName') ? formState.errors.firstName[0] : null
+            hasError('username') ? formState.errors.username[0] : null
           }
-          label="First name"
-          name="firstName"
+          label="Username"
+          name="username"
           onChange={handleChange}
           type="text"
-          value={formState.values.firstName || ''}
-          variant="outlined"
-        />
-        <TextField
-          className={classes.textField}
-          error={hasError('lastName')}
-          fullWidth
-          helperText={
-            hasError('lastName') ? formState.errors.lastName[0] : null
-          }
-          label="Last name"
-          name="lastName"
-          onChange={handleChange}
-          type="text"
-          value={formState.values.lastName || ''}
+          value={formState.values.username || ''}
           variant="outlined"
         />
         <TextField
@@ -71,6 +57,7 @@ const UserDetails = (props: any) => {
           helperText={hasError('email') ? formState.errors.email[0] : null}
           label="Email address"
           name="email"
+          disabled={true}
           onChange={handleChange}
           type="text"
           value={formState.values.email || ''}
@@ -85,6 +72,20 @@ const UserDetails = (props: any) => {
           }
           label="Password"
           name="password"
+          onChange={handleChange}
+          type="password"
+          value={formState.values.password || ''}
+          variant="outlined"
+        />
+        <TextField
+          className={classes.textField}
+          error={hasError('rPassword')}
+          fullWidth
+          helperText={
+            hasError('rPassword') ? formState.errors.rPassword[0] : null
+          }
+          label="Confirm Password"
+          name="rPassword"
           onChange={handleChange}
           type="password"
           value={formState.values.password || ''}

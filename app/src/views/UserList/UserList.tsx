@@ -24,7 +24,8 @@ const useStyles = makeStyles((theme: any) => ({
 const UserList = () => {
   const classes = useStyles();
 
-  const user: any = useContext(UserContext);
+  const userCtx: any = useContext(UserContext);
+  const { user } = userCtx;
   const { activeApp: appName } = user;
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState({

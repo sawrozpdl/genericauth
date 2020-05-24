@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
@@ -22,6 +22,8 @@ import toast from '../../utils/toast';
 import { LOGIN_URL } from '../../constants/endpoints';
 import { persist } from '../../services/token';
 import { Buffer } from 'buffer';
+import UserContext from '../../context/UserContext';
+import { fetchUser } from '../../services/user';
 
 const schema = {
   email: {
@@ -144,6 +146,9 @@ const SignIn = (props: any) => {
 
   const appName = props.match.params.appName;
 
+  const userCtx: any = useContext(UserContext);
+  const { setUser } = userCtx;
+
   const classes: any = useStyles();
 
   interface FormState {
@@ -203,12 +208,18 @@ const SignIn = (props: any) => {
         headers: { Authorization: `Basic ${key}` },
       });
       persist(data.refreshToken, data.refreshToken);
-      history.push(routes.HOME);
+      await fetchUser(setUser);
+      history.push(
+        interpolate(routes.USER_ACCOUNT, {
+          username: formState.values.email,
+          appName,
+        })
+      );
       toast.success('Login successful, Welcome back!');
     } catch (exception) {
-      console.log('ex: ', exception);
+      if (!exception.response) return toast.error('Unknown error occured!');
       const { message } = exception.response.data;
-      toast.error(message || 'Unknow error occured');
+      toast.error(message || 'Internal server error!');
     }
   };
 

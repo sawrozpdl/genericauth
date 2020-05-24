@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { CssBaseline } from '@material-ui/core';
 import { Router, Switch } from 'react-router-dom';
 import { ThemeProvider, makeStyles } from '@material-ui/styles';
 
-import { authorizeUser } from './services/auth';
 import validate from 'validate.js';
-import roles from './constants/roles';
 import validators from './common/validators';
 
 import { createTheme } from './theme/create';
@@ -14,37 +12,18 @@ import { createBrowserHistory } from 'history';
 import BaseRouter from './BaseRouter';
 import UserContext from './context/UserContext';
 import useSettings from './hooks/useSettings';
-import toast from './utils/toast';
+import { fetchUser } from './services/user';
 
 const browserHistory = createBrowserHistory();
 
-const App: React.FC = () => {
-  const [user, setUser] = useState(null);
-
-  const getGuestUser = (): any => {
-    return {
-      id: -1,
-      firstName: 'Anon',
-      activeRoles: [roles.GUEST],
-    };
-  };
-
-  const fetchUser = useCallback(async (): Promise<any> => {
-    let user = getGuestUser();
-    try {
-      const activeUser = await authorizeUser();
-      if (activeUser) {
-        user = activeUser;
-      }
-    } catch (err) {
-      toast.info('Login/Signup via apps section!');
-    }
-    setUser(user);
-  }, []);
+const App: React.FC = (props: any) => {
+  const userCtx: any = useContext(UserContext);
+  const { setUser } = userCtx;
 
   useEffect(() => {
-    fetchUser();
-  }, [fetchUser]);
+    fetchUser(setUser);
+    // eslint-disable-next-line
+  }, []);
 
   const useStyles = makeStyles((theme: any) => ({
     root: {
@@ -88,9 +67,7 @@ const App: React.FC = () => {
         <Router history={browserHistory}>
           <CssBaseline />
           <Switch>
-            <UserContext.Provider value={user}>
-              <BaseRouter />
-            </UserContext.Provider>
+            <BaseRouter />
           </Switch>
         </Router>
       </ThemeProvider>

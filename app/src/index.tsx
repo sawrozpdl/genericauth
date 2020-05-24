@@ -4,13 +4,16 @@ import App from './App';
 import { SettingsProvider } from './context/SettingsContext';
 import * as serviceWorker from './serviceWorker';
 import { restoreSettings } from './utils/settings';
+import { UserProvider } from './context/UserContext';
 
 const settings = restoreSettings();
 
 ReactDOM.render(
   <React.StrictMode>
     <SettingsProvider settings={settings}>
-      <App />
+      <UserProvider user={null}>
+        <App />
+      </UserProvider>
     </SettingsProvider>
   </React.StrictMode>,
   document.getElementById('root')

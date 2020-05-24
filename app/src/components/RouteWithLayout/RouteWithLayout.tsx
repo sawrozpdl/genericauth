@@ -8,12 +8,13 @@ import { interpolate } from '../../utils/string';
 
 const RouteWithLayout = (props: any) => {
   const { layout: Layout, allow, component: Component, ...rest } = props;
-  const user: any = useContext(UserContext);
+  const userCtx: any = useContext(UserContext);
+  const { user } = userCtx;
   console.log('you are: ', user);
   if (
     user &&
     allow.length &&
-    user.activeRoles.some((val: string) => allow.indexOf(val) === -1)
+    allow.some((val: string) => user.activeRoles.indexOf(val) === -1)
   ) {
     let redirectTo = routes.HOME;
     if (allow.includes(roles.GUEST)) {

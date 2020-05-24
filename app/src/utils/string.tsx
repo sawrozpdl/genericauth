@@ -28,6 +28,40 @@ export const extractInitials = (user: any, mid = true) =>
     mid && user.middleName ? user.middleName.charAt(0).toUpperCase() : ''
   }${user.lastName ? user.lastName.charAt(0).toUpperCase() : ''}`;
 
+/**
+ *
+ * Parses query to usable object
+ *
+ * @param {String} query
+ */
+export const parseQuery = (query: any) => {
+  return query
+    .substring(1, query.length)
+    .split('&')
+    .reduce((acc: any, curr: any) => {
+      const items = curr.split('=');
+      items[1] = items[1] && items[1].replace(/%20/g, ' ');
+      return {
+        ...acc,
+        [items[0]]: items[1],
+      };
+    }, {});
+};
+
+/**
+ *
+ * Unparses object to query
+ *
+ * @param {String} query
+ */
+export const unParseQuery = (object: any) => {
+  return Object.keys(object)
+    .reduce((acc: any, curr: any) => {
+      return object[curr] ? `${acc}${curr}=${object[curr]}&` : acc;
+    }, '?')
+    .slice(0, -1);
+};
+
 const nullCounter = (obj: any) => {
   let keyCount = 0;
   let nullCount = 0;

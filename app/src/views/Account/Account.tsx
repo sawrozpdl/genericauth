@@ -13,7 +13,8 @@ const useStyles = makeStyles((theme: any) => ({
 }));
 
 const Account = () => {
-  const user: any = useContext(UserContext);
+  const userCtx: any = useContext(UserContext);
+  const { user } = userCtx;
   const classes = useStyles();
 
   return (
