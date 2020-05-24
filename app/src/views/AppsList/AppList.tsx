@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { IconButton, Grid, Typography } from '@material-ui/core';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import { Grid, Typography } from '@material-ui/core';
 import { APPS_URL } from '../../constants/endpoints';
 import http from '../../utils/http';
 
 import { AppsToolbar, AppCard } from './components';
 import toast from '../../utils/toast';
 import Loading from '../../components/Loading';
+import Pagination from '../../components/Pagination';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
@@ -35,7 +34,7 @@ const AppList = (props: any) => {
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState({ page: 0, size: 10, search: '' });
 
-  const fetchApps = async () => {
+  const fetchApps = useCallback(async () => {
     setLoading(true);
     try {
       const { data } = await http.get(APPS_URL, { params: query });
@@ -46,7 +45,7 @@ const AppList = (props: any) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [query]);
 
   const handleSearch = (value: string): boolean | void =>
     value !== query.search && setQuery({ ...query, search: value });
@@ -63,7 +62,7 @@ const AppList = (props: any) => {
     } catch (exc) {
       toast.error('Failed to fetch apps!');
     }
-  }, [query]);
+  }, [query, fetchApps]);
 
   const { content: apps } = page;
 
@@ -92,17 +91,15 @@ const AppList = (props: any) => {
           </Grid>
         </div>
       )}
-      <div className={classes.pagination}>
-        <Typography variant="caption">{`Page: ${query.page + 1} of ${
-          page.totalPages
-        }`}</Typography>
-        <IconButton disabled={page.first} onClick={handlePreviousPageClick}>
-          <ChevronLeftIcon />
-        </IconButton>
-        <IconButton disabled={page.last} onClick={handleNextPageClick}>
-          <ChevronRightIcon />
-        </IconButton>
-      </div>
+      <Pagination
+        handleNext={handleNextPageClick}
+        handlePrevious={handlePreviousPageClick}
+        page={query.page}
+        disabled={loading}
+        totalPages={page.totalPages}
+        isFirst={page.first}
+        isLast={page.last}
+      />
     </div>
   );
 };

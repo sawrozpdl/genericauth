@@ -1,6 +1,6 @@
 import http from '../utils/http';
 
-import { AUTHENTICATE_URL, LOGOUT_URL } from '../constants/endpoints';
+import { AUTHENTICATE_URL } from '../constants/endpoints';
 
 import * as tokenService from './token';
 

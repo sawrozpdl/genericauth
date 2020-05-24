@@ -5,7 +5,6 @@ import { makeStyles, useTheme } from '@material-ui/styles';
 import { useMediaQuery } from '@material-ui/core';
 import { Sidebar, Topbar, Footer } from './components';
 import LoadingScreen from '../../components/LoadingScreen';
-import Loading from '../../components/Loading';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { CssBaseline } from '@material-ui/core';
 import { Router, Switch } from 'react-router-dom';
 import { ThemeProvider, makeStyles } from '@material-ui/styles';
@@ -29,9 +29,7 @@ const App: React.FC = () => {
     };
   };
 
-  console.log('mounts!');
-
-  const fetchUser = async (): Promise<any> => {
+  const fetchUser = useCallback(async (): Promise<any> => {
     let user = getGuestUser();
     try {
       const activeUser = await authorizeUser();
@@ -42,12 +40,11 @@ const App: React.FC = () => {
       toast.info('Login/Signup via apps section!');
     }
     setUser(user);
-  };
+  }, []);
 
   useEffect(() => {
-    console.log('hola');
     fetchUser();
-  }, []);
+  }, [fetchUser]);
 
   const useStyles = makeStyles((theme: any) => ({
     root: {

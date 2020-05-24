@@ -16,10 +16,8 @@ import {
   TableHead,
   TableRow,
   Typography,
-  TablePagination,
 } from '@material-ui/core';
 
-import { getInitials } from '../../../../helpers';
 import { extractInitials, extractFullName } from '../../../../utils/string';
 import { DISPLAY_DATE_FORMAT } from '../../../../constants/schemas';
 
@@ -49,8 +47,6 @@ const UsersTable = (props: any) => {
   const classes: any = useStyles();
 
   const [selectedUsers, setSelectedUsers] = useState<any>([]);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [page, setPage] = useState(0);
 
   const handleSelectAll = (event: any) => {
     const { users } = props;
@@ -86,14 +82,6 @@ const UsersTable = (props: any) => {
     setSelectedUsers(newSelectedUsers);
   };
 
-  const handlePageChange = (event: any, page: any) => {
-    setPage(page);
-  };
-
-  const handleRowsPerPageChange = (event: any) => {
-    setRowsPerPage(event.target.value);
-  };
-
   return (
     <Card {...rest} className={clsx(classes.root, className)}>
       <CardContent className={classes.content}>
@@ -121,7 +109,7 @@ const UsersTable = (props: any) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.slice(0, rowsPerPage).map((user: any) => (
+                {users.map((user: any) => (
                   <TableRow
                     className={classes.tableRow}
                     hover
@@ -159,22 +147,13 @@ const UsersTable = (props: any) => {
           </div>
         </PerfectScrollbar>
       </CardContent>
-      <CardActions className={classes.actions}>
-        <TablePagination
-          component="div"
-          count={users.length}
-          onChangePage={handlePageChange}
-          onChangeRowsPerPage={handleRowsPerPageChange}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[5, 10, 25]}
-        />
-      </CardActions>
+      <CardActions className={classes.actions}>{props.children}</CardActions>
     </Card>
   );
 };
 
 UsersTable.propTypes = {
+  children: PropTypes.any,
   className: PropTypes.string,
   users: PropTypes.array.isRequired,
 };

@@ -29,7 +29,7 @@ const set = (key: string, value: string): void => {
  * @param {string} key
  */
 const remove = (key: string): void => {
-  cookies.remove(key);
+  cookies.remove(key, { path: '/' });
 };
 
 export { get, set, remove };

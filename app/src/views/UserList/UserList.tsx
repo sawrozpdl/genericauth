@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useCallback } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import UserContext from '../../context/UserContext';
 
@@ -8,6 +8,7 @@ import { USERS_URL } from '../../constants/endpoints';
 import { interpolate } from '../../utils/string';
 import Loading from '../../components/Loading';
 import toast from '../../utils/toast';
+import Pagination from '../../components/Pagination';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
@@ -33,7 +34,7 @@ const UserList = () => {
   });
   const [page, setPage] = useState<any>([]);
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
       const { data } = await http.get(interpolate(USERS_URL, { appName }), {
@@ -46,7 +47,7 @@ const UserList = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [query, appName]);
 
   const handleSearch = (value: string): boolean | void =>
     value !== query.search && setQuery({ ...query, search: value });
@@ -59,7 +60,7 @@ const UserList = () => {
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [fetchUsers]);
 
   return (
     <div className={classes.root}>
@@ -68,7 +69,17 @@ const UserList = () => {
         {loading ? (
           <Loading height={500} />
         ) : (
-          <UsersTable users={page.content} />
+          <UsersTable users={page.content}>
+            <Pagination
+              handleNext={handleNextPageClick}
+              handlePrevious={handlePreviousPageClick}
+              page={query.page}
+              disabled={loading}
+              totalPages={page.totalPages}
+              isFirst={page.first}
+              isLast={page.last}
+            />
+          </UsersTable>
         )}
       </div>
     </div>

@@ -8,8 +8,6 @@ import config from '../config';
 import * as authService from '../services/auth';
 import * as tokenService from '../services/token';
 
-import { AUTHENTICATE_URL, LOGIN_URL } from '../constants/endpoints';
-
 const instance = axios.create({
   baseURL: config.baseURI,
   headers: {
