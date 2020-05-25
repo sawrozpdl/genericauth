@@ -22,6 +22,7 @@ import { interpolate } from '../../utils/string';
 import routes from '../../constants/routes';
 import toast from '../../utils/toast';
 import { USERS_URL } from '../../constants/endpoints';
+import { handleError } from '../../utils/error';
 
 const schema = {
   firstName: {
@@ -191,6 +192,7 @@ const SignUp = (props: any) => {
     touched: {},
     errors: {},
   });
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     const errors = validate(formState.values, schema);
@@ -227,6 +229,7 @@ const SignUp = (props: any) => {
 
   const handleSignUp = async (event: any) => {
     event.preventDefault();
+    setSubmitting(true);
     const {
       email,
       username,
@@ -237,6 +240,7 @@ const SignUp = (props: any) => {
       rPassword,
     } = formState.values;
     if (password !== rPassword) {
+      setSubmitting(false);
       return toast.error("Passwords don't match, Please try again");
     }
     try {
@@ -251,13 +255,12 @@ const SignUp = (props: any) => {
         },
       });
       toast.success('Registration successful, You may now log in!');
+      history.push(interpolate(routes.LOGIN, { appName }));
     } catch (error) {
-      const { message } = error.response.data;
-      return toast.error(
-        message || 'Unknown error occured, Please try again later'
-      );
+      handleError(error);
+    } finally {
+      setSubmitting(false);
     }
-    history.push(interpolate(routes.LOGIN, { appName }));
   };
 
   const hasError = (field: any) =>
@@ -408,7 +411,7 @@ const SignUp = (props: any) => {
             <Button
               className={classes.signUpButton}
               color="primary"
-              disabled={!formState.isValid}
+              disabled={submitting || !formState.isValid}
               fullWidth
               size="large"
               type="submit"

@@ -17,24 +17,33 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   textField: {
-    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
   },
 }));
 
 const UserDetails = (props: any) => {
   const { onNext, formState, handleChange, hasError, isSubmitting } = props;
+  let { allowEmail, noCaptions } = props;
   const classes: any = useStyles();
+
+  if (!allowEmail) allowEmail = false;
+  if (!noCaptions) noCaptions = false;
 
   return (
     <div>
-      <Typography variant="h3" color="textPrimary">
-        Create an account
-      </Typography>
-      <Box mt={2}>
-        <Typography variant="subtitle1" color="textSecondary">
-          This account will be the admin for the created app
-        </Typography>
-      </Box>
+      {!noCaptions && (
+        <>
+          {' '}
+          <Typography variant="h3" color="textPrimary">
+            Create an account
+          </Typography>
+          <Box mt={2}>
+            <Typography variant="subtitle1" color="textSecondary">
+              This account will be the admin for the created app
+            </Typography>
+          </Box>
+        </>
+      )}
       <Box mt={2}>
         <TextField
           className={classes.textField}
@@ -57,7 +66,7 @@ const UserDetails = (props: any) => {
           helperText={hasError('email') ? formState.errors.email[0] : null}
           label="Email address"
           name="email"
-          disabled={true}
+          disabled={!allowEmail}
           onChange={handleChange}
           type="text"
           value={formState.values.email || ''}
@@ -92,19 +101,21 @@ const UserDetails = (props: any) => {
           variant="outlined"
         />
       </Box>
-      <Box mt={6} display="flex">
-        <Box flexGrow={1} />
-        <Button
-          color="secondary"
-          disabled={isSubmitting}
-          type="submit"
-          onClick={onNext}
-          variant="contained"
-          size="large"
-        >
-          Next
-        </Button>
-      </Box>
+      {onNext && (
+        <Box mt={6} display="flex">
+          <Box flexGrow={1} />
+          <Button
+            color="secondary"
+            disabled={isSubmitting}
+            type="submit"
+            onClick={onNext}
+            variant="contained"
+            size="large"
+          >
+            Next
+          </Button>
+        </Box>
+      )}
     </div>
   );
 };
@@ -117,6 +128,8 @@ UserDetails.propTypes = {
   handleChange: PropTypes.func,
   hasError: PropTypes.func,
   isSubmitting: PropTypes.bool,
+  allowEmail: PropTypes.bool,
+  noCaptions: PropTypes.bool,
 };
 
 export default UserDetails;

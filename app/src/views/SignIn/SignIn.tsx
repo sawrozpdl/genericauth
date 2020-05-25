@@ -153,6 +153,8 @@ const SignIn = (props: any) => {
 
   const classes: any = useStyles();
 
+  const [submitting, setSubmitting] = useState(false);
+
   interface FormState {
     isValid: boolean;
     values: any;
@@ -202,6 +204,7 @@ const SignIn = (props: any) => {
 
   const handleSignIn = async (event: any) => {
     event.preventDefault();
+    setSubmitting(true);
     const { email, password } = formState.values;
     const key = new Buffer(`${email}:${password}`).toString('base64');
     try {
@@ -220,6 +223,8 @@ const SignIn = (props: any) => {
       toast.success('Login successful, Welcome back!');
     } catch (exception) {
       handleError(exception);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -277,7 +282,7 @@ const SignIn = (props: any) => {
             <Button
               className={classes.signInButton}
               color="primary"
-              disabled={!formState.isValid}
+              disabled={submitting || !formState.isValid}
               fullWidth
               size="large"
               type="submit"

@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import { Button } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
+import RefreshIcon from '@material-ui/icons/Refresh';
 
 import { SearchInput } from '../../../../components';
 
@@ -29,7 +31,14 @@ const useStyles = makeStyles((theme: any) => ({
 }));
 
 const UsersToolbar = (props: any) => {
-  const { className, onSearch, ...rest } = props;
+  const {
+    className,
+    onSearch,
+    onAddUserClick,
+    isAdmin,
+    onRefresh,
+    ...rest
+  } = props;
 
   const classes: any = useStyles();
 
@@ -42,10 +51,22 @@ const UsersToolbar = (props: any) => {
           onSearch={onSearch}
         />
         <span className={classes.spacer} />
-        <Button className={classes.exportButton}>Export</Button>
-        <Button color="primary" variant="contained">
-          Add user
-        </Button>
+        <IconButton size="small" onClick={onRefresh}>
+          <RefreshIcon />
+        </IconButton>
+
+        {isAdmin && (
+          <>
+            <Button className={classes.exportButton}>Export</Button>
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={onAddUserClick}
+            >
+              Add user
+            </Button>
+          </>
+        )}
       </div>
     </div>
   );
@@ -54,6 +75,10 @@ const UsersToolbar = (props: any) => {
 UsersToolbar.propTypes = {
   className: PropTypes.string,
   onSearch: PropTypes.func,
+  onRefresh: PropTypes.func,
+  onExport: PropTypes.func,
+  isAdmin: PropTypes.bool,
+  onAddUserClick: PropTypes.func,
 };
 
 export default UsersToolbar;
