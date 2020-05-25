@@ -24,6 +24,7 @@ import { persist } from '../../services/token';
 import { Buffer } from 'buffer';
 import UserContext from '../../context/UserContext';
 import { fetchUser } from '../../services/user';
+import { handleError } from '../../utils/error';
 
 const schema = {
   email: {
@@ -52,6 +53,7 @@ const useStyles = makeStyles((theme: any) => ({
       display: 'none',
     },
   },
+  forgotPassword: { float: 'right' },
   quote: {
     backgroundColor: theme.palette.neutral,
     height: '100%',
@@ -144,7 +146,7 @@ const useStyles = makeStyles((theme: any) => ({
 const SignIn = (props: any) => {
   const { history } = props;
 
-  const appName = props.match.params.appName;
+  const { appName } = props.match.params;
 
   const userCtx: any = useContext(UserContext);
   const { setUser } = userCtx;
@@ -217,9 +219,7 @@ const SignIn = (props: any) => {
       );
       toast.success('Login successful, Welcome back!');
     } catch (exception) {
-      if (!exception.response) return toast.error('Unknown error occured!');
-      const { message } = exception.response.data;
-      toast.error(message || 'Internal server error!');
+      handleError(exception);
     }
   };
 
@@ -293,6 +293,14 @@ const SignIn = (props: any) => {
                 variant="h6"
               >
                 Sign up
+              </Link>
+              <Link
+                component={RouterLink}
+                className={classes.forgotPassword}
+                to={interpolate(routes.FORGOT_PASSWORD, { appName })}
+                variant="h6"
+              >
+                Forgot Password
               </Link>
             </Typography>
           </form>

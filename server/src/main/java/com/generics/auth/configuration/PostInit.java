@@ -75,6 +75,8 @@ public class PostInit implements ApplicationRunner {
         reg = appRegistrationService.registerUser(godApp, godAdmin);
 
         userRoleService.createUserRole(new UserRole(godApp, superAdmin, godAdmin));
+        userRoleService.createUserRole(new UserRole(godApp, admin, godAdmin));
+        userRoleService.createUserRole(new UserRole(godApp, user, godAdmin));
     }
 
 }

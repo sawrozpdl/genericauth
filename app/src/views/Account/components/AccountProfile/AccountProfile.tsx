@@ -62,7 +62,7 @@ const AccountProfile = (props: any) => {
               color="textSecondary"
               variant="body1"
             >
-              {'Roles: ' + user.activeRoles[0]}
+              {'Roles: ' + user.activeRoles.map((role: any) => ` ${role}`)}
             </Typography>
             <Typography
               className={classes.typography}

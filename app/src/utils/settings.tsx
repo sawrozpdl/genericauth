@@ -1,11 +1,12 @@
 export function restoreSettings() {
-  let settings = null;
+  let settings = { direction: 'ltr', responsiveFontSizes: true, theme: 'DARK' };
 
   try {
     const storedData = localStorage.getItem('settings');
 
     if (storedData) {
       settings = JSON.parse(storedData);
+      console.log(settings);
     }
   } catch (err) {
     // If stored data is not a strigified JSON this might fail,

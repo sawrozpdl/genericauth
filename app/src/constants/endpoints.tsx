@@ -8,6 +8,8 @@ export const LOGIN_URL = `${config.auth.baseUrl}${config.auth.endpoints.login}`;
 
 export const VERIFY_URL = `${config.auth.baseUrl}${config.auth.endpoints.verify}`;
 
+export const FORGOT_PASSWORD_URL = `${config.auth.baseUrl}${config.auth.endpoints.forgotPassword}`;
+
 export const LOGOUT_URL = `${config.auth.baseUrl}${config.auth.endpoints.logout}`;
 
 export const USERS_URL = `${config.auth.baseUrl}${config.auth.endpoints.appUsers}`;

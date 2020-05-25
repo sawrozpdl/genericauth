@@ -19,7 +19,10 @@ const useStyles = makeStyles(() => ({
 }));
 
 const LocationDetails = (props: any) => {
-  const { className, location, ...rest } = props;
+  const { className, ...rest } = props;
+  let { location } = props;
+
+  if (!location) location = {};
 
   const { streetAddress, postalCode, city, stateProvince, country } = location;
 

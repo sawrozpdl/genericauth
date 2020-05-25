@@ -1,17 +1,13 @@
 package com.generics.auth.service;
 
 import com.generics.auth.exception.HttpException;
-import com.generics.auth.model.User;
-import com.generics.auth.utils.Http;
 import com.generics.auth.utils.Str;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 
 @Service
 public class VerifyService {
@@ -23,16 +19,9 @@ public class VerifyService {
     TokenService tokenService;
 
     @Autowired
-    UserService userService;
-
-    @Autowired
     ResourceLoader resourceLoader;
 
     public Object verifyEmail(String email, String redirect, String action, HttpServletRequest request) {
-        Optional<User> user = userService.getUserByEmail(email);
-        if (user.isPresent()) {
-            throw new HttpException("User with the email already exists.", HttpStatus.UNAUTHORIZED);
-        }
         String token = tokenService.createFor(email);
 //        String[] reqInfo = Http.getInfo(request);
         try {

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import { Button } from '@material-ui/core';
+import routes from '../../../../constants/routes';
 
 import { SearchInput } from '../../../../components';
 
@@ -39,7 +40,9 @@ const AppsToolbar = (props: any) => {
         <Button
           color="primary"
           variant="contained"
-          onClick={() => history.push('/')}
+          onClick={() => {
+            history.push(routes.CREATE_APP);
+          }}
         >
           Create App
         </Button>

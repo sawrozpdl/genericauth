@@ -7,6 +7,7 @@ import {
   extractFullName,
   extractInitials,
 } from '../../../../../../utils/string';
+import roles from '../../../../../../constants/roles';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
@@ -39,7 +40,7 @@ const Profile = (props: any) => {
         {extractFullName(user, false)}
       </Typography>
       <Typography variant="body2" className={classes.roles}>
-        {user.activeRoles}
+        {user.activeRoles.includes(roles.ADMIN) ? roles.ADMIN : roles.USER}
       </Typography>
     </div>
   );

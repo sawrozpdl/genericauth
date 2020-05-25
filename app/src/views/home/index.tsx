@@ -15,6 +15,7 @@ import { Button, TextField, Link } from '@material-ui/core';
 import routes from '../../constants/routes';
 import http from '../../utils/http';
 import { APP_CREATE_URL, VERIFY_URL } from '../../constants/endpoints';
+import { handleError } from '../../utils/error';
 
 const schema = {
   email: {
@@ -146,9 +147,7 @@ const Home: React.FC = (props: any) => {
         'Link sent! Please check your email and follow the instructions'
       );
     } catch (error) {
-      if (!error.response) return toast.error('Unknown error occured!');
-      const { message } = error.response.data;
-      toast.error(message || 'Internal server error!');
+      handleError(error);
     } finally {
       setSending(false);
     }
