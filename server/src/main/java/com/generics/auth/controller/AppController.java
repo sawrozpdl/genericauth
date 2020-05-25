@@ -8,6 +8,7 @@ import com.generics.auth.security.AuthenticationService;
 import com.generics.auth.service.*;
 import com.generics.auth.object.RequestFilter;
 import com.generics.auth.utils.Str;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -59,8 +60,9 @@ public class AppController {
     @Transactional
     public AppRegistration createApp(HttpServletRequest request,
                                      @RequestParam String appName,
-                                     @RequestParam(defaultValue = "false") Boolean isPrivate,
+                                     @RequestParam(defaultValue = "false") Integer appPrivacy,
                                      @RequestBody User user) {
+        Boolean isPrivate = appPrivacy == 1;
         User requestUser = authenticationService.authorizeRequest(request, null, null, null);
         user.setEmail(requestUser.getEmail());
         App createdApp = appService.createApp(new App(appName, isPrivate));

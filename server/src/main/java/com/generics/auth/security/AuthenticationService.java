@@ -80,6 +80,7 @@ public class AuthenticationService {
             switch (tokenTag) {
                 case "Bearer": {
                     User user = tokenService.parseToken(token);
+                    System.out.println("User: " + user);
                     if (user != null)
                         return user;
                     error = "Invalid token or expired";

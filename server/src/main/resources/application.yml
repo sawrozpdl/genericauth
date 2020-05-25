@@ -39,10 +39,10 @@ server:
       enabled: false
 
 smtp:
-  port: 587
-  server: smtp-relay.sendinblue.com
-  username: sarojpaudyal53@gmail.com
-  password: Fk2MYfbSrHxs1BEU
+  port: ${SMTP_PORT:587}
+  server: ${SMTP_SERVER:smtp.gmail.com}
+  username: ${SMTP_LOGIN:username@gmail.com}
+  password: ${SMTP_PASSWORD:password}
 
 aws:
   region: ${AWS_REGION:null}

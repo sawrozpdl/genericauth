@@ -88,7 +88,7 @@ const UserDetails = (props: any) => {
           name="rPassword"
           onChange={handleChange}
           type="password"
-          value={formState.values.password || ''}
+          value={formState.values.rPassword || ''}
           variant="outlined"
         />
       </Box>

@@ -40,10 +40,10 @@ public class TokenService {
         if (new Date().compareTo(claims.getExpiration()) >= 0)
             throw new HttpException("Token has expired", HttpStatus.UNAUTHORIZED);
         String email = claims.getSubject();
-        String appName = (String) claims.get("appName");
-        ArrayList<String> roles = (ArrayList<String>) claims.get("roles");
         Optional<User> user = userService.getUserByEmail(email);
         user.ifPresent(value -> {
+            String appName = (String) claims.get("appName");
+            ArrayList<String> roles = (ArrayList<String>) claims.get("roles");
             value.setActiveApp(appName);
             value.setActiveRoles(roles);
         });

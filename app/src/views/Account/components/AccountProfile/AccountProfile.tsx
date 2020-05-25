@@ -55,7 +55,7 @@ const AccountProfile = (props: any) => {
         <div className={classes.details}>
           <div>
             <Typography gutterBottom variant="h2">
-              {extractFullName(user) || 'Mr. User'}
+              {extractFullName(user) || 'Mr. Anon'}
             </Typography>
             <Typography
               className={classes.typography}
@@ -82,7 +82,7 @@ const AccountProfile = (props: any) => {
             </Typography>
           </div>
           <Avatar className={classes.avatar} src={user.avatarUrl}>
-            {extractInitials(user)}
+            {extractInitials(user) || 'A'}
           </Avatar>
         </div>
         <div className={classes.progress}>

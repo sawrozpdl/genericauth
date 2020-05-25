@@ -215,10 +215,10 @@ const CreateApp = (props: any) => {
           headers: { Authorization: `Bearer ${query.token}` },
         });
         setUser(data);
-        setField('email', user.email);
+        setField('email', data.email);
       } catch (error) {
         history.push(routes.HOME);
-        toast.error('Session Expired or Invalid!');
+        toast.error('Session Expired or Invalid Token!');
       }
     };
     setUserIfExists();
@@ -282,6 +282,7 @@ const CreateApp = (props: any) => {
   const handleNext = (event: any) => {
     event.preventDefault();
     touchUserFields();
+    console.log('formstate: ', formState);
     if (!formState.isValid) return;
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
@@ -305,7 +306,7 @@ const CreateApp = (props: any) => {
       await http.post(APPS_URL, {
         accessToken: user.username,
         body: { email, username, password },
-        params: { appName, isPrivate: appPrivacy },
+        params: { appName, appPrivacy },
         headers: !user.username && {
           Authorization: `Bearer ${query.token}`,
         },

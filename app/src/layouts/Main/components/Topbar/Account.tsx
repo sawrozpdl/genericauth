@@ -72,7 +72,7 @@ const Account = (props: any) => {
         onClick={handleOpen}
       >
         <Avatar alt="User" className={classes.avatar} src={user.avatarUrl}>
-          {extractInitials(user, false)}
+          {extractInitials(user, false) || 'A'}
         </Avatar>
         <Hidden smDown>
           <Typography variant="h6" color="inherit">
