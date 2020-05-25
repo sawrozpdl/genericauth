@@ -1,8 +1,8 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import App from '../../App';
+import Loading from '../../components/Loading';
 
 test('renders learn react link', () => {
-  const app = render(<App />);
-  expect(app.container).toBeInTheDOM();
+  const app = render(<Loading height={1} />);
+  expect(app.container).toBeInTheDocument();
 });
