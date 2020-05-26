@@ -30,7 +30,7 @@ const Notifications = (props: any) => {
 
   return (
     <Card {...rest} className={clsx(classes.root, className)}>
-      <form>
+      <form autoComplete="off">
         <CardHeader
           subheader="Manage the notifications"
           title="Notifications"

@@ -39,6 +39,9 @@ public class AppRegistration implements Serializable {
 
     private Date registeredAt;
 
+    @Column(nullable = false)
+    private boolean isActive = true;
+
     @PrePersist
     protected void onCreate() {
         registeredAt = new Date();
@@ -81,5 +84,13 @@ public class AppRegistration implements Serializable {
 
     public void setRegisteredAt(Date registeredAt) {
         this.registeredAt = registeredAt;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

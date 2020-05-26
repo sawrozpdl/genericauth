@@ -56,7 +56,7 @@ public class UserRoleService {
     public void deleteUserRole(Integer id) {
         if (userRoleRepository.existsById(id))
             userRoleRepository.deleteById(id);
-        throw new HttpException(Error.missing("UserRole", "id", id), HttpStatus.NOT_FOUND);
+        else throw new HttpException(Error.missing("UserRole", "id", id), HttpStatus.NOT_FOUND);
     }
 
 }

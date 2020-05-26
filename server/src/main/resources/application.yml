@@ -26,7 +26,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
+#        show_sql: true
+#        format_sql: true
         id:
           new_generator_mappings: false
 
@@ -53,5 +54,7 @@ aws:
 logging:
   level:
     org:
+      hibernate:
+        type: trace
       springframework:
         web: debug

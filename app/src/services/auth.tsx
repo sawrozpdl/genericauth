@@ -1,16 +1,17 @@
 import http from '../utils/http';
 
-import { AUTHENTICATE_URL } from '../constants/endpoints';
+import { AUTHENTICATE_URL, LOGOUT_URL } from '../constants/endpoints';
 
 import * as tokenService from './token';
+import { interpolate } from '../utils/string';
 
 /**
  * Log out of the system.
  *
  * @param {string} refreshToken
  */
-export async function logout(): Promise<void> {
-  // await http.post(LOGOUT_URL); TODO: track lastLogin
+export async function logout(appName?: string): Promise<void> {
+  appName && (await http.post(interpolate(LOGOUT_URL, { appName })));
 
   tokenService.clear();
 }

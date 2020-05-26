@@ -13,14 +13,20 @@ import {
   TextField,
 } from '@material-ui/core';
 import { countries } from '../../../../constants/location';
+import { handleError } from '../../../../utils/error';
+import { updateUser } from '../../../../services/user';
+import toast from '../../../../utils/toast';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: any) => ({
   root: {},
+  cardAction: {
+    padding: theme.spacing(2),
+  },
 }));
 
 const LocationDetails = (props: any) => {
-  const { className, canEdit, ...rest } = props;
-  let { location } = props;
+  const { className, canEdit, user, ...rest } = props;
+  let { location } = user;
 
   if (!location) location = {};
 
@@ -36,6 +42,7 @@ const LocationDetails = (props: any) => {
     country,
   });
 
+  const [submitting, setSubmitting] = useState(false);
   const [states, setStates] = useState(['Select a country first']);
 
   useEffect(() => {
@@ -52,9 +59,22 @@ const LocationDetails = (props: any) => {
     });
   };
 
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
+    setSubmitting(true);
+    try {
+      await updateUser({ ...user, location: { ...values } });
+      toast.success('Location updated successfully');
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <Card {...rest} className={clsx(classes.root, className)}>
-      <form autoComplete="off" noValidate>
+      <form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <CardHeader
           subheader="Location information about oneself"
           title="Location"
@@ -147,8 +167,13 @@ const LocationDetails = (props: any) => {
           <>
             {' '}
             <Divider />
-            <CardActions>
-              <Button color="primary" variant="contained">
+            <CardActions className={classes.cardAction}>
+              <Button
+                type="submit"
+                color="primary"
+                variant="outlined"
+                disabled={submitting}
+              >
                 Update Location
               </Button>
             </CardActions>
@@ -161,8 +186,9 @@ const LocationDetails = (props: any) => {
 
 LocationDetails.propTypes = {
   className: PropTypes.string,
-  location: PropTypes.object,
+  user: PropTypes.object,
   canEdit: PropTypes.bool,
+  onUpdate: PropTypes.func,
   activeUser: PropTypes.object,
 };
 

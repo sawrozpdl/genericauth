@@ -2,6 +2,7 @@ package com.generics.auth.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.generics.auth.constant.Gender;
+import com.generics.auth.utils.Str;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -39,12 +40,14 @@ public class User extends GenericModel {
     @Column(nullable = false, length = 255)
     private String password;
 
-    @Column(length = 10)
-    private Integer phoneNumber;
+    @Size(min = 10)
+    private String phoneNumber;
 
     private Date lastLogin;
 
     private transient String activeApp;
+
+    private transient Boolean activeInApp;
 
     private transient ArrayList<String> activeRoles;
 
@@ -125,6 +128,10 @@ public class User extends GenericModel {
 
     public String getActiveApp() { return this.activeApp; }
 
+    public void setActiveInApp(Boolean activeInApp) {this.activeInApp = activeInApp;}
+
+    public Boolean getActiveInApp() { return this.activeInApp; }
+
     public void setActiveRoles(ArrayList<String> activeRoles) {this.activeRoles = activeRoles;}
 
     public ArrayList<String>  getActiveRoles() { return this.activeRoles; }
@@ -199,6 +206,14 @@ public class User extends GenericModel {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public String getPhoneNumber() {
+        return this.phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
 }

@@ -13,8 +13,8 @@ export const getGuestUser = (): any => {
 };
 
 export const UserProvider = (props: any) => {
-  const { user, children } = props;
-  const [activeUser, setUser] = useState(user || getGuestUser());
+  const { children } = props;
+  const [activeUser, setUser] = useState(null);
   const handleSetUser = (user: any) => {
     setUser(user || getGuestUser());
   };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -49,11 +49,16 @@ const useStyles = makeStyles((theme: any) => ({
 }));
 
 const UsersTable = (props: any) => {
-  const { className, users, appName, ...rest } = props;
+  const {
+    className,
+    users,
+    appName,
+    selectedUsers,
+    setSelectedUsers,
+    ...rest
+  } = props;
 
   const classes: any = useStyles();
-
-  const [selectedUsers, setSelectedUsers] = useState<any>([]);
 
   const handleSelectAll = (event: any) => {
     const { users } = props;
@@ -172,6 +177,8 @@ UsersTable.propTypes = {
   children: PropTypes.any,
   className: PropTypes.string,
   appName: PropTypes.string,
+  selectedUsers: PropTypes.array,
+  setSelectedUsers: PropTypes.func,
   users: PropTypes.array.isRequired,
 };
 

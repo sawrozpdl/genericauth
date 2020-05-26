@@ -11,6 +11,9 @@ import {
   Button,
   TextField,
 } from '@material-ui/core';
+import { changePassword } from '../../../../services/user';
+import toast from '../../../../utils/toast';
+import { handleError } from '../../../../utils/error';
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -21,6 +24,7 @@ const Password = (props: any) => {
 
   const classes = useStyles();
 
+  const [submitting, setSubmitting] = useState(false);
   const [values, setValues] = useState({
     password: '',
     confirm: '',
@@ -33,9 +37,29 @@ const Password = (props: any) => {
     });
   };
 
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
+    if (values.confirm !== values.password) {
+      return toast.info('Passwords donot match, Please try again');
+    }
+    if (values.password.length < 8) {
+      return toast.info('Password should be at least 8 characters');
+    }
+    setSubmitting(true);
+    try {
+      await changePassword(values.password);
+      setValues({ password: '', confirm: '' });
+      toast.success('Password changed successfully');
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <Card {...rest} className={clsx(classes.root, className)}>
-      <form>
+      <form autoComplete="off" onSubmit={handleSubmit}>
         <CardHeader subheader="Update password" title="Password" />
         <Divider />
         <CardContent>
@@ -61,7 +85,12 @@ const Password = (props: any) => {
         </CardContent>
         <Divider />
         <CardActions>
-          <Button color="primary" variant="outlined">
+          <Button
+            color="primary"
+            variant="outlined"
+            type="submit"
+            disabled={submitting}
+          >
             Update
           </Button>
         </CardActions>

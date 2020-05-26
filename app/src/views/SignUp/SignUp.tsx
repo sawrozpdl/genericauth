@@ -285,7 +285,11 @@ const SignUp = (props: any) => {
           <Typography component="h1" variant="h3">
             {`Register for ${capitalize(appName)}`}
           </Typography>
-          <form className={classes.form} onSubmit={handleSignUp}>
+          <form
+            autoComplete="off"
+            className={classes.form}
+            onSubmit={handleSignUp}
+          >
             <TextField
               className={classes.textField}
               error={hasError('firstName')}

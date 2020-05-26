@@ -282,7 +282,6 @@ const CreateApp = (props: any) => {
   const handleNext = (event: any) => {
     event.preventDefault();
     touchUserFields();
-    console.log('formstate: ', formState);
     if (!formState.isValid) return;
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
@@ -357,7 +356,11 @@ const CreateApp = (props: any) => {
               </Stepper>
             </Grid>
             <Grid item xs={12} md={9}>
-              <form onSubmit={handleComplete} className={clsx(classes.form)}>
+              <form
+                autoComplete="off"
+                onSubmit={handleComplete}
+                className={clsx(classes.form)}
+              >
                 <Box p={3}>
                   {activeStep === 0 && (
                     <UserDetails
@@ -415,7 +418,7 @@ const CreateApp = (props: any) => {
                   onClick={async () => {
                     if (user.username) {
                       logout();
-                      await authService.logout();
+                      await authService.logout(user.activeApp);
                     }
                     history.push(
                       interpolate(routes.LOGIN, {

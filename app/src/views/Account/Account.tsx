@@ -1,19 +1,31 @@
 import React, { useContext, useEffect, useState, useCallback } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { Grid } from '@material-ui/core';
+import { Grid, Card, CardContent } from '@material-ui/core';
 import UserContext from '../../context/UserContext';
 
 import { AccountProfile, AccountDetails, LocationDetails } from './components';
-import { fetchUserForApp } from '../../services/user';
+import { fetchUserForApp, disableUser } from '../../services/user';
 import Loading from '../../components/Loading';
 import roles from '../../constants/roles';
 import { handleError } from '../../utils/error';
 import routes from '../../constants/routes';
 
+import { Button } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
+import BlockIcon from '@material-ui/icons/Block';
+import toast from '../../utils/toast';
+import RoleDetails from './components/RoleDetails';
+
 const useStyles = makeStyles((theme: any) => ({
   root: {
     padding: theme.spacing(4),
     minHeight: '100vh',
+  },
+  cardRoot: { marginTop: theme.spacing(3) },
+  cardAction: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    paddingBottom: theme.spacing(2) + 'px !important',
   },
 }));
 
@@ -50,6 +62,36 @@ const Account = (props: any) => {
     fetchAndSetUser();
   }, [fetchAndSetUser]);
 
+  const handleDisable = async (actionName: string, hard = false) => {
+    if (user.email === activeUser.email) {
+      return toast.info(`${actionName} of self is not allowed!`);
+    }
+    const toDisable = user;
+    try {
+      await disableUser(toDisable, hard);
+      fetchAndSetUser();
+      toast.success(`${actionName} successfull!`);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  const isAdmin = activeUser.activeRoles.includes(roles.ADMIN);
+
+  const handleDeactivateClick = async () => {
+    if (!isAdmin) return;
+    await handleDisable(user.activeInApp ? 'Deactivation' : 'Activation');
+  };
+
+  const handleDeleteClick = async () => {
+    if (!isAdmin) return;
+    await handleDisable('Deletion', true);
+  };
+
+  const onComponentUpdate = async () => {
+    fetchAndSetUser();
+  };
+
   return (
     <div className={classes.root}>
       {!loading && user ? (
@@ -59,22 +101,52 @@ const Account = (props: any) => {
               user={user}
               activeUser={activeUser}
               canEdit={canEdit}
+              onUpdate={onComponentUpdate}
             />
+            <Card className={classes.cardRoot}>
+              <CardContent className={classes.cardAction}>
+                <Button
+                  color="default"
+                  variant="outlined"
+                  disabled={!isAdmin}
+                  startIcon={<BlockIcon />}
+                  onClick={handleDeactivateClick}
+                >
+                  {user.activeInApp ? 'Deactivate' : 'Activate'}
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  disabled={!isAdmin}
+                  onClick={handleDeleteClick}
+                  startIcon={<DeleteIcon />}
+                >
+                  {'Delete'}
+                </Button>
+              </CardContent>
+            </Card>
           </Grid>
           <Grid item lg={8} md={6} xl={8} xs={12}>
             <AccountDetails
               user={user}
               activeUser={activeUser}
+              onUpdate={onComponentUpdate}
               canEdit={canEdit}
             />
           </Grid>
           <Grid item lg={4} md={6} xl={4} xs={12}>
-            <div />
+            <RoleDetails
+              user={user}
+              activeUser={activeUser}
+              onUpdate={onComponentUpdate}
+              isAdmin={isAdmin}
+            />
           </Grid>
           <Grid item lg={8} md={6} xl={8} xs={12}>
             <LocationDetails
-              location={user.location}
+              user={user}
               activeUser={activeUser}
+              onUpdate={onComponentUpdate}
               canEdit={canEdit}
             />
           </Grid>

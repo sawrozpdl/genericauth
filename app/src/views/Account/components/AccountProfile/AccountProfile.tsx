@@ -25,6 +25,10 @@ const useStyles = makeStyles((theme: any) => ({
   details: {
     display: 'flex',
   },
+  cardAction: {
+    justifyContent: 'space-between',
+    padding: theme.spacing(2),
+  },
   avatar: {
     marginLeft: 'auto',
     height: 110,
@@ -97,15 +101,15 @@ const AccountProfile = (props: any) => {
         <>
           {' '}
           <Divider />
-          <CardActions>
+          <CardActions className={classes.cardAction}>
             <Button
               className={classes.uploadButton}
               color="primary"
-              variant="text"
+              variant="outlined"
             >
               Upload picture
             </Button>
-            <Button variant="text">Remove picture</Button>
+            <Button variant="outlined">Remove picture</Button>
           </CardActions>
         </>
       )}
@@ -117,6 +121,7 @@ AccountProfile.propTypes = {
   className: PropTypes.string,
   user: PropTypes.object,
   canEdit: PropTypes.bool,
+  onUpdate: PropTypes.func,
   activeUser: PropTypes.object,
 };
 

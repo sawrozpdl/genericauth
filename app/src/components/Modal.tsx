@@ -12,11 +12,12 @@ const DialogTitle = withStyles((theme: any) => ({
   root: {
     margin: 0,
     padding: theme.spacing(2),
+    marginRight: theme.spacing(5),
   },
   closeButton: {
     position: 'absolute',
     right: theme.spacing(1),
-    top: theme.spacing(1),
+    top: theme.spacing(0.5),
     color: theme.palette.grey[500],
   },
 }))((props: any) => {

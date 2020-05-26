@@ -246,7 +246,11 @@ const SignIn = (props: any) => {
           <Typography component="h1" variant="h3">
             {`Log in to ${capitalize(appName)}`}
           </Typography>
-          <form className={classes.form} onSubmit={handleSignIn}>
+          <form
+            autoComplete="off"
+            className={classes.form}
+            onSubmit={handleSignIn}
+          >
             <Typography
               align="center"
               className={classes.sugestion}

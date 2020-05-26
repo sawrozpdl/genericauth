@@ -6,7 +6,13 @@ public enum Events {
     DELETED,
     FETCHED,
     PROMOTED,
+    DEMOTED,
+    FETCH_USERS,
+    FETCH_USER,
     ADDED,
     REMOVED,
-    BANNED
+    BANNED,
+    REGISTERED,
+    LOGGED_IN,
+    LOGGED_OUT;
 }

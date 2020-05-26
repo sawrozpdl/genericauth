@@ -139,7 +139,6 @@ const Home: React.FC = (props: any) => {
           redirectTo: APP_CREATE_URL,
         },
       });
-      console.log('Sent email: ', data);
       setFormState((formState: any) => {
         return { errors: {}, touched: {}, values: {}, isValid: false };
       });
@@ -227,7 +226,11 @@ const Home: React.FC = (props: any) => {
                   We will send you &apos;IAM&apos; link to the email and you are
                   almost there!
                 </Typography>
-                <form className={classes.form} onSubmit={handleAppCreate}>
+                <form
+                  autoComplete="off"
+                  className={classes.form}
+                  onSubmit={handleAppCreate}
+                >
                   <TextField
                     className={classes.textField}
                     error={hasError('email')}

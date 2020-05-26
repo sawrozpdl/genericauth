@@ -9,7 +9,7 @@ import Container from '@material-ui/core/Container';
 import Avatar from '@material-ui/core/Avatar';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import toast from '../../utils/toast';
-import { FORGOT_PASSWORD_URL, VERIFY_URL } from '../../constants/endpoints';
+import { CHANGE_PASSWORD_URL, VERIFY_URL } from '../../constants/endpoints';
 import routes from '../../constants/routes';
 import { handleError } from '../../utils/error';
 import { parseQuery, interpolate } from '../../utils/string';
@@ -208,7 +208,7 @@ const SignIn = (props: any) => {
       return;
     }
 
-    await http.post(FORGOT_PASSWORD_URL, {
+    await http.post(CHANGE_PASSWORD_URL, {
       accessToken: false,
       body: { password },
       headers: {

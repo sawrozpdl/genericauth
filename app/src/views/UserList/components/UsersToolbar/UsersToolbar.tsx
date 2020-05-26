@@ -2,9 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
-import { Button } from '@material-ui/core';
+import { Button, Typography } from '@material-ui/core';
 import { IconButton } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
+import BlockIcon from '@material-ui/icons/Block';
 import RefreshIcon from '@material-ui/icons/Refresh';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 import { SearchInput } from '../../../../components';
 
@@ -19,6 +23,7 @@ const useStyles = makeStyles((theme: any) => ({
   spacer: {
     flexGrow: 1,
   },
+  actionBtn: { marginLeft: theme.spacing(1) },
   importButton: {
     marginRight: theme.spacing(1),
   },
@@ -35,8 +40,13 @@ const UsersToolbar = (props: any) => {
     className,
     onSearch,
     onAddUserClick,
+    selectedUsers,
+    onDeactivateClick,
+    onDeleteClick,
     isAdmin,
     onRefresh,
+    active,
+    setActive,
     ...rest
   } = props;
 
@@ -50,6 +60,57 @@ const UsersToolbar = (props: any) => {
           placeholder="Search user"
           onSearch={onSearch}
         />
+        {isAdmin && (
+          <>
+            {' '}
+            <ToggleButtonGroup
+              size="small"
+              value={active}
+              exclusive
+              onChange={setActive}
+              aria-label="text alignment"
+            >
+              <ToggleButton value={true} aria-label="left aligned">
+                <Typography
+                  color={active ? 'primary' : 'textPrimary'}
+                  variant="body2"
+                >
+                  {'Active'}
+                </Typography>
+              </ToggleButton>
+              <ToggleButton value={false} aria-label="centered">
+                <Typography
+                  color={!active ? 'primary' : 'textPrimary'}
+                  variant="body2"
+                >
+                  {'InActive'}
+                </Typography>
+              </ToggleButton>
+            </ToggleButtonGroup>
+            {selectedUsers && selectedUsers.length ? (
+              <>
+                <Button
+                  color="default"
+                  variant="outlined"
+                  className={classes.actionBtn}
+                  startIcon={<BlockIcon />}
+                  onClick={onDeactivateClick}
+                >
+                  {active ? 'Deactivate' : 'Activate'}
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  className={classes.actionBtn}
+                  onClick={onDeleteClick}
+                  startIcon={<DeleteIcon />}
+                >
+                  {'Delete'}
+                </Button>
+              </>
+            ) : null}
+          </>
+        )}
         <span className={classes.spacer} />
         <IconButton size="small" onClick={onRefresh}>
           <RefreshIcon />
@@ -58,11 +119,7 @@ const UsersToolbar = (props: any) => {
         {isAdmin && (
           <>
             <Button className={classes.exportButton}>Export</Button>
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={onAddUserClick}
-            >
+            <Button color="primary" variant="outlined" onClick={onAddUserClick}>
               Add user
             </Button>
           </>
@@ -78,6 +135,11 @@ UsersToolbar.propTypes = {
   onRefresh: PropTypes.func,
   onExport: PropTypes.func,
   isAdmin: PropTypes.bool,
+  active: PropTypes.bool,
+  onDeactivateClick: PropTypes.func,
+  onDeleteClick: PropTypes.func,
+  selectedUsers: PropTypes.array,
+  setActive: PropTypes.func,
   onAddUserClick: PropTypes.func,
 };
 

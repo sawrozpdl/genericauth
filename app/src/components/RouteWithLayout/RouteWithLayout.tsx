@@ -5,12 +5,12 @@ import UserContext from '../../context/UserContext';
 import routes from '../../constants/routes';
 import roles from '../../constants/roles';
 import { interpolate } from '../../utils/string';
+import LoadingScreen from '../LoadingScreen';
 
 const RouteWithLayout = (props: any) => {
   const { layout: Layout, allow, component: Component, ...rest } = props;
   const userCtx: any = useContext(UserContext);
   const { user } = userCtx;
-  console.log('you are: ', user);
   if (
     user &&
     allow.length &&
@@ -29,11 +29,15 @@ const RouteWithLayout = (props: any) => {
   return (
     <Route
       {...rest}
-      render={(matchProps) => (
-        <Layout>
-          <Component {...matchProps} />
-        </Layout>
-      )}
+      render={(matchProps) =>
+        user ? (
+          <Layout {...matchProps}>
+            <Component {...matchProps} />
+          </Layout>
+        ) : (
+          <LoadingScreen />
+        )
+      }
     />
   );
 };

@@ -14,6 +14,8 @@ import { Modal } from '../../components/Modal';
 import UserDetails from '../CreateApp/UserDetails';
 import { handleError } from '../../utils/error';
 import roles from '../../constants/roles';
+import { disableUser } from '../../services/user';
+import { collectObject } from '../../utils/object';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
@@ -73,9 +75,12 @@ const UserList = () => {
     page: 0,
     size: 10,
     search: '',
+    active: true,
   });
   const [page, setPage] = useState<any>([]);
   const [showAddUser, setShowAddUser] = useState(false);
+
+  const [selectedUsers, setSelectedUsers] = useState<any>([]);
 
   const isAdmin = user.activeRoles.includes(roles.ADMIN);
 
@@ -175,19 +180,56 @@ const UserList = () => {
     fetchUsers();
   };
 
+  const handleBulkDisable = async (actionName: string, hard = false) => {
+    if (selectedUsers.includes(user.id)) {
+      return toast.info(`${actionName} of self is not allowed!`);
+    }
+    const toDisable = collectObject(page.content, selectedUsers, 'id');
+    try {
+      for (let i = 0; i < toDisable.length; i++) {
+        await disableUser(toDisable[i], hard);
+      }
+      toast.success(`${actionName} successfull!`);
+      setSelectedUsers([]);
+      fetchUsers();
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  const handleDeactivateClick = async () => {
+    await handleBulkDisable(query.active ? 'Deactivation' : 'Activation');
+  };
+
+  const handleDeleteClick = async () => {
+    await handleBulkDisable('Deletion', true);
+  };
+
   return (
     <div className={classes.root}>
       <UsersToolbar
         onSearch={handleSearch}
         isAdmin={isAdmin}
+        active={query.active}
+        selectedUsers={selectedUsers}
+        setActive={(event, value): void =>
+          setQuery({ ...query, active: value })
+        }
         onRefresh={handleRefreshClick}
-        onAddUserClick={() => setShowAddUser(true)}
+        onDeactivateClick={handleDeactivateClick}
+        onDeleteClick={handleDeleteClick}
+        onAddUserClick={(): void => setShowAddUser(true)}
       />
       <div className={classes.content}>
         {loading ? (
           <Loading height={500} />
         ) : (
-          <UsersTable users={page.content} appName={appName}>
+          <UsersTable
+            users={page.content}
+            appName={appName}
+            selectedUsers={selectedUsers}
+            setSelectedUsers={setSelectedUsers}
+          >
             <Pagination
               handleNext={handleNextPageClick}
               handlePrevious={handlePreviousPageClick}

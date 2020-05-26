@@ -64,7 +64,7 @@ function clearUnauthorizedRequestQueue() {
  * Clear tokens and redirect to login page.
  */
 function clearLocalAuth() {
-  authService.logout();
+  //authService.logout();
 }
 
 async function errorResponseHandler(err: any) {

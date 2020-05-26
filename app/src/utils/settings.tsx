@@ -6,7 +6,6 @@ export function restoreSettings() {
 
     if (storedData) {
       settings = JSON.parse(storedData);
-      console.log(settings);
     }
   } catch (err) {
     // If stored data is not a strigified JSON this might fail,

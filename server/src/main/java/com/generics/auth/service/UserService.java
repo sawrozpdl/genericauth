@@ -95,8 +95,8 @@ public class UserService {
         throw new HttpException(Error.missing("User", "id", id), HttpStatus.NOT_FOUND);
     }
 
-    public Page<User> getAllUsersInApp(String appName, RequestFilter filter) {
-        return userRepository.findUsersByAppName(appName, PageRequest.of(filter.page, filter.size));
+    public Page<User> getAllUsersInApp(String appName, String search, boolean active, RequestFilter filter) {
+        return userRepository.findUsersByAppName(appName, search, active, PageRequest.of(filter.page, filter.size));
     }
 
     public void changePassword(User user, String password) {

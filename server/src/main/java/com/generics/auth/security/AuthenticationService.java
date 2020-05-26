@@ -1,21 +1,25 @@
 package com.generics.auth.security;
 
+import com.generics.auth.constant.Events;
+import com.generics.auth.constant.Models;
 import com.generics.auth.constant.Roles;
 import com.generics.auth.exception.HttpException;
+import com.generics.auth.model.App;
 import com.generics.auth.model.User;
-import com.generics.auth.service.AppService;
-import com.generics.auth.service.TokenService;
-import com.generics.auth.service.UserRoleService;
-import com.generics.auth.service.UserService;
+import com.generics.auth.model.UserRole;
+import com.generics.auth.service.*;
 import com.generics.auth.utils.Gen;
+import com.generics.auth.utils.Str;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import com.generics.auth.utils.Error;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class AuthenticationService {
@@ -25,6 +29,9 @@ public class AuthenticationService {
 
     @Autowired
     AppService appService;
+
+    @Autowired
+    EventService eventService;
 
     @Autowired
     UserRoleService userRoleService;
@@ -51,8 +58,15 @@ public class AuthenticationService {
                 if (user != null) {
                     error = "Access Denied";
                     boolean isAuthorized = username != null && !user.getUsername().equals(username);
-                    List<String> userRoles = userRoleService.getUserRolesForApp(user.getUsername(), appName);
-                    if ((userRoles.containsAll(Arrays.asList(roles)) && isAuthorized) || userRoles.contains(Roles.ADMIN.name())) {
+
+                    Set<UserRole> userRoles = user.getRoles();
+                    ArrayList<String> activeRoles = new ArrayList<>();
+                    userRoles.forEach(userRole -> {
+                        if (userRole.getApp().getName().equals(appName))
+                            activeRoles.add(userRole.getRole().getName());
+                    });
+
+                    if ((userRoles.containsAll(Arrays.asList(roles)) && isAuthorized) || activeRoles.contains(Roles.ADMIN.name())) {
                         return user;
                     }
                 }
@@ -124,6 +138,12 @@ public class AuthenticationService {
 
                 User user = userService.authenticateUser(username, password, appName);
                 if (user != null) {
+                    App app = appService.geAppByName(appName);
+                    eventService.track(Str.interpolate(Models.USER, "id", user.getId()),
+                            Events.LOGGED_IN,
+                            Str.interpolate(Models.APP, "id", app.getId()),
+                            app);
+
                     return new Object() {
                         public final String accessToken = tokenService.generateToken(user,appName, true);
                         public final String refreshToken = tokenService.generateToken(user,appName, false);

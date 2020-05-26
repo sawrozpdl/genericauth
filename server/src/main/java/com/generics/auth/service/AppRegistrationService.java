@@ -38,7 +38,7 @@ public class AppRegistrationService {
         if (appRegistration.isPresent())
             return appRegistration.get();
 
-        throw new HttpException(Error.missing("Registration for" + appName, "username", username), HttpStatus.NOT_FOUND);
+        throw new HttpException(Error.missing("Registration for " + appName, "username", username), HttpStatus.NOT_FOUND);
     }
 
     public AppRegistration registerUser(App app, User user) {
@@ -52,8 +52,15 @@ public class AppRegistrationService {
     public void removeAppRegistration(Integer id) {
         if (appRegistrationRepository.existsById(id))
             appRegistrationRepository.deleteById(id);
+        else throw new HttpException(Error.missing("App Registration", "id", id), HttpStatus.NOT_FOUND);
+    }
 
-        throw new HttpException(Error.missing("App Registration", "id", id), HttpStatus.NOT_FOUND);
+    public void disableAppRegistration(AppRegistration appRegistration) {
+        if (appRegistrationRepository.existsById(appRegistration.getId())) {
+            appRegistration.setActive(!appRegistration.isActive());
+            appRegistrationRepository.save(appRegistration);
+        }
+        else throw new HttpException(Error.missing("App Registration", "id", appRegistration.getId()), HttpStatus.NOT_FOUND);
     }
 
 }

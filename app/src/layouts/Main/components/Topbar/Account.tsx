@@ -46,9 +46,15 @@ const Account = (props: any) => {
 
   const { user, onLogout } = props;
 
+  const classes: any = useStyles();
+
+  if (!user) return <div />;
+
+  const { username, activeApp: appName } = user;
+
   const handleLogout = async () => {
     try {
-      await authService.logout();
+      await authService.logout(appName);
       onLogout();
       history.push(routes.HOME);
       toast.success('Logout successfull!');
@@ -56,12 +62,6 @@ const Account = (props: any) => {
       toast.error('Unknown error occured');
     }
   };
-
-  const classes: any = useStyles();
-
-  if (!user) return <div />;
-
-  const { username, activeApp: appName } = user;
 
   return (
     <>

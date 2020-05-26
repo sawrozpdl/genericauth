@@ -39,7 +39,7 @@ public class ApiController {
         return authenticationService.authenticateRequest(request);
     }
 
-    @PostMapping("/api/forgot-password")
+    @PostMapping("/api/change-password")
     public Object changePassword(@RequestBody PasswordBody passwordBody, HttpServletRequest request) {
         User user = authenticationService.authorizeRequest(request, null, null, null);
         String password = passwordBody.getPassword();

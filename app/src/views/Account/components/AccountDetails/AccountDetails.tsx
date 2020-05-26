@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import moment from 'moment';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
@@ -12,6 +13,9 @@ import {
   Button,
   TextField,
 } from '@material-ui/core';
+import { updateUser } from '../../../../services/user';
+import toast from '../../../../utils/toast';
+import { handleError } from '../../../../utils/error';
 
 const genders = [
   { label: 'Private', value: 'PRIVATE' },
@@ -20,8 +24,11 @@ const genders = [
   { label: 'Other', value: 'OTHER' },
 ];
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: any) => ({
   root: {},
+  cardAction: {
+    padding: theme.spacing(2),
+  },
 }));
 
 const AccountDetails = (props: any) => {
@@ -39,6 +46,7 @@ const AccountDetails = (props: any) => {
 
   const classes = useStyles();
 
+  const [submitting, setSubmitting] = useState(false);
   const [values, setValues] = useState({
     firstName,
     middleName,
@@ -46,7 +54,7 @@ const AccountDetails = (props: any) => {
     email,
     phoneNumber,
     gender,
-    birthDate,
+    birthDate: moment(birthDate).format('YYYY-MM-DD'),
   });
 
   const handleChange = (event: any) => {
@@ -56,9 +64,22 @@ const AccountDetails = (props: any) => {
     });
   };
 
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
+    setSubmitting(true);
+    try {
+      await updateUser({ ...user, ...values });
+      toast.success('Profile updated successfully');
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <Card {...rest} className={clsx(classes.root, className)}>
-      <form autoComplete="off" noValidate>
+      <form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <CardHeader
           subheader="Basic information about oneself"
           title="Profile"
@@ -126,7 +147,7 @@ const AccountDetails = (props: any) => {
                 name="birthDate"
                 type="date"
                 onChange={handleChange}
-                value={values.birthDate}
+                defaultValue={values.birthDate}
                 variant="outlined"
                 InputLabelProps={{ shrink: true }}
               />
@@ -162,8 +183,13 @@ const AccountDetails = (props: any) => {
           <>
             {' '}
             <Divider />
-            <CardActions>
-              <Button color="primary" variant="contained">
+            <CardActions className={classes.cardAction}>
+              <Button
+                type="submit"
+                color="primary"
+                variant="outlined"
+                disabled={submitting}
+              >
                 Update Profile
               </Button>
             </CardActions>
@@ -177,6 +203,7 @@ const AccountDetails = (props: any) => {
 AccountDetails.propTypes = {
   className: PropTypes.string,
   user: PropTypes.object,
+  onUpdate: PropTypes.func,
   canEdit: PropTypes.bool,
   activeUser: PropTypes.object,
 };
