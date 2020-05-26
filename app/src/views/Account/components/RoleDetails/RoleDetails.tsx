@@ -91,7 +91,7 @@ const RoleDetails = (props: any) => {
                 <Chip
                   avatar={<Avatar>{role.charAt(0).toUpperCase()}</Avatar>}
                   label={role}
-                  disabled={submitting}
+                  disabled={submitting || !isAdmin}
                   onDelete={() => {
                     handleDemote(role);
                   }}

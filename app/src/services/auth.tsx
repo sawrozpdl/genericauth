@@ -10,8 +10,11 @@ import { interpolate } from '../utils/string';
  *
  * @param {string} refreshToken
  */
-export async function logout(appName?: string): Promise<void> {
-  appName && (await http.post(interpolate(LOGOUT_URL, { appName })));
+export async function logout(
+  appName?: string,
+  username?: string
+): Promise<void> {
+  appName && (await http.post(interpolate(LOGOUT_URL, { appName, username })));
 
   tokenService.clear();
 }

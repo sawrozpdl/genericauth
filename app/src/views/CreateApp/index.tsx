@@ -418,7 +418,7 @@ const CreateApp = (props: any) => {
                   onClick={async () => {
                     if (user.username) {
                       logout();
-                      await authService.logout(user.activeApp);
+                      await authService.logout(user.activeApp, user.username);
                     }
                     history.push(
                       interpolate(routes.LOGIN, {

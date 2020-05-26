@@ -88,6 +88,7 @@ const LocationDetails = (props: any) => {
                 label="City"
                 margin="dense"
                 name="city"
+                disabled={!canEdit}
                 onChange={handleChange}
                 value={values.city}
                 variant="outlined"
@@ -99,6 +100,7 @@ const LocationDetails = (props: any) => {
                 label="Postal Code"
                 margin="dense"
                 name="postalCode"
+                disabled={!canEdit}
                 onChange={handleChange}
                 value={values.postalCode}
                 variant="outlined"
@@ -109,6 +111,7 @@ const LocationDetails = (props: any) => {
                 fullWidth
                 label="Street Address"
                 margin="dense"
+                disabled={!canEdit}
                 name="streetAddress"
                 onChange={handleChange}
                 value={values.streetAddress}
@@ -120,6 +123,7 @@ const LocationDetails = (props: any) => {
                 fullWidth
                 label="Select State"
                 margin="dense"
+                disabled={!canEdit}
                 name="stateProvince"
                 onChange={handleChange}
                 select
@@ -144,6 +148,7 @@ const LocationDetails = (props: any) => {
                 fullWidth
                 label="Country"
                 margin="dense"
+                disabled={!canEdit}
                 name="country"
                 onChange={handleChange}
                 select

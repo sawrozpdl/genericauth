@@ -111,10 +111,10 @@ public class AppController {
         return authenticationService.loginRequest(request, appName);
     }
 
-    @PostMapping("/api/apps/{appName}/logout")
-    public Object logout(@PathVariable String appName, HttpServletRequest request, HttpServletResponse response) {
+    @PostMapping("/api/apps/{appName}/users/{username}/logout")
+    public Object logout(@PathVariable String appName,@PathVariable String username, HttpServletRequest request, HttpServletResponse response) {
         App app = appService.geAppByName(appName);
-        User requestUser = authenticationService.authorizeRequest(request, appName,  new String[] {Roles.ADMIN.name()}, null);
+        User requestUser = authenticationService.authorizeRequest(request, appName,  new String[] {Roles.USER.name()}, username);
         eventService.track(Str.interpolate(Models.USER, "id", requestUser.getId()),
                 Events.LOGGED_OUT,
                 Str.interpolate(Models.APP, "id", app.getId()),

@@ -54,7 +54,7 @@ const Account = (props: any) => {
 
   const handleLogout = async () => {
     try {
-      await authService.logout(appName);
+      await authService.logout(appName, username);
       onLogout();
       history.push(routes.HOME);
       toast.success('Logout successfull!');

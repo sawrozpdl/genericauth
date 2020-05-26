@@ -43,6 +43,7 @@ const Account = (props: any) => {
 
   const fetchAndSetUser = useCallback(async () => {
     try {
+      console.log('fetching user!');
       const userData = await fetchUserForApp(username, appName);
       setUser(userData);
       setCanEdit(
@@ -103,28 +104,28 @@ const Account = (props: any) => {
               canEdit={canEdit}
               onUpdate={onComponentUpdate}
             />
-            <Card className={classes.cardRoot}>
-              <CardContent className={classes.cardAction}>
-                <Button
-                  color="default"
-                  variant="outlined"
-                  disabled={!isAdmin}
-                  startIcon={<BlockIcon />}
-                  onClick={handleDeactivateClick}
-                >
-                  {user.activeInApp ? 'Deactivate' : 'Activate'}
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  disabled={!isAdmin}
-                  onClick={handleDeleteClick}
-                  startIcon={<DeleteIcon />}
-                >
-                  {'Delete'}
-                </Button>
-              </CardContent>
-            </Card>
+            {isAdmin && (
+              <Card className={classes.cardRoot}>
+                <CardContent className={classes.cardAction}>
+                  <Button
+                    color="default"
+                    variant="outlined"
+                    startIcon={<BlockIcon />}
+                    onClick={handleDeactivateClick}
+                  >
+                    {user.activeInApp ? 'Deactivate' : 'Activate'}
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={handleDeleteClick}
+                    startIcon={<DeleteIcon />}
+                  >
+                    {'Delete'}
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
           </Grid>
           <Grid item lg={8} md={6} xl={8} xs={12}>
             <AccountDetails

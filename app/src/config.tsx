@@ -13,7 +13,7 @@ const config: any = {
       verify: '/verify',
       app: '/apps/:appName',
       login: '/apps/:appName/login',
-      logout: '/apps/:appName/logout',
+      logout: '/apps/:appName/users/:username/logout',
       appUsers: '/apps/:appName/users',
       authenticate: '/authenticate',
       changePassword: '/change-password',

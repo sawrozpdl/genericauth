@@ -57,16 +57,14 @@ public class AuthenticationService {
                 if (roles == null) return  user;
                 if (user != null) {
                     error = "Access Denied";
-                    boolean isAuthorized = username != null && !user.getUsername().equals(username);
-
+                    boolean isAuthorized = username == null || user.getUsername().equals(username);
                     Set<UserRole> userRoles = user.getRoles();
                     ArrayList<String> activeRoles = new ArrayList<>();
                     userRoles.forEach(userRole -> {
                         if (userRole.getApp().getName().equals(appName))
                             activeRoles.add(userRole.getRole().getName());
                     });
-
-                    if ((userRoles.containsAll(Arrays.asList(roles)) && isAuthorized) || activeRoles.contains(Roles.ADMIN.name())) {
+                    if ((activeRoles.containsAll(Arrays.asList(roles)) && isAuthorized) || activeRoles.contains(Roles.ADMIN.name())) {
                         return user;
                     }
                 }

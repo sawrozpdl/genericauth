@@ -54,7 +54,7 @@ const AccountDetails = (props: any) => {
     email,
     phoneNumber,
     gender,
-    birthDate: moment(birthDate).format('YYYY-MM-DD'),
+    birthDate: birthDate && moment(birthDate).format('YYYY-MM-DD'),
   });
 
   const handleChange = (event: any) => {
@@ -93,6 +93,7 @@ const AccountDetails = (props: any) => {
                 label="First name"
                 margin="dense"
                 name="firstName"
+                disabled={!canEdit}
                 onChange={handleChange}
                 value={values.firstName}
                 variant="outlined"
@@ -104,6 +105,7 @@ const AccountDetails = (props: any) => {
                 label="Middle name"
                 margin="dense"
                 name="middleName"
+                disabled={!canEdit}
                 onChange={handleChange}
                 value={values.middleName}
                 variant="outlined"
@@ -115,6 +117,7 @@ const AccountDetails = (props: any) => {
                 label="Last name"
                 margin="dense"
                 name="lastName"
+                disabled={!canEdit}
                 onChange={handleChange}
                 value={values.lastName}
                 variant="outlined"
@@ -127,6 +130,7 @@ const AccountDetails = (props: any) => {
                 margin="dense"
                 name="gender"
                 onChange={handleChange}
+                disabled={!canEdit}
                 select
                 SelectProps={{ native: true }}
                 value={values.gender}
@@ -146,6 +150,7 @@ const AccountDetails = (props: any) => {
                 margin="dense"
                 name="birthDate"
                 type="date"
+                disabled={!canEdit}
                 onChange={handleChange}
                 defaultValue={values.birthDate}
                 variant="outlined"
@@ -170,6 +175,7 @@ const AccountDetails = (props: any) => {
                 fullWidth
                 label="Phone Number"
                 margin="dense"
+                disabled={!canEdit}
                 name="phoneNumber"
                 onChange={handleChange}
                 type="number"
