@@ -17,3 +17,7 @@ export const USERS_URL = `${config.auth.baseUrl}${config.auth.endpoints.appUsers
 export const AUTHENTICATE_URL = `${config.auth.baseUrl}${config.auth.endpoints.authenticate}`;
 
 export const APPS_URL = `${config.auth.baseUrl}${config.auth.endpoints.apps}`;
+
+export const APP_USERS_URL = `${config.auth.baseUrl}${config.auth.endpoints.appUsers}`;
+
+export const USER_PROFILE_URL = `${config.auth.baseUrl}${config.auth.endpoints.userProfile}`;

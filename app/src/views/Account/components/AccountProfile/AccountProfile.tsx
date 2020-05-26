@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: any) => ({
 }));
 
 const AccountProfile = (props: any) => {
-  const { className, user, ...rest } = props;
+  const { className, user, canEdit, ...rest } = props;
 
   const classes: any = useStyles();
 
@@ -55,7 +55,7 @@ const AccountProfile = (props: any) => {
         <div className={classes.details}>
           <div>
             <Typography gutterBottom variant="h2">
-              {extractFullName(user) || 'Mr. Anon'}
+              {extractFullName(user) || user.username}
             </Typography>
             <Typography
               className={classes.typography}
@@ -93,13 +93,22 @@ const AccountProfile = (props: any) => {
           />
         </div>
       </CardContent>
-      <Divider />
-      <CardActions>
-        <Button className={classes.uploadButton} color="primary" variant="text">
-          Upload picture
-        </Button>
-        <Button variant="text">Remove picture</Button>
-      </CardActions>
+      {canEdit && (
+        <>
+          {' '}
+          <Divider />
+          <CardActions>
+            <Button
+              className={classes.uploadButton}
+              color="primary"
+              variant="text"
+            >
+              Upload picture
+            </Button>
+            <Button variant="text">Remove picture</Button>
+          </CardActions>
+        </>
+      )}
     </Card>
   );
 };
@@ -107,6 +116,8 @@ const AccountProfile = (props: any) => {
 AccountProfile.propTypes = {
   className: PropTypes.string,
   user: PropTypes.object,
+  canEdit: PropTypes.bool,
+  activeUser: PropTypes.object,
 };
 
 export default AccountProfile;

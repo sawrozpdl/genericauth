@@ -37,7 +37,7 @@ const Profile = (props: any) => {
         {extractInitials(user, false) || 'A'}
       </Avatar>
       <Typography className={classes.name} variant="h4">
-        {extractFullName(user, false)}
+        {extractFullName(user, false) || user.username}
       </Typography>
       <Typography variant="body2" className={classes.roles}>
         {user.activeRoles.includes(roles.ADMIN) ? roles.ADMIN : roles.USER}

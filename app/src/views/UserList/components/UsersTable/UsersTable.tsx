@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { Link as RouterLink } from 'react-router-dom';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/styles';
+import { Link } from '@material-ui/core';
 import {
   Card,
   CardActions,
@@ -18,8 +20,13 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import { extractInitials, extractFullName } from '../../../../utils/string';
+import {
+  extractInitials,
+  extractFullName,
+  interpolate,
+} from '../../../../utils/string';
 import { DISPLAY_DATE_FORMAT } from '../../../../constants/schemas';
+import routes from '../../../../constants/routes';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {},
@@ -42,7 +49,7 @@ const useStyles = makeStyles((theme: any) => ({
 }));
 
 const UsersTable = (props: any) => {
-  const { className, users, ...rest } = props;
+  const { className, users, appName, ...rest } = props;
 
   const classes: any = useStyles();
 
@@ -130,7 +137,16 @@ const UsersTable = (props: any) => {
                           {extractInitials(user, false) || 'A'}
                         </Avatar>
                         <Typography variant="body1">
-                          {extractFullName(user, false) || 'Anonymous'}
+                          <Link
+                            component={RouterLink}
+                            to={interpolate(routes.USER_ACCOUNT, {
+                              appName,
+                              username: user.username,
+                            })}
+                            variant="h6"
+                          >
+                            {extractFullName(user, false) || 'Anonymous'}
+                          </Link>
                         </Typography>
                       </div>
                     </TableCell>
@@ -155,6 +171,7 @@ const UsersTable = (props: any) => {
 UsersTable.propTypes = {
   children: PropTypes.any,
   className: PropTypes.string,
+  appName: PropTypes.string,
   users: PropTypes.array.isRequired,
 };
 

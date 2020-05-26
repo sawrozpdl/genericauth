@@ -13,7 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Set;
 
 @RestController
 public class AppUserController {
@@ -51,8 +53,15 @@ public class AppUserController {
 
     @GetMapping("/api/apps/{appName}/users/{username}")
     public User userInApp(@PathVariable String appName, @PathVariable String username) {
-
-        return userService.getUserByUsernameForApp(username, appName);
+        User user = userService.getUserByUsernameForApp(username, appName);
+        Set<UserRole> userRoles = user.getRoles();
+        ArrayList<String> roles = new ArrayList<>();
+        userRoles.forEach(userRole -> {
+            if (userRole.getApp().getName().equals(appName))
+                roles.add(userRole.getRole().getName());
+        });
+        user.setActiveRoles(roles);
+        return user;
     }
 
     @PostMapping("/api/apps/{appName}/users")

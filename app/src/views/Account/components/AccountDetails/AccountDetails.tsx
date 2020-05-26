@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const AccountDetails = (props: any) => {
-  const { className, user, ...rest } = props;
+  const { className, user, canEdit, ...rest } = props;
 
   const {
     firstName,
@@ -158,12 +158,17 @@ const AccountDetails = (props: any) => {
             </Grid>
           </Grid>
         </CardContent>
-        <Divider />
-        <CardActions>
-          <Button color="primary" variant="contained">
-            Update Profile
-          </Button>
-        </CardActions>
+        {canEdit && (
+          <>
+            {' '}
+            <Divider />
+            <CardActions>
+              <Button color="primary" variant="contained">
+                Update Profile
+              </Button>
+            </CardActions>
+          </>
+        )}
       </form>
     </Card>
   );
@@ -172,6 +177,8 @@ const AccountDetails = (props: any) => {
 AccountDetails.propTypes = {
   className: PropTypes.string,
   user: PropTypes.object,
+  canEdit: PropTypes.bool,
+  activeUser: PropTypes.object,
 };
 
 export default AccountDetails;

@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const LocationDetails = (props: any) => {
-  const { className, ...rest } = props;
+  const { className, canEdit, ...rest } = props;
   let { location } = props;
 
   if (!location) location = {};
@@ -143,12 +143,17 @@ const LocationDetails = (props: any) => {
             </Grid>
           </Grid>
         </CardContent>
-        <Divider />
-        <CardActions>
-          <Button color="primary" variant="contained">
-            Update Location
-          </Button>
-        </CardActions>
+        {canEdit && (
+          <>
+            {' '}
+            <Divider />
+            <CardActions>
+              <Button color="primary" variant="contained">
+                Update Location
+              </Button>
+            </CardActions>
+          </>
+        )}
       </form>
     </Card>
   );
@@ -157,6 +162,8 @@ const LocationDetails = (props: any) => {
 LocationDetails.propTypes = {
   className: PropTypes.string,
   location: PropTypes.object,
+  canEdit: PropTypes.bool,
+  activeUser: PropTypes.object,
 };
 
 export default LocationDetails;

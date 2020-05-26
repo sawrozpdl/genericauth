@@ -29,6 +29,10 @@ const useStyles = makeStyles((theme: any) => ({
 const userSchema = {
   username: {
     presence: { allowEmpty: false, message: 'is required' },
+    format: {
+      pattern: /^[a-z0-9_-]{3,16}$/,
+      message: 'Username is not valid',
+    },
     length: {
       minimum: 3,
       maximum: 32,
@@ -183,7 +187,7 @@ const UserList = () => {
         {loading ? (
           <Loading height={500} />
         ) : (
-          <UsersTable users={page.content}>
+          <UsersTable users={page.content} appName={appName}>
             <Pagination
               handleNext={handleNextPageClick}
               handlePrevious={handlePreviousPageClick}
