@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: any) => ({
   },
 }));
 
-const Budget = (props: any) => {
+const Registrations = (props: any) => {
   const { className, ...rest } = props;
 
   const classes: any = useStyles();
@@ -56,9 +56,9 @@ const Budget = (props: any) => {
               gutterBottom
               variant="body2"
             >
-              BUDGET
+              REGISTRATIONS
             </Typography>
-            <Typography variant="h3">$24,000</Typography>
+            <Typography variant="h3">19</Typography>
           </Grid>
           <Grid item>
             <Avatar className={classes.avatar}>
@@ -69,7 +69,7 @@ const Budget = (props: any) => {
         <div className={classes.difference}>
           <ArrowDownwardIcon className={classes.differenceIcon} />
           <Typography className={classes.differenceValue} variant="body2">
-            12%
+            8%
           </Typography>
           <Typography className={classes.caption} variant="caption">
             Since last month
@@ -80,8 +80,8 @@ const Budget = (props: any) => {
   );
 };
 
-Budget.propTypes = {
+Registrations.propTypes = {
   className: PropTypes.string,
 };
 
-export default Budget;
+export default Registrations;

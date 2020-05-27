@@ -7,14 +7,14 @@ import {
   Card,
   CardHeader,
   CardContent,
-  IconButton,
   Divider,
   Typography,
 } from '@material-ui/core';
-import LaptopMacIcon from '@material-ui/icons/LaptopMac';
-import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
-import RefreshIcon from '@material-ui/icons/Refresh';
-import TabletMacIcon from '@material-ui/icons/TabletMac';
+
+import InputIcon from '@material-ui/icons/Input';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import PostAddIcon from '@material-ui/icons/PostAdd';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
@@ -29,16 +29,16 @@ const useStyles = makeStyles((theme: any) => ({
     display: 'flex',
     justifyContent: 'center',
   },
-  device: {
+  requestType: {
     textAlign: 'center',
-    padding: theme.spacing(1),
+    padding: theme.spacing(2),
   },
-  deviceIcon: {
+  requestTypeIcon: {
     color: theme.palette.icon,
   },
 }));
 
-const UsersByDevice = (props: any) => {
+const RequestsByType = (props: any) => {
   const { className, ...rest } = props;
 
   const classes = useStyles();
@@ -47,18 +47,19 @@ const UsersByDevice = (props: any) => {
   const data = {
     datasets: [
       {
-        data: [63, 15, 22],
+        data: [63, 22, 18, 12],
         backgroundColor: [
           theme.palette.primary.main,
-          theme.palette.error.main,
+          theme.palette.info.main,
           theme.palette.warning.main,
+          theme.palette.error.main,
         ],
         borderWidth: 8,
         borderColor: theme.palette.background.default,
         hoverBorderColor: theme.palette.background.default,
       },
     ],
-    labels: ['Desktop', 'Tablet', 'Mobile'],
+    labels: ['GET', 'POST', 'PUT', 'DELETE'],
   };
 
   const options = {
@@ -94,49 +95,50 @@ const UsersByDevice = (props: any) => {
     },
   };
 
-  const devices = [
+  const requestTypes = [
     {
-      title: 'Desktop',
+      title: 'GET',
       value: '63',
-      icon: <LaptopMacIcon />,
+      icon: <GetAppIcon />,
       color: theme.palette.primary.main,
     },
     {
-      title: 'Tablet',
-      value: '15',
-      icon: <TabletMacIcon />,
-      color: theme.palette.error.main,
+      title: 'POST',
+      value: '22',
+      icon: <PostAddIcon />,
+      color: theme.palette.info.main,
     },
     {
-      title: 'Mobile',
-      value: '22',
-      icon: <PhoneIphoneIcon />,
+      title: 'PUT',
+      value: '18',
+      icon: <InputIcon />,
       color: theme.palette.warning.main,
+    },
+    {
+      title: 'DELETE',
+      value: '12',
+      icon: <DeleteOutlineIcon />,
+      color: theme.palette.error.main,
     },
   ];
 
   return (
     <Card {...rest} className={clsx(classes.root, className)}>
-      <CardHeader
-        action={
-          <IconButton size="small">
-            <RefreshIcon />
-          </IconButton>
-        }
-        title="Users By Device"
-      />
+      <CardHeader title="Requests By Type" />
       <Divider />
       <CardContent>
         <div className={classes.chartContainer}>
           <Doughnut data={data} options={options} />
         </div>
         <div className={classes.stats}>
-          {devices.map((device) => (
-            <div className={classes.device} key={device.title}>
-              <span className={classes.deviceIcon}>{device.icon}</span>
-              <Typography variant="body1">{device.title}</Typography>
-              <Typography style={{ color: device.color }} variant="h3">
-                {device.value}%
+          {requestTypes.map((requestType) => (
+            <div className={classes.requestType} key={requestType.title}>
+              <span className={classes.requestTypeIcon}>
+                {requestType.icon}
+              </span>
+              <Typography variant="body1">{requestType.title}</Typography>
+              <Typography style={{ color: requestType.color }} variant="h3">
+                {requestType.value}%
               </Typography>
             </div>
           ))}
@@ -146,8 +148,8 @@ const UsersByDevice = (props: any) => {
   );
 };
 
-UsersByDevice.propTypes = {
+RequestsByType.propTypes = {
   className: PropTypes.string,
 };
 
-export default UsersByDevice;
+export default RequestsByType;

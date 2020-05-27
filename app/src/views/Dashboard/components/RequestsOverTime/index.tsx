@@ -20,9 +20,10 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function PerformanceOverTime(props: any) {
+const RequestsOverTime = (props: any) => {
   const { className, ...rest } = props;
   const classes = useStyles();
+
   const performance = {
     thisWeek: {
       data: [],
@@ -33,7 +34,7 @@ function PerformanceOverTime(props: any) {
       labels: [],
     },
     thisYear: {
-      data: [10, 5, 11, 20, 13, 28, 18, 4, 13, 12, 13, 5],
+      data: [10, 5, 110, 20, 13, 28, 18, 4, 13, 12, 13, 5],
       labels: [
         'Jan',
         'Feb',
@@ -53,10 +54,7 @@ function PerformanceOverTime(props: any) {
 
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
-      <CardHeader
-        action={<GenericMoreButton />}
-        title="Performance Over Time"
-      />
+      <CardHeader action={<GenericMoreButton />} title="Requests Over Time" />
       <Divider />
       <CardContent>
         <PerfectScrollbar>
@@ -71,10 +69,10 @@ function PerformanceOverTime(props: any) {
       </CardContent>
     </Card>
   );
-}
+};
 
-PerformanceOverTime.propTypes = {
+RequestsOverTime.propTypes = {
   className: PropTypes.string,
 };
 
-export default PerformanceOverTime;
+export default RequestsOverTime;

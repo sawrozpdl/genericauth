@@ -11,7 +11,7 @@ import {
   Divider,
   List,
   ListItem,
-  ListItemAvatar,
+  Avatar,
   ListItemText,
   IconButton,
 } from '@material-ui/core';
@@ -20,50 +20,42 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import mockData from './data';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: any) => ({
   root: {
     height: '100%',
   },
   content: {
     padding: 0,
   },
-  image: {
-    height: 48,
-    width: 48,
+  avatar: {
+    marginRight: theme.spacing(2),
   },
   actions: {
     justifyContent: 'flex-end',
   },
 }));
 
-const LatestProducts = (props: any) => {
+const RecentUsers = (props: any) => {
   const { className, ...rest } = props;
 
   const classes: any = useStyles();
 
-  const [products] = useState(mockData);
+  const [users] = useState(mockData);
 
   return (
     <Card {...rest} className={clsx(classes.root, className)}>
-      <CardHeader
-        subtitle={`${products.length} in total`}
-        title="Latest products"
-      />
+      <CardHeader subtitle={`${users.length} in total`} title="Recent Users" />
       <Divider />
       <CardContent className={classes.content}>
         <List>
-          {products.map((product, i) => (
-            <ListItem divider={i < products.length - 1} key={product.id}>
-              <ListItemAvatar>
-                <img
-                  alt="Product"
-                  className={classes.image}
-                  src={product.imageUrl}
-                />
-              </ListItemAvatar>
+          {users.map((user, i) => (
+            <ListItem divider={i < users.length - 1} key={user.id}>
+              <Avatar src={user.avatarUrl} className={classes.avatar}>
+                {user.name.charAt(0).toUpperCase()}
+              </Avatar>
               <ListItemText
-                primary={product.name}
-                secondary={`Updated ${product.updatedAt.fromNow()}`}
+                primary={user.name}
+                secondary={`Registered ${user.updatedAt.fromNow()}`}
               />
               <IconButton edge="end" size="small">
                 <MoreVertIcon />
@@ -82,8 +74,8 @@ const LatestProducts = (props: any) => {
   );
 };
 
-LatestProducts.propTypes = {
+RecentUsers.propTypes = {
   className: PropTypes.string,
 };
 
-export default LatestProducts;
+export default RecentUsers;

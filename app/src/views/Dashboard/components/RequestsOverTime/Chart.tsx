@@ -79,7 +79,6 @@ function Chart(props: any) {
             beginAtZero: true,
             min: 0,
             maxTicksLimit: 7,
-            callback: (value: any) => (value > 0 ? `${value}K` : value),
           },
         },
       ],
@@ -102,11 +101,11 @@ function Chart(props: any) {
           return;
         },
         label: (tooltipItem: any) => {
-          let label = `Income: ${tooltipItem.yLabel}`;
+          const label = ` ${tooltipItem.yLabel} Requests`;
 
-          if (tooltipItem.yLabel > 0) {
-            label += 'K';
-          }
+          // if (tooltipItem.yLabel > 0) {
+          //   label += 'K';
+          // }
 
           return label;
         },

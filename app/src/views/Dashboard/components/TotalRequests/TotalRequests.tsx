@@ -2,19 +2,14 @@ import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {
-  Card,
-  CardContent,
-  Grid,
-  Typography,
-  Avatar,
-  LinearProgress,
-} from '@material-ui/core';
+import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
 import InsertChartIcon from '@material-ui/icons/InsertChartOutlined';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
     height: '100%',
+    backgroundColor: theme.palette.info.main,
+    color: theme.palette.primary.contrastText,
   },
   content: {
     alignItems: 'center',
@@ -24,8 +19,8 @@ const useStyles = makeStyles((theme: any) => ({
     fontWeight: 700,
   },
   avatar: {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
+    backgroundColor: theme.palette.white,
+    color: theme.palette.primary.main,
     height: 56,
     width: 56,
   },
@@ -33,12 +28,9 @@ const useStyles = makeStyles((theme: any) => ({
     height: 32,
     width: 32,
   },
-  progress: {
-    marginTop: theme.spacing(3),
-  },
 }));
 
-const TasksProgress = (props: any) => {
+const TotalRequests = (props: any) => {
   const { className, ...rest } = props;
 
   const classes = useStyles();
@@ -50,13 +42,15 @@ const TasksProgress = (props: any) => {
           <Grid item>
             <Typography
               className={classes.title}
-              color="textSecondary"
+              color="inherit"
               gutterBottom
               variant="body2"
             >
-              TASKS PROGRESS
+              TOTAL REQUESTS
             </Typography>
-            <Typography variant="h3">75.5%</Typography>
+            <Typography color="inherit" variant="h3">
+              23,200
+            </Typography>
           </Grid>
           <Grid item>
             <Avatar className={classes.avatar}>
@@ -64,18 +58,13 @@ const TasksProgress = (props: any) => {
             </Avatar>
           </Grid>
         </Grid>
-        <LinearProgress
-          className={classes.progress}
-          value={75.5}
-          variant="determinate"
-        />
       </CardContent>
     </Card>
   );
 };
 
-TasksProgress.propTypes = {
+TotalRequests.propTypes = {
   className: PropTypes.string,
 };
 
-export default TasksProgress;
+export default TotalRequests;

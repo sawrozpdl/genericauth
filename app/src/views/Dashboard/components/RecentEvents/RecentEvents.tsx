@@ -45,12 +45,12 @@ const useStyles = makeStyles((theme: any) => ({
 }));
 
 const statusColors: any = {
-  delivered: 'success',
-  pending: 'info',
-  refunded: 'danger',
+  authorized: 'success',
+  created: 'info',
+  unauthorized: 'danger',
 };
 
-const LatestOrders = (props: any) => {
+const RecentEvents = (props: any) => {
   const { className, ...rest } = props;
 
   const classes: any = useStyles();
@@ -62,10 +62,10 @@ const LatestOrders = (props: any) => {
       <CardHeader
         action={
           <Button color="primary" size="small" variant="outlined">
-            New entry
+            Refresh
           </Button>
         }
-        title="Latest Orders"
+        title="Recent Events"
       />
       <Divider />
       <CardContent className={classes.content}>
@@ -74,8 +74,8 @@ const LatestOrders = (props: any) => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Order Ref</TableCell>
-                  <TableCell>Customer</TableCell>
+                  <TableCell>Event ID</TableCell>
+                  <TableCell>Event Name</TableCell>
                   <TableCell sortDirection="desc">
                     <Tooltip enterDelay={300} title="Sort">
                       <TableSortLabel active direction="desc">
@@ -121,8 +121,8 @@ const LatestOrders = (props: any) => {
   );
 };
 
-LatestOrders.propTypes = {
+RecentEvents.propTypes = {
   className: PropTypes.string,
 };
 
-export default LatestOrders;
+export default RecentEvents;

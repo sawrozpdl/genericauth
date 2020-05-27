@@ -131,7 +131,7 @@ const Home: React.FC = (props: any) => {
     setSending(true);
     try {
       const email = formState.values.email;
-      const { data } = await http.post(VERIFY_URL, {
+      await http.post(VERIFY_URL, {
         accessToken: false,
         params: {
           id: new Buffer(email).toString('base64'),
