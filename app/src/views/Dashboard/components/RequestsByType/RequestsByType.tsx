@@ -11,10 +11,8 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import InputIcon from '@material-ui/icons/Input';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import PostAddIcon from '@material-ui/icons/PostAdd';
+import events from '../../../../constants/events';
+import GenericMoreButton from '../../../../components/GenericMoreButton';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
@@ -25,12 +23,11 @@ const useStyles = makeStyles((theme: any) => ({
     height: '250px',
   },
   stats: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(4),
     display: 'flex',
     justifyContent: 'center',
   },
   requestType: {
-    textAlign: 'center',
     padding: theme.spacing(2),
   },
   requestTypeIcon: {
@@ -39,15 +36,38 @@ const useStyles = makeStyles((theme: any) => ({
 }));
 
 const RequestsByType = (props: any) => {
-  const { className, ...rest } = props;
+  const { className, app, ...rest } = props;
 
   const classes = useStyles();
   const theme: any = useTheme();
 
+  const intialData = {
+    GET: 0,
+    POST: 0,
+    PUT: 0,
+    DELETE: 0,
+  };
+
+  const { events: requests } = app;
+
+  const requestsCount: number = requests.length;
+
+  const getMethod = (action: string): string => events[action].split(':')[1];
+
+  const filteredRequests: object = requests.reduce((acc: any, curr: any) => {
+    const currMethod = getMethod(curr.action);
+    acc[currMethod] += 1;
+    return acc;
+  }, intialData);
+
+  const filteredRequestsData = Object.values(
+    filteredRequests
+  ).map((data: number) => ((data * 100) / requestsCount).toFixed(1));
+
   const data = {
     datasets: [
       {
-        data: [63, 22, 18, 12],
+        data: filteredRequestsData,
         backgroundColor: [
           theme.palette.primary.main,
           theme.palette.info.main,
@@ -85,7 +105,7 @@ const RequestsByType = (props: any) => {
       bodyFontColor: theme.palette.text.secondary,
       footerFontColor: theme.palette.text.secondary,
       callbacks: {
-        label(tooltipItem: any, _data: any) {
+        label(tooltipItem: any, _data: any): string {
           const label = _data.labels[tooltipItem.index];
           const value = _data.datasets[0].data[tooltipItem.index];
 
@@ -98,33 +118,29 @@ const RequestsByType = (props: any) => {
   const requestTypes = [
     {
       title: 'GET',
-      value: '63',
-      icon: <GetAppIcon />,
+      value: filteredRequestsData[0],
       color: theme.palette.primary.main,
     },
     {
       title: 'POST',
-      value: '22',
-      icon: <PostAddIcon />,
+      value: filteredRequestsData[1],
       color: theme.palette.info.main,
     },
     {
       title: 'PUT',
-      value: '18',
-      icon: <InputIcon />,
+      value: filteredRequestsData[2],
       color: theme.palette.warning.main,
     },
     {
       title: 'DELETE',
-      value: '12',
-      icon: <DeleteOutlineIcon />,
+      value: filteredRequestsData[3],
       color: theme.palette.error.main,
     },
   ];
 
   return (
     <Card {...rest} className={clsx(classes.root, className)}>
-      <CardHeader title="Requests By Type" />
+      <CardHeader title="Requests By Type" action={<GenericMoreButton />} />
       <Divider />
       <CardContent>
         <div className={classes.chartContainer}>
@@ -133,10 +149,7 @@ const RequestsByType = (props: any) => {
         <div className={classes.stats}>
           {requestTypes.map((requestType) => (
             <div className={classes.requestType} key={requestType.title}>
-              <span className={classes.requestTypeIcon}>
-                {requestType.icon}
-              </span>
-              <Typography variant="body1">{requestType.title}</Typography>
+              <Typography variant="h4">{requestType.title}</Typography>
               <Typography style={{ color: requestType.color }} variant="h3">
                 {requestType.value}%
               </Typography>
@@ -150,6 +163,7 @@ const RequestsByType = (props: any) => {
 
 RequestsByType.propTypes = {
   className: PropTypes.string,
+  app: PropTypes.object,
 };
 
 export default RequestsByType;

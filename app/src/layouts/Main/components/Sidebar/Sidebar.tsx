@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Divider, Drawer } from '@material-ui/core';
 import DashboardIcon from '@material-ui/icons/Dashboard';
+import HistoryIcon from '@material-ui/icons/History';
 import PeopleIcon from '@material-ui/icons/People';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import SettingsIcon from '@material-ui/icons/Settings';
@@ -52,8 +53,13 @@ const Sidebar = (props: any) => {
   const pages = [
     user.activeRoles.includes(roles.ADMIN) && {
       title: 'Dashboard',
-      href: interpolate(routes.DASHBOARD, { username, appName }),
+      href: interpolate(routes.DASHBOARD, { appName }),
       icon: <DashboardIcon />,
+    },
+    {
+      title: 'History',
+      href: interpolate(routes.HISTORY, { appName }),
+      icon: <HistoryIcon />,
     },
     {
       title: 'Users',

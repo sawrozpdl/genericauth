@@ -11,6 +11,7 @@ import {
   LinearProgress,
 } from '@material-ui/core';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
+import { getProfileCompleteness } from '../../../../utils/string';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
@@ -39,7 +40,16 @@ const useStyles = makeStyles((theme: any) => ({
 }));
 
 const ProfileCompletion = (props: any) => {
-  const { className, ...rest } = props;
+  const { className, app, ...rest } = props;
+
+  const { users } = app;
+
+  const completion = users.reduce(
+    (acc: any, curr: any) => acc + getProfileCompleteness(curr),
+    0
+  );
+
+  const percent = (completion / users.length).toFixed(2);
 
   const classes = useStyles();
 
@@ -56,7 +66,7 @@ const ProfileCompletion = (props: any) => {
             >
               PROFILE COMPLETION
             </Typography>
-            <Typography variant="h3">75.5%</Typography>
+            <Typography variant="h3">{percent}%</Typography>
           </Grid>
           <Grid item>
             <Avatar className={classes.avatar}>
@@ -66,7 +76,7 @@ const ProfileCompletion = (props: any) => {
         </Grid>
         <LinearProgress
           className={classes.progress}
-          value={75.5}
+          value={+percent}
           variant="determinate"
         />
       </CardContent>
@@ -76,6 +86,7 @@ const ProfileCompletion = (props: any) => {
 
 ProfileCompletion.propTypes = {
   className: PropTypes.string,
+  app: PropTypes.object,
 };
 
 export default ProfileCompletion;

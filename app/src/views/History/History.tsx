@@ -6,7 +6,7 @@ import validate from 'validate.js';
 import { UsersToolbar, UsersTable } from './components';
 import http from '../../utils/http';
 import { USERS_URL } from '../../constants/endpoints';
-import { interpolate, toNormalCase, downloadCsv } from '../../utils/string';
+import { interpolate } from '../../utils/string';
 import Loading from '../../components/Loading';
 import toast from '../../utils/toast';
 import Pagination from '../../components/Pagination';
@@ -15,18 +15,7 @@ import UserDetails from '../CreateApp/UserDetails';
 import { handleError } from '../../utils/error';
 import roles from '../../constants/roles';
 import { disableUser } from '../../services/user';
-import { collectObject, withoutAttrs } from '../../utils/object';
-
-const EXCLUDE_ATTRS: string[] = [
-  'roles',
-  'profile',
-  'location',
-  'password',
-  'activeRoles',
-  'activeInApp',
-  'refreshTokens',
-  'registrations',
-];
+import { collectObject } from '../../utils/object';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
@@ -44,7 +33,7 @@ const userSchema = {
     presence: { allowEmpty: false, message: 'is required' },
     format: {
       pattern: /^[a-z0-9_-]{3,16}$/,
-      message: 'is not valid',
+      message: 'Username is not valid',
     },
     length: {
       minimum: 3,
@@ -74,7 +63,7 @@ const userSchema = {
   },
 };
 
-const UserList = () => {
+const History = () => {
   const classes = useStyles();
 
   const userCtx: any = useContext(UserContext);
@@ -208,19 +197,6 @@ const UserList = () => {
     }
   };
 
-  const handleExportClick = async (): Promise<void> => {
-    let toExport = selectedUsers.length
-      ? collectObject(page.content, selectedUsers, 'id')
-      : page.content;
-    toExport = toExport.map((user: any) => withoutAttrs(user, EXCLUDE_ATTRS));
-    const tableHeaders = Object.keys(toExport[0]).map((header: string) =>
-      toNormalCase(header)
-    );
-    const tableRows = toExport.map((obj: object) => Object.values(obj));
-    const rows = [tableHeaders, ...tableRows];
-    downloadCsv(rows, 'user_data');
-  };
-
   const handleDeactivateClick = async () => {
     await handleBulkDisable(query.active ? 'Deactivation' : 'Activation');
   };
@@ -239,7 +215,6 @@ const UserList = () => {
         setActive={(event, value): void =>
           setQuery({ ...query, active: value })
         }
-        onExport={handleExportClick}
         onRefresh={handleRefreshClick}
         onDeactivateClick={handleDeactivateClick}
         onDeleteClick={handleDeleteClick}
@@ -299,4 +274,4 @@ const UserList = () => {
   );
 };
 
-export default UserList;
+export default History;

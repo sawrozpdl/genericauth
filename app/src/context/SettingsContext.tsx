@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import THEMES from '../constants/themes';
@@ -7,12 +7,10 @@ import { storeSettings } from '../utils/settings';
 const SettingsContext = createContext({});
 
 const defaultSettings = {
-  direction: 'ltr',
-  responsiveFontSizes: true,
   theme: THEMES.DARK,
 };
 
-export function SettingsProvider(props: any) {
+export const SettingsProvider = (props: any) => {
   const { settings, children } = props;
   const [currentSettings, setCurrentSettings] = useState(
     settings || defaultSettings
@@ -25,10 +23,6 @@ export function SettingsProvider(props: any) {
     storeSettings(mergedSettings);
   };
 
-  useEffect(() => {
-    document.dir = currentSettings.direction;
-  }, [currentSettings]);
-
   return (
     <SettingsContext.Provider
       value={{
@@ -39,7 +33,7 @@ export function SettingsProvider(props: any) {
       {children}
     </SettingsContext.Provider>
   );
-}
+};
 
 SettingsProvider.propTypes = {
   children: PropTypes.node.isRequired,

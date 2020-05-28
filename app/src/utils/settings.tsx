@@ -1,5 +1,7 @@
-export function restoreSettings() {
-  let settings = { direction: 'ltr', responsiveFontSizes: true, theme: 'DARK' };
+import toast from './toast';
+
+export const restoreSettings = () => {
+  let settings = { theme: 'DARK' };
 
   try {
     const storedData = localStorage.getItem('settings');
@@ -8,13 +10,12 @@ export function restoreSettings() {
       settings = JSON.parse(storedData);
     }
   } catch (err) {
-    // If stored data is not a strigified JSON this might fail,
-    // that's why we catch the error
+    toast.info('Failed to load settings!');
   }
 
   return settings;
-}
+};
 
-export function storeSettings(settings: any) {
+export const storeSettings = (settings: any) => {
   localStorage.setItem('settings', JSON.stringify(settings));
-}
+};

@@ -23,6 +23,8 @@ import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
 import mockData from './data';
 import { StatusBullet } from '../../../../components';
+import { interpolate } from '../../../../utils/string';
+import routes from '../../../../constants/routes';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {},
@@ -51,7 +53,7 @@ const statusColors: any = {
 };
 
 const RecentEvents = (props: any) => {
-  const { className, ...rest } = props;
+  const { className, history, app, ...rest } = props;
 
   const classes: any = useStyles();
 
@@ -113,7 +115,14 @@ const RecentEvents = (props: any) => {
       </CardContent>
       <Divider />
       <CardActions className={classes.actions}>
-        <Button color="primary" size="small" variant="text">
+        <Button
+          color="primary"
+          size="small"
+          variant="text"
+          onClick={() =>
+            history.push(interpolate(routes.HISTORY, { appName: app.name }))
+          }
+        >
           View all <ArrowRightIcon />
         </Button>
       </CardActions>

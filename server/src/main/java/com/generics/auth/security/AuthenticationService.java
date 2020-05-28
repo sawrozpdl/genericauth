@@ -5,6 +5,7 @@ import com.generics.auth.constant.Models;
 import com.generics.auth.constant.Roles;
 import com.generics.auth.exception.HttpException;
 import com.generics.auth.model.App;
+import com.generics.auth.model.AppRegistration;
 import com.generics.auth.model.User;
 import com.generics.auth.model.UserRole;
 import com.generics.auth.service.*;
@@ -18,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -29,6 +29,9 @@ public class AuthenticationService {
 
     @Autowired
     AppService appService;
+
+    @Autowired
+    AppRegistrationService appRegistrationService;
 
     @Autowired
     EventService eventService;
@@ -136,16 +139,20 @@ public class AuthenticationService {
 
                 User user = userService.authenticateUser(username, password, appName);
                 if (user != null) {
-                    App app = appService.geAppByName(appName);
-                    eventService.track(Str.interpolate(Models.USER, "id", user.getId()),
-                            Events.LOGGED_IN,
-                            Str.interpolate(Models.APP, "id", app.getId()),
-                            app);
+                    AppRegistration appRegistration = appRegistrationService.getAppRegistrationByAppNameAndUsername(username, appName);
+                    if (appRegistration.isActive()) {
+                        App app = appService.geAppByName(appName);
+                        eventService.track(Str.interpolate(Models.USER, "id", user.getId()),
+                                Events.LOGGED_IN,
+                                Str.interpolate(Models.APP, "id", app.getId()),
+                                app);
 
-                    return new Object() {
-                        public final String accessToken = tokenService.generateToken(user,appName, true);
-                        public final String refreshToken = tokenService.generateToken(user,appName, false);
-                    };
+                        return new Object() {
+                            public final String accessToken = tokenService.generateToken(user,appName, true);
+                            public final String refreshToken = tokenService.generateToken(user,appName, false);
+                        };
+                    }
+                    error = "Account has been disabled, Please contact your admin";
                 }
             }
             else {

@@ -58,28 +58,28 @@ const Dashboard = (props: any) => {
       ) : (
         <Grid container spacing={4}>
           <Grid item lg={3} sm={6} xl={3} xs={12}>
-            <TotalUsers />
+            <TotalUsers app={app} />
           </Grid>
           <Grid item lg={3} sm={6} xl={3} xs={12}>
-            <Registrations />
+            <Registrations app={app} />
           </Grid>
           <Grid item lg={3} sm={6} xl={3} xs={12}>
-            <ProfileCompletion />
+            <ProfileCompletion app={app} />
           </Grid>
           <Grid item lg={3} sm={6} xl={3} xs={12}>
-            <TotalRequests />
+            <TotalRequests app={app} />
           </Grid>
           <Grid item lg={8} md={12} xl={9} xs={12}>
-            <RequestsOverTime />
+            <RequestsOverTime app={app} />
           </Grid>
           <Grid item lg={4} md={6} xl={3} xs={12}>
-            <RequestsByType />
+            <RequestsByType app={app} />
           </Grid>
-          <Grid item lg={6} md={6} xl={6} xs={12}>
-            <RecentEvents />
+          <Grid item lg={4} md={6} xl={4} xs={12}>
+            <RecentUsers app={app} {...props} />
           </Grid>
-          <Grid item lg={6} md={12} xl={6} xs={12}>
-            <RecentUsers />
+          <Grid item lg={8} md={12} xl={8} xs={12}>
+            <RecentEvents app={app} {...props} />
           </Grid>
         </Grid>
       )}

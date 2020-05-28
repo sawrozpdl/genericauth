@@ -9,6 +9,7 @@ import { Main as MainLayout, Minimal as MinimalLayout } from './layouts';
 
 import {
   Dashboard as DashboardView,
+  History as HistoryView,
   AppList as AppListView,
   UserList as UserListView,
   Account as AccountView,
@@ -40,6 +41,13 @@ const BaseRouter: React.FC = () => {
         allow={[roles.ADMIN]}
         layout={MainLayout}
         path={routes.DASHBOARD}
+      />
+      <RouteWithLayout
+        component={HistoryView}
+        exact
+        allow={[roles.ADMIN]}
+        layout={MainLayout}
+        path={routes.HISTORY}
       />
       <RouteWithLayout
         component={UserListView}

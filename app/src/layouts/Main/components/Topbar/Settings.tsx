@@ -3,17 +3,17 @@ import {
   Badge,
   Box,
   Button,
-  FormControlLabel,
   IconButton,
   Popover,
   SvgIcon,
-  Switch,
   TextField,
   Tooltip,
   Typography,
   makeStyles,
+  capitalize,
 } from '@material-ui/core';
 import THEMES from '../../../../constants/themes';
+import MenuItem from '@material-ui/core/MenuItem';
 import useSettings from '../../../../hooks/useSettings';
 import SettingsIcon from '@material-ui/icons/Settings';
 
@@ -90,54 +90,21 @@ const Settings = () => {
         <Typography variant="h4" color="textPrimary">
           Settings
         </Typography>
-        <Box mt={2} px={1}>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={values.direction === 'rtl'}
-                edge="start"
-                name="direction"
-                onChange={(event) =>
-                  handleChange(
-                    'direction',
-                    event.target.checked ? 'rtl' : 'ltr'
-                  )
-                }
-              />
-            }
-            label="RTL"
-          />
-        </Box>
-        <Box mt={2} px={1}>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={values.responsiveFontSizes}
-                edge="start"
-                name="direction"
-                onChange={(event) =>
-                  handleChange('responsiveFontSizes', event.target.checked)
-                }
-              />
-            }
-            label="Responsive font sizes"
-          />
-        </Box>
+
         <Box mt={2}>
           <TextField
             fullWidth
             label="Theme"
             name="theme"
-            onChange={(event) => handleChange('theme', event.target.value)}
+            onChange={(event): any => handleChange('theme', event.target.value)}
             select
-            SelectProps={{ native: true }}
             value={values.theme}
             variant="outlined"
           >
             {Object.keys(THEMES).map((theme: string) => (
-              <option key={theme} value={theme}>
-                {theme.toLowerCase()}
-              </option>
+              <MenuItem key={theme} value={theme}>
+                {capitalize(theme.toLowerCase())}
+              </MenuItem>
             ))}
           </TextField>
         </Box>

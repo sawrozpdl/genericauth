@@ -8,6 +8,7 @@ const routes = {
   LOGIN: '/:appName/login',
   REGISTER: '/:appName/register',
   DASHBOARD: '/:appName/dashboard',
+  HISTORY: '/:appName/history',
   USER_PROFILE: '/:appName/:username',
   USER_ACCOUNT: '/:appName/:username/account',
   USER_SETTINGS: '/:appName/:username/settings',

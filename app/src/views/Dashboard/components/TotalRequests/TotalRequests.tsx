@@ -31,7 +31,9 @@ const useStyles = makeStyles((theme: any) => ({
 }));
 
 const TotalRequests = (props: any) => {
-  const { className, ...rest } = props;
+  const { className, app, ...rest } = props;
+
+  const { length: requestsCount } = app.events;
 
   const classes = useStyles();
 
@@ -49,7 +51,7 @@ const TotalRequests = (props: any) => {
               TOTAL REQUESTS
             </Typography>
             <Typography color="inherit" variant="h3">
-              23,200
+              {requestsCount}
             </Typography>
           </Grid>
           <Grid item>
@@ -65,6 +67,7 @@ const TotalRequests = (props: any) => {
 
 TotalRequests.propTypes = {
   className: PropTypes.string,
+  app: PropTypes.object,
 };
 
 export default TotalRequests;

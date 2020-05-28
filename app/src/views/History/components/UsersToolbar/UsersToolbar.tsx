@@ -44,7 +44,6 @@ const UsersToolbar = (props: any) => {
     onDeactivateClick,
     onDeleteClick,
     isAdmin,
-    onExport,
     onRefresh,
     active,
     setActive,
@@ -119,9 +118,7 @@ const UsersToolbar = (props: any) => {
 
         {isAdmin && (
           <>
-            <Button className={classes.exportButton} onClick={onExport}>
-              Export
-            </Button>
+            <Button className={classes.exportButton}>Export</Button>
             <Button color="primary" variant="outlined" onClick={onAddUserClick}>
               Add user
             </Button>

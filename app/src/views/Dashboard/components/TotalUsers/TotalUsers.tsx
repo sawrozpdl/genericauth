@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
 import PeopleIcon from '@material-ui/icons/PeopleOutlined';
 
 const useStyles = makeStyles((theme: any) => ({
@@ -31,17 +31,25 @@ const useStyles = makeStyles((theme: any) => ({
     display: 'flex',
     alignItems: 'center',
   },
-  differenceIcon: {
+  userIcon: {
     color: theme.palette.success.dark,
   },
-  differenceValue: {
+  activeUsers: {
     color: theme.palette.success.dark,
+    marginLeft: theme.spacing(0.5),
     marginRight: theme.spacing(1),
   },
 }));
 
 const TotalUsers = (props: any) => {
-  const { className, ...rest } = props;
+  const { className, app, ...rest } = props;
+
+  const { registrations } = app;
+
+  const activeUsers = registrations.reduce(
+    (acc: any, curr: any) => (curr.active ? acc + 1 : acc),
+    0
+  );
 
   const classes: any = useStyles();
 
@@ -58,7 +66,7 @@ const TotalUsers = (props: any) => {
             >
               TOTAL USERS
             </Typography>
-            <Typography variant="h3">121</Typography>
+            <Typography variant="h3">{registrations.length}</Typography>
           </Grid>
           <Grid item>
             <Avatar className={classes.avatar}>
@@ -67,12 +75,12 @@ const TotalUsers = (props: any) => {
           </Grid>
         </Grid>
         <div className={classes.difference}>
-          <ArrowUpwardIcon className={classes.differenceIcon} />
-          <Typography className={classes.differenceValue} variant="body2">
-            16%
+          <AccessibilityNewIcon className={classes.userIcon} />
+          <Typography className={classes.activeUsers} variant="body2">
+            {activeUsers}
           </Typography>
           <Typography className={classes.caption} variant="caption">
-            Since last month
+            Users active
           </Typography>
         </div>
       </CardContent>
@@ -82,6 +90,7 @@ const TotalUsers = (props: any) => {
 
 TotalUsers.propTypes = {
   className: PropTypes.string,
+  app: PropTypes.object,
 };
 
 export default TotalUsers;

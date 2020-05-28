@@ -16,6 +16,11 @@ export const capitalize = (string: string): string => {
   return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 };
 
+export const toNormalCase = (string: string): string =>
+  string
+    .replace(/([A-Z])/g, ' $1')
+    .replace(/^./, (str: string) => str.toUpperCase());
+
 export const extractFullName = (user: any, mid = true): string => {
   const { firstName, middleName, lastName } = user;
   return `${firstName ? `${capitalize(firstName)}` : ''}${
@@ -84,4 +89,17 @@ const nullCounter = (obj: any) => {
 export const getProfileCompleteness = (user: any) => {
   const { nullCount, keyCount } = nullCounter(user);
   return ((keyCount - nullCount) / keyCount) * 100;
+};
+
+export const downloadCsv = (rows: any, name: string) => {
+  const csvContent =
+    'data:text/csv;charset=utf-8,' +
+    rows.map((e: string[]) => e.join(',')).join('\n');
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement('a');
+  link.setAttribute('href', encodedUri);
+  link.setAttribute('download', `${name}_${new Date().toISOString()}.csv`);
+  document.body.appendChild(link);
+
+  link.click();
 };
