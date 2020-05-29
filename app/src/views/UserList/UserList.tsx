@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/styles';
 import { Button, Typography } from '@material-ui/core';
 import UserContext from '../../context/UserContext';
 import validate from 'validate.js';
-import { UsersToolbar, UsersTable } from './components';
+import { UsersToolbar } from './components';
 import http from '../../utils/http';
 import { USERS_URL } from '../../constants/endpoints';
 import { interpolate, toNormalCase, downloadCsv } from '../../utils/string';
@@ -16,6 +16,9 @@ import { handleError } from '../../utils/error';
 import roles from '../../constants/roles';
 import { disableUser } from '../../services/user';
 import { collectObject, withoutAttrs } from '../../utils/object';
+import routes from '../../constants/routes';
+import GenericTable from '../../components/GenericTable';
+import columns from './columns';
 
 const EXCLUDE_ATTRS: string[] = [
   'roles',
@@ -74,10 +77,12 @@ const userSchema = {
   },
 };
 
-const UserList = () => {
+const UserList = (props: any) => {
   const classes = useStyles();
 
   const userCtx: any = useContext(UserContext);
+  const { appName: viewingApp } = props.match.params;
+  const { history } = props;
   const { user } = userCtx;
   const { activeApp: appName } = user;
   const [loading, setLoading] = useState(true);
@@ -155,7 +160,13 @@ const UserList = () => {
     !page.first && setQuery({ ...query, page: query.page - 1 });
 
   useEffect(() => {
+    if (appName !== viewingApp) {
+      toast.info(`Please login to ${viewingApp} for that!`);
+      return history.push(routes.HOME);
+    }
     fetchUsers();
+
+    // eslint-disable-next-line
   }, [fetchUsers]);
 
   const handleUserAdd = async () => {
@@ -249,11 +260,12 @@ const UserList = () => {
         {loading ? (
           <Loading height={500} />
         ) : (
-          <UsersTable
-            users={page.content}
-            appName={appName}
-            selectedUsers={selectedUsers}
-            setSelectedUsers={setSelectedUsers}
+          <GenericTable
+            data={page.content}
+            columns={columns}
+            selection={true}
+            selectedItems={selectedUsers}
+            setSelectedItems={setSelectedUsers}
           >
             <Pagination
               handleNext={handleNextPageClick}
@@ -264,7 +276,7 @@ const UserList = () => {
               isFirst={page.first}
               isLast={page.last}
             />
-          </UsersTable>
+          </GenericTable>
         )}
       </div>
       <Modal

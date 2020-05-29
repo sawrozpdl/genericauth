@@ -232,6 +232,7 @@ const SignIn = (props: any) => {
     toast.success(
       'Link sent! Please check your email and follow the instructions'
     );
+    history.push(routes.HOME);
   };
 
   const handleFormSubmit = async (event: any) => {

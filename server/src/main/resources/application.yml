@@ -54,7 +54,5 @@ aws:
 logging:
   level:
     org:
-      hibernate:
-        type: trace
       springframework:
         web: debug

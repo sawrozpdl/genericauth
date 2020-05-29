@@ -1,32 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import clsx from 'clsx';
-import moment from 'moment';
-import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {
-  Card,
-  CardActions,
-  CardHeader,
-  CardContent,
-  Button,
-  Divider,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Tooltip,
-  TableSortLabel,
-} from '@material-ui/core';
+import { Card, CardHeader, Button, Divider } from '@material-ui/core';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
-import mockData from './data';
-import { StatusBullet } from '../../../../components';
 import { interpolate } from '../../../../utils/string';
 import routes from '../../../../constants/routes';
+import GenericTable from '../../../../components/GenericTable';
+import getColumns from '../../../History/columns';
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles = makeStyles(() => ({
   root: {},
   content: {
     padding: 0,
@@ -38,26 +22,23 @@ const useStyles = makeStyles((theme: any) => ({
     display: 'flex',
     alignItems: 'center',
   },
-  status: {
-    marginRight: theme.spacing(1),
-  },
   actions: {
     justifyContent: 'flex-end',
   },
 }));
-
-const statusColors: any = {
-  authorized: 'success',
-  created: 'info',
-  unauthorized: 'danger',
-};
 
 const RecentEvents = (props: any) => {
   const { className, history, app, ...rest } = props;
 
   const classes: any = useStyles();
 
-  const [orders] = useState(mockData);
+  const { users, events, name: appName } = app;
+
+  const filteredEvents = events
+    .filter((event: any) => event.producer && event.consumer)
+    .sort((a: any, b: any) =>
+      a.createdAt > b.createdAt ? -1 : b.createdAt > a.createdAt ? 1 : 0
+    );
 
   return (
     <Card {...rest} className={clsx(classes.root, className)}>
@@ -70,51 +51,13 @@ const RecentEvents = (props: any) => {
         title="Recent Events"
       />
       <Divider />
-      <CardContent className={classes.content}>
-        <PerfectScrollbar>
-          <div className={classes.inner}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Event ID</TableCell>
-                  <TableCell>Event Name</TableCell>
-                  <TableCell sortDirection="desc">
-                    <Tooltip enterDelay={300} title="Sort">
-                      <TableSortLabel active direction="desc">
-                        Date
-                      </TableSortLabel>
-                    </Tooltip>
-                  </TableCell>
-                  <TableCell>Status</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {orders.map((order) => (
-                  <TableRow hover key={order.id}>
-                    <TableCell>{order.ref}</TableCell>
-                    <TableCell>{order.customer.name}</TableCell>
-                    <TableCell>
-                      {moment(order.createdAt).format('DD/MM/YYYY')}
-                    </TableCell>
-                    <TableCell>
-                      <div className={classes.statusContainer}>
-                        <StatusBullet
-                          className={classes.status}
-                          color={statusColors[order.status]}
-                          size="sm"
-                        />
-                        {order.status}
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </PerfectScrollbar>
-      </CardContent>
-      <Divider />
-      <CardActions className={classes.actions}>
+      <GenericTable
+        data={filteredEvents
+          .slice(Math.max(filteredEvents.length - 6, 0))
+          .reverse()}
+        columns={getColumns(appName, users, false)}
+        selection={false}
+      >
         <Button
           color="primary"
           size="small"
@@ -125,7 +68,7 @@ const RecentEvents = (props: any) => {
         >
           View all <ArrowRightIcon />
         </Button>
-      </CardActions>
+      </GenericTable>
     </Card>
   );
 };

@@ -72,7 +72,7 @@ const RequestsOverTime = (props: any) => {
     const events = yearlyEvents[year];
     const filtered = events.reduce((acc: any, curr: any) => {
       const month = new Date(curr.createdAt).getMonth();
-      const label = labels[month + 1];
+      const label = labels[month];
       return {
         ...acc,
         [label]: acc[label] ? acc[label] + 1 : 1,

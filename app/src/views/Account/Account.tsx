@@ -43,7 +43,6 @@ const Account = (props: any) => {
 
   const fetchAndSetUser = useCallback(async () => {
     try {
-      console.log('fetching user!');
       const userData = await fetchUserForApp(username, appName);
       setUser(userData);
       setCanEdit(

@@ -214,12 +214,7 @@ const SignIn = (props: any) => {
       });
       persist(data.refreshToken, data.refreshToken);
       await fetchUser(setUser);
-      history.push(
-        interpolate(routes.USER_ACCOUNT, {
-          username: formState.values.email,
-          appName,
-        })
-      );
+      history.push(routes.HOME);
       toast.success('Login successful, Welcome back!');
     } catch (exception) {
       handleError(exception);

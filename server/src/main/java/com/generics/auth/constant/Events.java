@@ -14,5 +14,6 @@ public enum Events {
     BANNED,
     REGISTERED,
     LOGGED_IN,
-    LOGGED_OUT;
+    LOGGED_OUT,
+    UN_BANNED;
 }

@@ -45,12 +45,14 @@ public class AppUserController {
     AuthenticationService authenticationService;
 
     @GetMapping("/api/apps/{appName}/users")
-    public Page<User> usersInApp(@PathVariable String appName,
+    public Page<User> usersInApp(HttpServletRequest request,
+                                 @PathVariable String appName,
                              @RequestParam(defaultValue = "0") Integer page,
                              @RequestParam(defaultValue = "10") Integer size,
                              @RequestParam(defaultValue = "") String search,
                              @RequestParam(defaultValue = "") String sort,
                              @RequestParam(defaultValue = "true") Boolean active) {
+        authenticationService.authorizeRequest(request, appName, new String[] {Roles.USER.name()}, null);
         App app = appService.geAppByName(appName);
         eventService.track(null,
                 Events.FETCH_USERS,
@@ -64,7 +66,8 @@ public class AppUserController {
     }
 
     @GetMapping("/api/apps/{appName}/users/{username}")
-    public User userInApp(@PathVariable String appName, @PathVariable String username) {
+    public User userInApp(HttpServletRequest request, @PathVariable String appName, @PathVariable String username) {
+        authenticationService.authorizeRequest(request, appName, new String[] {Roles.USER.name()}, null);
         AppRegistration appRegistration = appRegistrationService.getAppRegistrationByAppNameAndUsername(username, appName);
         User user = appRegistration.getUser();
         App app = appRegistration.getApp();
@@ -175,7 +178,7 @@ public class AppUserController {
         appRegistrationService.disableAppRegistration(registration);
 
         eventService.track(Str.interpolate(Models.USER, "id", activeUser.getId()),
-                Events.BANNED,
+                registration.isActive() ? Events.BANNED : Events.UN_BANNED,
                 Str.interpolate(Models.USER, "id", registration.getUser().getId()),
                 app);
 

@@ -2,13 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
-import { Button, Typography } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import { IconButton } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import BlockIcon from '@material-ui/icons/Block';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+
+import PublicIcon from '@material-ui/icons/Public';
 
 import { SearchInput } from '../../../../components';
 
@@ -23,6 +25,7 @@ const useStyles = makeStyles((theme: any) => ({
   spacer: {
     flexGrow: 1,
   },
+  extraOpt: { marginLeft: theme.spacing(2) },
   actionBtn: { marginLeft: theme.spacing(1) },
   importButton: {
     marginRight: theme.spacing(1),
@@ -71,25 +74,23 @@ const UsersToolbar = (props: any) => {
               onChange={setActive}
               aria-label="text alignment"
             >
-              <ToggleButton value={true} aria-label="left aligned">
-                <Typography
-                  color={active ? 'primary' : 'textPrimary'}
-                  variant="body2"
-                >
-                  {'Active'}
-                </Typography>
+              <ToggleButton
+                value={true}
+                aria-label="left aligned"
+                disabled={selectedUsers.length}
+              >
+                <PublicIcon />
               </ToggleButton>
-              <ToggleButton value={false} aria-label="centered">
-                <Typography
-                  color={!active ? 'primary' : 'textPrimary'}
-                  variant="body2"
-                >
-                  {'InActive'}
-                </Typography>
+              <ToggleButton
+                value={false}
+                aria-label="centered"
+                disabled={selectedUsers.length}
+              >
+                <BlockIcon />
               </ToggleButton>
             </ToggleButtonGroup>
             {selectedUsers && selectedUsers.length ? (
-              <>
+              <div className={classes.extraOpt}>
                 <Button
                   color="default"
                   variant="outlined"
@@ -108,7 +109,7 @@ const UsersToolbar = (props: any) => {
                 >
                   {'Delete'}
                 </Button>
-              </>
+              </div>
             ) : null}
           </>
         )}

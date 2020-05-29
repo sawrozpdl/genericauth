@@ -124,7 +124,7 @@ async function errorResponseHandler(err: any) {
  */
 const get = (
   url: any,
-  { params = {}, accessToken = false, headers = {} } = {}
+  { params = {}, accessToken = true, headers = {} } = {}
 ): any => {
   const authHeaders: any = {};
 

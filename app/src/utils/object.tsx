@@ -8,7 +8,7 @@ export const collectObject = (source: any, array: any, accessor: any) =>
  * @param  {Array} attrsToExclude
  * @returns {Object}
  */
-export function withoutAttrs(obj: any, attrsToExclude: any) {
+export const withoutAttrs = (obj: any, attrsToExclude: any) => {
   const result: any = {};
 
   Object.keys(obj).forEach((key) => {
@@ -18,7 +18,7 @@ export function withoutAttrs(obj: any, attrsToExclude: any) {
   });
 
   return result;
-}
+};
 
 /**
  * Get the copy of object with only specified attributes.
@@ -27,7 +27,7 @@ export function withoutAttrs(obj: any, attrsToExclude: any) {
  * @param  {Array} attrs
  * @returns {Object}
  */
-export function withAttrs(obj: any, attrs: any) {
+export const withAttrs = (obj: any, attrs: any) => {
   const result: any = {};
 
   Object.keys(obj).forEach((key) => {
@@ -37,4 +37,7 @@ export function withAttrs(obj: any, attrs: any) {
   });
 
   return result;
-}
+};
+
+export const getObjectById = (objects: any, id: any) =>
+  objects.find((object: any) => object.id === +id);

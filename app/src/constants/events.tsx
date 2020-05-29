@@ -10,9 +10,17 @@ const events: any = {
   ADDED: 'ADDED:POST',
   REMOVED: 'REMOVED:DELETE',
   BANNED: 'BANNED:POST',
+  UN_BANNED: 'UN_BANNED:POST',
   REGISTERED: 'REGISTERED:POST',
   LOGGED_IN: 'LOGGED_IN:POST',
   LOGGED_OUT: 'LOGGED_OUT:POST',
 };
 
-export default events;
+const statusColors: any = {
+  GET: 'success',
+  PUT: 'info',
+  POST: 'warning',
+  DELETE: 'danger',
+};
+
+export { events as default, statusColors };

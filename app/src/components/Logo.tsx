@@ -3,7 +3,7 @@ import React from 'react';
 const Logo = (props: any) => {
   return (
     <img
-      alt="Logo"
+      alt=""
       width="45"
       height="45"
       src="/images/logos/logo-auth.svg"

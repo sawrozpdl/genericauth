@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback, useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 
@@ -13,8 +13,11 @@ import {
   RequestsOverTime,
 } from './components';
 import { fetchApp, fetchUsersInApp } from '../../services/app';
+import UserContext from '../../context/UserContext';
 import { handleError } from '../../utils/error';
 import Loading from '../../components/Loading';
+import toast from '../../utils/toast';
+import routes from '../../constants/routes';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
@@ -28,23 +31,36 @@ const Dashboard = (props: any) => {
 
   const { appName } = props.match.params;
 
+  const { history } = props;
+
+  const userCtx: any = useContext(UserContext);
+  const { activeApp } = userCtx.user;
+
   const [loading, setLoading] = useState(true);
   const [app, setApp] = useState(null);
 
-  console.log(app);
-
   const fetchAppsAndUsers = useCallback(async () => {
+    if (appName !== activeApp) {
+      toast.info(`Please login to ${appName} for that!`);
+      return history.push(routes.HOME);
+    }
     try {
       setLoading(true);
       const app = await fetchApp(appName);
       const usersPage = await fetchUsersInApp(appName, { size: 1000 });
-      app.users = usersPage.content;
+      const inUsersPage = await fetchUsersInApp(appName, {
+        size: 1000,
+        active: false,
+      });
+      app.users = [...usersPage.content, ...inUsersPage.content];
       setApp(app);
     } catch (error) {
       handleError(error);
     } finally {
       setLoading(false);
     }
+
+    // eslint-disable-next-line
   }, [appName]);
 
   useEffect(() => {
