@@ -7,12 +7,10 @@ import com.generics.auth.service.UserService;
 import com.generics.auth.service.VerifyService;
 import com.generics.auth.utils.Gen;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 @RestController
@@ -36,9 +34,14 @@ public class ApiController {
         return verifyService.verifyEmail(email, redirectTo, actionName, request);
     }
 
-    @PostMapping("/api/forgot-password")
+    @PostMapping("/api/authenticate")
+    public Object authorize(HttpServletRequest request) {
+        return authenticationService.authenticateRequest(request);
+    }
+
+    @PostMapping("/api/change-password")
     public Object changePassword(@RequestBody PasswordBody passwordBody, HttpServletRequest request) {
-        User user = authenticationService.authorizeRequest(request, null, null);
+        User user = authenticationService.authorizeRequest(request, null, null, null);
         String password = passwordBody.getPassword();
         userService.changePassword(user, password);
         return new Object() {

@@ -1,3 +1,7 @@
-export { default as Footer } from './Footer';
-export { default as Sidebar } from './Sidebar';
-export { default as Topbar } from './Topbar';
+import React from 'react';
+
+const Footer = React.lazy(() => import('./Footer'));
+const Topbar = React.lazy(() => import('./Topbar'));
+const Sidebar = React.lazy(() => import('./Sidebar'));
+
+export { Sidebar, Footer, Topbar };

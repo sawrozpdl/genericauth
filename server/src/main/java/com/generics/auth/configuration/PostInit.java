@@ -43,8 +43,8 @@ public class PostInit implements ApplicationRunner {
     @Transactional
     public void seedDB() {
         try {
-//            setRoles();
-//            setSuperAdmin();
+            setRoles();
+            setSuperAdmin();
         } catch (Exception exc) {
             logger.info("DB Seed failed, Exception: ", exc);
         }
@@ -75,6 +75,8 @@ public class PostInit implements ApplicationRunner {
         reg = appRegistrationService.registerUser(godApp, godAdmin);
 
         userRoleService.createUserRole(new UserRole(godApp, superAdmin, godAdmin));
+        userRoleService.createUserRole(new UserRole(godApp, admin, godAdmin));
+        userRoleService.createUserRole(new UserRole(godApp, user, godAdmin));
     }
 
 }

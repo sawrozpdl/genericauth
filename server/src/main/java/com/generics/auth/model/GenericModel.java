@@ -1,5 +1,6 @@
 package com.generics.auth.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.models.auth.In;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Parameter;
@@ -11,6 +12,7 @@ import java.util.Date;
 
 
 @MappedSuperclass
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public abstract class GenericModel implements Serializable {
 
     @Id

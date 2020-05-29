@@ -10,7 +10,12 @@ import {
   Typography,
   makeStyles,
 } from '@material-ui/core';
+import { Buffer } from 'buffer';
 import { Button, TextField, Link } from '@material-ui/core';
+import routes from '../../constants/routes';
+import http from '../../utils/http';
+import { APP_CREATE_URL, VERIFY_URL } from '../../constants/endpoints';
+import { handleError } from '../../utils/error';
 
 const schema = {
   email: {
@@ -93,6 +98,8 @@ const Home: React.FC = (props: any) => {
     errors: {},
   });
 
+  const [sending, setSending] = useState(false);
+
   useEffect(() => {
     const errors = validate(formState.values, schema);
 
@@ -119,14 +126,30 @@ const Home: React.FC = (props: any) => {
     }));
   };
 
-  const handleAppCreate = (event: any) => {
+  const handleAppCreate = async (event: any) => {
     event.preventDefault();
-    setFormState((formState: any) => {
-      return { errors: {}, touched: {}, values: {}, isValid: false };
-    });
-    toast.success(
-      'Link sent! Please check your email and follow the instructions'
-    );
+    setSending(true);
+    try {
+      const email = formState.values.email;
+      await http.post(VERIFY_URL, {
+        accessToken: false,
+        params: {
+          id: new Buffer(email).toString('base64'),
+          actionName: 'Create App',
+          redirectTo: APP_CREATE_URL,
+        },
+      });
+      setFormState((formState: any) => {
+        return { errors: {}, touched: {}, values: {}, isValid: false };
+      });
+      toast.success(
+        'Link sent! Please check your email and follow the instructions'
+      );
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setSending(false);
+    }
   };
 
   const hasError = (field: any) =>
@@ -152,10 +175,10 @@ const Home: React.FC = (props: any) => {
               </Typography>
               <Box mt={3}>
                 <Typography variant="body1" color="textSecondary">
-                  A professional kit that comes with ready-to-use Material-UI©
-                  components developed with one common goal in mind, help you
-                  build faster &amp; beautiful applications. Each component is
-                  fully customizable, responsive and easy to integrate.
+                  A generic authentication service which provides API interfaces
+                  which can be intergrated easily to almost every application
+                  &amp; is easy to use &amp; also provides generic login/signup
+                  forms, generic mail system &amp; the list goes on
                 </Typography>
               </Box>
               <Box mt={3}>
@@ -203,7 +226,11 @@ const Home: React.FC = (props: any) => {
                   We will send you &apos;IAM&apos; link to the email and you are
                   almost there!
                 </Typography>
-                <form className={classes.form} onSubmit={handleAppCreate}>
+                <form
+                  autoComplete="off"
+                  className={classes.form}
+                  onSubmit={handleAppCreate}
+                >
                   <TextField
                     className={classes.textField}
                     error={hasError('email')}
@@ -221,7 +248,7 @@ const Home: React.FC = (props: any) => {
                   <Button
                     className={classes.signUpButton}
                     color="primary"
-                    disabled={!formState.isValid}
+                    disabled={!formState.isValid || sending}
                     fullWidth
                     size="large"
                     type="submit"
@@ -231,7 +258,7 @@ const Home: React.FC = (props: any) => {
                   </Button>
                   <Typography color="textSecondary" variant="body1">
                     Already Have an app? Sign in{' '}
-                    <Link component={RouterLink} to="/sign-in" variant="h6">
+                    <Link component={RouterLink} to={routes.APPS} variant="h6">
                       Here
                     </Link>
                   </Typography>

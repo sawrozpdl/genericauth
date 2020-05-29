@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import moment from 'moment';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
@@ -12,23 +13,48 @@ import {
   Button,
   TextField,
 } from '@material-ui/core';
+import { updateUser } from '../../../../services/user';
+import toast from '../../../../utils/toast';
+import { handleError } from '../../../../utils/error';
 
-const useStyles = makeStyles(() => ({
+const genders = [
+  { label: 'Private', value: 'PRIVATE' },
+  { label: 'Male', value: 'MALE' },
+  { label: 'Female', value: 'FEMALE' },
+  { label: 'Other', value: 'OTHER' },
+];
+
+const useStyles = makeStyles((theme: any) => ({
   root: {},
+  cardAction: {
+    padding: theme.spacing(2),
+  },
 }));
 
 const AccountDetails = (props: any) => {
-  const { className, ...rest } = props;
+  const { className, user, canEdit, ...rest } = props;
+
+  const {
+    firstName,
+    middleName,
+    lastName,
+    email,
+    phoneNumber,
+    gender,
+    birthDate,
+  } = user;
 
   const classes = useStyles();
 
+  const [submitting, setSubmitting] = useState(false);
   const [values, setValues] = useState({
-    firstName: 'Shen',
-    lastName: 'Zhi',
-    email: 'shen.zhi@devias.io',
-    phone: '',
-    state: 'Alabama',
-    country: 'USA',
+    firstName,
+    middleName,
+    lastName,
+    email,
+    phoneNumber,
+    gender,
+    birthDate: birthDate && moment(birthDate).format('YYYY-MM-DD'),
   });
 
   const handleChange = (event: any) => {
@@ -38,51 +64,97 @@ const AccountDetails = (props: any) => {
     });
   };
 
-  const states = [
-    {
-      value: 'alabama',
-      label: 'Alabama',
-    },
-    {
-      value: 'new-york',
-      label: 'New York',
-    },
-    {
-      value: 'san-francisco',
-      label: 'San Francisco',
-    },
-  ];
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
+    setSubmitting(true);
+    try {
+      await updateUser({ ...user, ...values });
+      toast.success('Profile updated successfully');
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <Card {...rest} className={clsx(classes.root, className)}>
-      <form autoComplete="off" noValidate>
-        <CardHeader subheader="The information can be edited" title="Profile" />
+      <form autoComplete="off" noValidate onSubmit={handleSubmit}>
+        <CardHeader
+          subheader="Basic information about oneself"
+          title="Profile"
+        />
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item md={6} xs={12}>
+            <Grid item md={4} xs={12}>
               <TextField
                 fullWidth
-                helperText="Please specify the first name"
                 label="First name"
                 margin="dense"
                 name="firstName"
+                disabled={!canEdit}
                 onChange={handleChange}
-                required
                 value={values.firstName}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item md={4} xs={12}>
+              <TextField
+                fullWidth
+                label="Middle name"
+                margin="dense"
+                name="middleName"
+                disabled={!canEdit}
+                onChange={handleChange}
+                value={values.middleName}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item md={4} xs={12}>
+              <TextField
+                fullWidth
+                label="Last name"
+                margin="dense"
+                name="lastName"
+                disabled={!canEdit}
+                onChange={handleChange}
+                value={values.lastName}
                 variant="outlined"
               />
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
-                label="Last name"
+                label="Gender"
                 margin="dense"
-                name="lastName"
+                name="gender"
                 onChange={handleChange}
-                required
-                value={values.lastName}
+                disabled={!canEdit}
+                select
+                SelectProps={{ native: true }}
+                value={values.gender}
                 variant="outlined"
+              >
+                {genders.map((gender) => (
+                  <option key={gender.label} value={gender.value}>
+                    {gender.label}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <TextField
+                fullWidth
+                label="Birth Date"
+                margin="dense"
+                name="birthDate"
+                type="date"
+                disabled={!canEdit}
+                onChange={handleChange}
+                defaultValue={values.birthDate}
+                variant="outlined"
+                InputLabelProps={{ shrink: true }}
               />
             </Grid>
             <Grid item md={6} xs={12}>
@@ -91,6 +163,7 @@ const AccountDetails = (props: any) => {
                 label="Email Address"
                 margin="dense"
                 name="email"
+                disabled={true}
                 onChange={handleChange}
                 required
                 value={values.email}
@@ -102,54 +175,32 @@ const AccountDetails = (props: any) => {
                 fullWidth
                 label="Phone Number"
                 margin="dense"
-                name="phone"
+                disabled={!canEdit}
+                name="phoneNumber"
                 onChange={handleChange}
                 type="number"
-                value={values.phone}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="Select State"
-                margin="dense"
-                name="state"
-                onChange={handleChange}
-                required
-                select
-                // eslint-disable-next-line react/jsx-sort-props
-                SelectProps={{ native: true }}
-                value={values.state}
-                variant="outlined"
-              >
-                {states.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="Country"
-                margin="dense"
-                name="country"
-                onChange={handleChange}
-                required
-                value={values.country}
+                value={values.phoneNumber}
                 variant="outlined"
               />
             </Grid>
           </Grid>
         </CardContent>
-        <Divider />
-        <CardActions>
-          <Button color="primary" variant="contained">
-            Save details
-          </Button>
-        </CardActions>
+        {canEdit && (
+          <>
+            {' '}
+            <Divider />
+            <CardActions className={classes.cardAction}>
+              <Button
+                type="submit"
+                color="primary"
+                variant="outlined"
+                disabled={submitting}
+              >
+                Update Profile
+              </Button>
+            </CardActions>
+          </>
+        )}
       </form>
     </Card>
   );
@@ -157,6 +208,10 @@ const AccountDetails = (props: any) => {
 
 AccountDetails.propTypes = {
   className: PropTypes.string,
+  user: PropTypes.object,
+  onUpdate: PropTypes.func,
+  canEdit: PropTypes.bool,
+  activeUser: PropTypes.object,
 };
 
 export default AccountDetails;

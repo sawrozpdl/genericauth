@@ -11,6 +11,14 @@ import {
   Typography,
   makeStyles,
 } from '@material-ui/core';
+import * as authService from '../../../../services/auth';
+import routes from '../../../../constants/routes';
+import {
+  interpolate,
+  extractFullName,
+  extractInitials,
+} from '../../../../utils/string';
+import toast from '../../../../utils/toast';
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -23,29 +31,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Account = () => {
-  const account = {
-    user: {
-      id: '5e86809283e28b96d2d38537',
-      avatar: '/static/images/avatars/avatar_6.png',
-      bio: 'Sales Manager',
-      canHire: false,
-      country: 'USA',
-      email: 'katarina.smith@devias.io',
-      username: 'admin',
-      password: 'admin',
-      firstName: 'Katarina',
-      isPublic: true,
-      lastName: 'Smith',
-      phone: '+40 777666555',
-      role: 'admin',
-      state: 'New York',
-      timezone: '4:32PM (GMT-4)',
-    },
-  };
+const Account = (props: any) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const classes: any = useStyles();
-  const history = useHistory();
 
   const handleOpen = (event: any) => {
     setAnchorEl(event.currentTarget);
@@ -55,8 +42,25 @@ const Account = () => {
     setAnchorEl(null);
   };
 
+  const history = useHistory();
+
+  const { user, onLogout } = props;
+
+  const classes: any = useStyles();
+
+  if (!user) return <div />;
+
+  const { username, activeApp: appName } = user;
+
   const handleLogout = async () => {
-    history.push('/');
+    try {
+      await authService.logout(appName, username);
+      onLogout();
+      history.push(routes.HOME);
+      toast.success('Logout successfull!');
+    } catch (error) {
+      toast.error('Unknown error occured');
+    }
   };
 
   return (
@@ -67,14 +71,12 @@ const Account = () => {
         component={ButtonBase}
         onClick={handleOpen}
       >
-        <Avatar
-          alt="User"
-          className={classes.avatar}
-          src={account.user.avatar}
-        />
+        <Avatar alt="User" className={classes.avatar} src={user.avatarUrl}>
+          {extractInitials(user, false) || 'A'}
+        </Avatar>
         <Hidden smDown>
           <Typography variant="h6" color="inherit">
-            {`${account.user.firstName} ${account.user.lastName}`}
+            {extractFullName(user, false)}
           </Typography>
         </Hidden>
       </Box>
@@ -90,11 +92,17 @@ const Account = () => {
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
       >
-        <MenuItem component={RouterLink} to="/app/social/profile">
-          Profile
-        </MenuItem>
-        <MenuItem component={RouterLink} to="/app/account">
+        <MenuItem
+          component={RouterLink}
+          to={interpolate(routes.USER_ACCOUNT, { appName, username })}
+        >
           Account
+        </MenuItem>
+        <MenuItem
+          component={RouterLink}
+          to={interpolate(routes.USER_SETTINGS, { appName, username })}
+        >
+          Settings
         </MenuItem>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>

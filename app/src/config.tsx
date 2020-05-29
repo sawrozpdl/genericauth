@@ -1,20 +1,28 @@
-export default {
+const config: any = {
   env: process.env.NODE_ENV,
+  app: {
+    baseUrl: process.env.REACT_APP_BASE_URL,
+    endpoints: {
+      createApp: '/create',
+    },
+  },
   auth: {
     baseUrl: process.env.REACT_APP_AUTH_BASE_URL,
     endpoints: {
       apps: '/apps',
       verify: '/verify',
-      appHome: '/apps/:appName',
-      logout: '/apps/:appName/logout',
+      app: '/apps/:appName',
+      login: '/apps/:appName/login',
+      logout: '/apps/:appName/users/:username/logout',
       appUsers: '/apps/:appName/users',
-      forgotPassword: '/forgot-password',
-      authorize: '/apps/:appName/authorize',
-      appLocation: '/apps/:appName/location',
+      authenticate: '/authenticate',
+      changePassword: '/change-password',
       userProfile: '/apps/:appName/users/:username',
-      userRole: '/apps/:appName/users/:username/roles',
-      userLocation: '/apps/:appName/users/:username/location',
+      userRoles: '/apps/:appName/users/:username/roles',
+      disableUser: '/apps/:appName/users/:username/disable',
     },
     clientId: process.env.REACT_APP_AUTH_CLIENT_ID,
   },
 };
+
+export default config;

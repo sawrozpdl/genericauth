@@ -1,14 +1,12 @@
 package com.generics.auth.service;
 
 import com.generics.auth.exception.HttpException;
-import com.generics.auth.utils.Http;
 import com.generics.auth.utils.Str;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
 import javax.servlet.http.HttpServletRequest;
 
 @Service
@@ -25,16 +23,17 @@ public class VerifyService {
 
     public Object verifyEmail(String email, String redirect, String action, HttpServletRequest request) {
         String token = tokenService.createFor(email);
-        String[] reqInfo = Http.getInfo(request);
+//        String[] reqInfo = Http.getInfo(request);
         try {
             String redirectUrl = String.format("%s?token=%s", redirect, token);
             Resource resource = resourceLoader.getResource("classpath:templates/verify.html");
             String body = Str.asString(resource);
 
             String[] args = {"action_name::" + action,
+                    "user_name::" + email.split("@")[0],
                     "action_url::" + redirectUrl,
-                    "browser_name::" + reqInfo[1],
-                    "operating_system::" + reqInfo[0]};
+                    "browser_name::" + "reqInfo[1]",
+                    "operating_system::" + "reqInfo[0]"};
 
             body = Str.format(body, args);
 

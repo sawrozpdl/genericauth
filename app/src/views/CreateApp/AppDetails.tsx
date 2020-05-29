@@ -110,7 +110,7 @@ const AppDetails = (props: any) => {
       </Box>
       <Box mt={6} display="flex">
         {onBack && (
-          <Button onClick={onBack} size="large">
+          <Button onClick={onBack} size="large" disabled={!onBack}>
             Previous
           </Button>
         )}
@@ -132,7 +132,7 @@ const AppDetails = (props: any) => {
 AppDetails.propTypes = {
   className: PropTypes.string,
   onComplete: PropTypes.func,
-  onBack: PropTypes.func,
+  onBack: PropTypes.any,
   formState: PropTypes.any,
   handleChange: PropTypes.func,
   hasError: PropTypes.func,

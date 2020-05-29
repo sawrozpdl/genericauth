@@ -2,6 +2,7 @@ package com.generics.auth.service;
 
 import com.generics.auth.exception.HttpException;
 import com.generics.auth.model.User;
+import com.generics.auth.model.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -11,8 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class TokenService {
@@ -22,9 +22,6 @@ public class TokenService {
 
     @Autowired
     private UserService userService;
-
-    private final Integer ACCESS_TOKEN_EXPIRATION = 600000;
-    private final Integer REFRESH_TOKEN_EXPIRATION = 864000000;
 
     public Claims getClaims(String token) {
         try {
@@ -44,6 +41,12 @@ public class TokenService {
             throw new HttpException("Token has expired", HttpStatus.UNAUTHORIZED);
         String email = claims.getSubject();
         Optional<User> user = userService.getUserByEmail(email);
+        user.ifPresent(value -> {
+            String appName = (String) claims.get("appName");
+            ArrayList<String> roles = (ArrayList<String>) claims.get("roles");
+            value.setActiveApp(appName);
+            value.setActiveRoles(roles);
+        });
         return user.orElseGet(() -> new User(null, email, null));
     }
 
@@ -62,7 +65,9 @@ public class TokenService {
     }
 
     private Date getExpiryDate(boolean isAccessToken) {
-       return new Date(System.currentTimeMillis() + (isAccessToken ? ACCESS_TOKEN_EXPIRATION : REFRESH_TOKEN_EXPIRATION));
+        int ACCESS_TOKEN_EXPIRATION = 600000;
+        int REFRESH_TOKEN_EXPIRATION = 864000000;
+        return new Date(System.currentTimeMillis() + (isAccessToken ? ACCESS_TOKEN_EXPIRATION : REFRESH_TOKEN_EXPIRATION));
     }
 
     public String generateToken(User user,String appName, boolean isAccessToken) {
@@ -70,7 +75,13 @@ public class TokenService {
             Claims claims = Jwts.claims().setSubject(user.getEmail());
             claims.put("userId", user.getId() + "");
             claims.put("appName", appName);
-            claims.put("roles", user.getRoles());
+            Set<UserRole> userRoles = user.getRoles();
+            ArrayList<String> roles = new ArrayList<>();
+            userRoles.forEach(userRole -> {
+                if (userRole.getApp().getName().equals(appName))
+                    roles.add(userRole.getRole().getName());
+            });
+            claims.put("roles", roles);
 
             return Jwts.builder()
                     .setClaims(claims)

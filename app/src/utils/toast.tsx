@@ -2,7 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { createTheme } from '../theme/create';
+import { makeStyles, Theme, ThemeProvider } from '@material-ui/core/styles';
+import { restoreSettings } from './settings';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -30,14 +32,15 @@ const SnackBar: React.FC<SnackBarInterface> = (props: SnackBarInterface) => {
   const handleClose = (): void => {
     setOpen(false);
   };
-
   return (
     <div className={classes.root}>
-      <Snackbar open={open} autoHideDuration={8000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity={type}>
-          {message}
-        </Alert>
-      </Snackbar>
+      <ThemeProvider theme={createTheme(restoreSettings())}>
+        <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity={type}>
+            {message}
+          </Alert>
+        </Snackbar>
+      </ThemeProvider>
     </div>
   );
 };

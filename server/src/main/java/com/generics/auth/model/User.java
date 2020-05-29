@@ -2,7 +2,9 @@ package com.generics.auth.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.generics.auth.constant.Gender;
+import com.generics.auth.utils.Str;
 
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.Date;
 import java.util.HashSet;
@@ -38,7 +40,16 @@ public class User extends GenericModel {
     @Column(nullable = false, length = 255)
     private String password;
 
+    @Size(min = 10)
+    private String phoneNumber;
+
     private Date lastLogin;
+
+    private transient String activeApp;
+
+    private transient Boolean activeInApp;
+
+    private transient ArrayList<String> activeRoles;
 
     @OneToOne(mappedBy= "user", cascade = CascadeType.ALL, fetch= FetchType.LAZY, orphanRemoval = true)
     private Profile profile;
@@ -113,6 +124,18 @@ public class User extends GenericModel {
         this.gender = gender;
     }
 
+    public void setActiveApp(String appName) {this.activeApp = appName;}
+
+    public String getActiveApp() { return this.activeApp; }
+
+    public void setActiveInApp(Boolean activeInApp) {this.activeInApp = activeInApp;}
+
+    public Boolean getActiveInApp() { return this.activeInApp; }
+
+    public void setActiveRoles(ArrayList<String> activeRoles) {this.activeRoles = activeRoles;}
+
+    public ArrayList<String>  getActiveRoles() { return this.activeRoles; }
+
     public Date getBirthDate() {
         return birthDate;
     }
@@ -153,7 +176,6 @@ public class User extends GenericModel {
         this.profile = profile;
     }
 
-    //@JsonManagedReference
     public Set<AppRegistration> getRegistrations() {
         return registrations;
     }
@@ -176,6 +198,22 @@ public class User extends GenericModel {
 
     public void setRoles(Set<UserRole> roles) {
         this.roles = roles;
+    }
+
+    public Location getLocation() {
+        return this.location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public String getPhoneNumber() {
+        return this.phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
 }

@@ -4,7 +4,7 @@ const HttpStatus = {
   BAD_REQUEST: 400,
   OK: 200,
   CREATED: 201,
-  UNAUTHORIZED: 403,
+  UNAUTHORIZED: 401,
 };
 
 export default HttpStatus;

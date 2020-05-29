@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import validate from 'validate.js';
 import PropTypes from 'prop-types';
@@ -23,6 +23,7 @@ import {
   withStyles,
   colors,
 } from '@material-ui/core';
+import * as authService from '../../services/auth';
 import {
   NavigateNextRounded as NavigateNextIcon,
   SupervisedUserCircleRounded as UserIcon,
@@ -31,6 +32,12 @@ import {
 } from '@material-ui/icons';
 import UserDetails from './UserDetails';
 import AppDetails from './AppDetails';
+import routes from '../../constants/routes';
+import { interpolate, parseQuery } from '../../utils/string';
+import toast from '../../utils/toast';
+import http from '../../utils/http';
+import UserContext from '../../context/UserContext';
+import { APPS_URL, AUTHENTICATE_URL } from '../../constants/endpoints';
 
 const steps = [
   {
@@ -44,15 +51,10 @@ const steps = [
 ];
 
 const userSchema = {
-  firstName: {
+  username: {
     presence: { allowEmpty: false, message: 'is required' },
     length: {
-      maximum: 32,
-    },
-  },
-  lastName: {
-    presence: { allowEmpty: false, message: 'is required' },
-    length: {
+      minimum: 3,
       maximum: 32,
     },
   },
@@ -64,6 +66,13 @@ const userSchema = {
     },
   },
   password: {
+    presence: { allowEmpty: false, message: 'is required' },
+    length: {
+      minimum: 8,
+      maximum: 128,
+    },
+  },
+  rPassword: {
     presence: { allowEmpty: false, message: 'is required' },
     length: {
       minimum: 8,
@@ -151,17 +160,27 @@ const useStyles = makeStyles((theme: any) => ({
   },
 }));
 
-const ProjectCreateView = () => {
+const CreateApp = (props: any) => {
   const classes = useStyles();
-  const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState(false);
-
   interface FormState {
     isValid: boolean;
     values: any;
     touched: any;
     errors: any;
   }
+
+  const { history } = props;
+
+  const query = parseQuery(props.location.search);
+
+  const userCtx: any = useContext(UserContext);
+  const { user: currentUser } = userCtx;
+  const { logout } = userCtx;
+
+  const [user, setUser] = useState(currentUser);
+
+  const [activeStep, setActiveStep] = useState(user.username ? 1 : 0);
 
   const [formState, setFormState] = useState<FormState>({
     isValid: false,
@@ -171,6 +190,41 @@ const ProjectCreateView = () => {
     touched: {},
     errors: {},
   });
+
+  const setField = (name: any, value: any) => {
+    setFormState((formState) => ({
+      ...formState,
+      values: {
+        ...formState.values,
+        [name]: value,
+      },
+    }));
+  };
+
+  useEffect(() => {
+    const setUserIfExists = async () => {
+      if (user.username) return;
+      if (!query.token) {
+        history.push(routes.HOME);
+        toast.info('Plese verify your email for creating app!');
+        return;
+      }
+      try {
+        const { data } = await http.post(AUTHENTICATE_URL, {
+          accessToken: false,
+          headers: { Authorization: `Bearer ${query.token}` },
+        });
+        setUser(data);
+        setField('email', data.email);
+      } catch (error) {
+        history.push(routes.HOME);
+        toast.error('Session Expired or Invalid Token!');
+      }
+    };
+    setUserIfExists();
+
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     const errors = validate(
@@ -236,23 +290,32 @@ const ProjectCreateView = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleComplete = (event: any) => {
+  const handleComplete = async (event: any) => {
     event.preventDefault();
     touchAppFields();
-    if (!formState.isValid) {
-      // setFormState((formState) => ({
-      //   ...formState,
-      //   errors: {
-      //     appName: 'App name is required',
-      //   },
-      //   touched: {
-      //     appName: true,
-      //   },
-      // }));
-      return;
+    if (!formState.isValid) return;
+    try {
+      const {
+        email,
+        username,
+        password,
+        appName,
+        appPrivacy,
+      } = formState.values;
+      await http.post(APPS_URL, {
+        accessToken: user.username,
+        body: { email, username, password },
+        params: { appName, appPrivacy },
+        headers: !user.username && {
+          Authorization: `Bearer ${query.token}`,
+        },
+      });
+      setCompleted(true);
+    } catch (error) {
+      if (!error.response) return toast.error('Network error!');
+      const { message } = error.response.data;
+      toast.error(message || 'Unknow error occured');
     }
-    //API
-    setCompleted(true);
   };
 
   return (
@@ -293,7 +356,11 @@ const ProjectCreateView = () => {
               </Stepper>
             </Grid>
             <Grid item xs={12} md={9}>
-              <form onSubmit={handleComplete} className={clsx(classes.form)}>
+              <form
+                autoComplete="off"
+                onSubmit={handleComplete}
+                className={clsx(classes.form)}
+              >
                 <Box p={3}>
                   {activeStep === 0 && (
                     <UserDetails
@@ -307,7 +374,7 @@ const ProjectCreateView = () => {
                   )}
                   {activeStep === 1 && (
                     <AppDetails
-                      onBack={handleBack}
+                      onBack={!user.username && handleBack}
                       onComplete={handleComplete}
                       formState={formState}
                       handleChange={handleChange}
@@ -348,10 +415,19 @@ const ProjectCreateView = () => {
                 <Button
                   variant="contained"
                   color="secondary"
-                  component={RouterLink}
-                  to="/dashboard"
+                  onClick={async () => {
+                    if (user.username) {
+                      logout();
+                      await authService.logout(user.activeApp, user.username);
+                    }
+                    history.push(
+                      interpolate(routes.LOGIN, {
+                        appName: formState.values.appName,
+                      })
+                    );
+                  }}
                 >
-                  Go to Dashboard
+                  {`Login to ${formState.values.appName}`}
                 </Button>
               </Box>
             </Box>
@@ -362,4 +438,4 @@ const ProjectCreateView = () => {
   );
 };
 
-export default ProjectCreateView;
+export default CreateApp;

@@ -25,13 +25,11 @@ public class Event implements Serializable {
     @GeneratedValue(generator = "eventSequenceGenerator")
     private Integer id;
 
-    @Column(nullable = false)
     private String producer;
 
     @Column(nullable = false)
     private String action;
 
-    @Column(nullable = false)
     private  String consumer;
 
     @Column(columnDefinition = "TEXT")

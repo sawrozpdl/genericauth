@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: any) => ({
 }));
 
 const Main = (props: any) => {
-  const { children } = props;
+  const { children, ...rest } = props;
 
   const classes = useStyles();
   const theme: any = useTheme();
@@ -51,12 +51,17 @@ const Main = (props: any) => {
         [classes.shiftContent]: isDesktop,
       })}
     >
-      <Topbar onSidebarOpen={handleSidebarOpen} />
-      <Sidebar
-        onClose={handleSidebarClose}
-        open={shouldOpenSidebar}
-        variant={isDesktop ? 'persistent' : 'temporary'}
-      />
+      <Suspense fallback={<div />}>
+        <Topbar onSidebarOpen={handleSidebarOpen} {...rest} />
+      </Suspense>
+      <Suspense fallback={<div />}>
+        <Sidebar
+          onClose={handleSidebarClose}
+          open={shouldOpenSidebar}
+          variant={isDesktop ? 'persistent' : 'temporary'}
+          {...rest}
+        />
+      </Suspense>
       <Suspense fallback={<LoadingScreen />}>
         <main className={classes.content}>
           {children}

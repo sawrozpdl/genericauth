@@ -30,13 +30,15 @@ public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecifi
     @Query(value = "SELECT us.* from \"user\" as us " +
             "inner join app_registration as ar on us.id = ar.user_id " +
             "inner join app on app.id = ar.app_id " +
-            "where app.name = :appName", nativeQuery = true)
-    Page<User> findUsersByAppName(String appName, Pageable pageable);
+            "where app.name = :appName and ar.is_active = :active and " +
+            "(concat(us.first_name , ' ', us.middle_name ,us.last_name ) like %:search% " +
+            "or us.username like %:search% or us.email like %:search%)", nativeQuery = true)
+    Page<User> findUsersByAppName(String appName, String search, boolean active, Pageable pageable);
 
     @Query(value = "SELECT us.* from \"user\" as us " +
             "inner join app_registration as ar on us.id = ar.user_id " +
             "inner join app on app.id = ar.app_id " +
-            "where us.username = :username and us.password = :password and app.name = :appName", nativeQuery = true)
+            "where (us.username = :username or us.email = :username) and us.password = :password and app.name = :appName", nativeQuery = true)
     Optional<User> findUserByUserNamePasswordAndAppName(String username, String password, String appName);
 
 }

@@ -1,55 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { CssBaseline } from '@material-ui/core';
 import { Router, Switch } from 'react-router-dom';
 import { ThemeProvider, makeStyles } from '@material-ui/styles';
 
-import * as storage from './utils/storage';
-import httpConstants from './constants/http';
-
-import { handleError } from './utils/error';
-
-import { authorizeUser } from './services/auth';
 import validate from 'validate.js';
-import roles from './constants/roles';
 import validators from './common/validators';
 
 import { createTheme } from './theme/create';
 
 import { createBrowserHistory } from 'history';
 import BaseRouter from './BaseRouter';
-import UserContext from './UserContext';
+import UserContext from './context/UserContext';
 import useSettings from './hooks/useSettings';
+import { fetchUser } from './services/user';
 
 const browserHistory = createBrowserHistory();
 
-const App: React.FC = () => {
-  const [user, setUser] = useState(null);
-
-  const getActiveUser = (): any => {
-    try {
-      const accessToken = storage.get(httpConstants.ACCESS_TOKEN);
-
-      return authorizeUser(accessToken);
-    } catch (err) {
-      handleError(err);
-    }
-
-    return null;
-  };
-
-  const getGuestUser = () => {
-    return {
-      id: -1,
-      firstName: 'Anon',
-      roles: [roles.GUEST],
-    };
-  };
+const App: React.FC = (props: any) => {
+  const userCtx: any = useContext(UserContext);
+  const { setUser } = userCtx;
 
   useEffect(() => {
-    const userResponse = getActiveUser();
-    let { data } = userResponse;
-    data = data ? data : getGuestUser();
-    setUser(data);
+    fetchUser(setUser);
+    // eslint-disable-next-line
   }, []);
 
   const useStyles = makeStyles((theme: any) => ({
@@ -94,9 +67,7 @@ const App: React.FC = () => {
         <Router history={browserHistory}>
           <CssBaseline />
           <Switch>
-            <UserContext.Provider value={user}>
-              <BaseRouter />
-            </UserContext.Provider>
+            <BaseRouter />
           </Switch>
         </Router>
       </ThemeProvider>

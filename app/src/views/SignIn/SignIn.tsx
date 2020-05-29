@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
@@ -9,18 +9,28 @@ import {
   TextField,
   Link,
   Typography,
+  capitalize,
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Container from '@material-ui/core/Container';
 import Avatar from '@material-ui/core/Avatar';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import routes from '../../constants/routes';
+import { interpolate } from '../../utils/string';
+import http from '../../utils/http';
+import toast from '../../utils/toast';
+import { LOGIN_URL } from '../../constants/endpoints';
+import { persist } from '../../services/token';
+import { Buffer } from 'buffer';
+import UserContext from '../../context/UserContext';
+import { fetchUser } from '../../services/user';
+import { handleError } from '../../utils/error';
 
 const schema = {
   email: {
     presence: { allowEmpty: false, message: 'is required' },
-    email: true,
     length: {
-      maximum: 64,
+      maximum: 128,
     },
   },
   password: {
@@ -43,6 +53,7 @@ const useStyles = makeStyles((theme: any) => ({
       display: 'none',
     },
   },
+  forgotPassword: { float: 'right' },
   quote: {
     backgroundColor: theme.palette.neutral,
     height: '100%',
@@ -78,7 +89,7 @@ const useStyles = makeStyles((theme: any) => ({
   contentHeader: {
     display: 'flex',
     alignItems: 'center',
-    paddingTop: theme.spacing(10),
+    paddingTop: theme.spacing(5),
     marginLeft: theme.spacing(-2),
     marginBottom: theme.spacing(-3),
     paddingRight: theme.spacing(2),
@@ -135,7 +146,14 @@ const useStyles = makeStyles((theme: any) => ({
 const SignIn = (props: any) => {
   const { history } = props;
 
+  const { appName } = props.match.params;
+
+  const userCtx: any = useContext(UserContext);
+  const { setUser } = userCtx;
+
   const classes: any = useStyles();
+
+  const [submitting, setSubmitting] = useState(false);
 
   interface FormState {
     isValid: boolean;
@@ -184,9 +202,25 @@ const SignIn = (props: any) => {
     }));
   };
 
-  const handleSignIn = (event: any) => {
+  const handleSignIn = async (event: any) => {
     event.preventDefault();
-    history.push('/');
+    setSubmitting(true);
+    const { email, password } = formState.values;
+    const key = new Buffer(`${email}:${password}`).toString('base64');
+    try {
+      const { data } = await http.post(interpolate(LOGIN_URL, { appName }), {
+        accessToken: false,
+        headers: { Authorization: `Basic ${key}` },
+      });
+      persist(data.refreshToken, data.refreshToken);
+      await fetchUser(setUser);
+      history.push(routes.HOME);
+      toast.success('Login successful, Welcome back!');
+    } catch (exception) {
+      handleError(exception);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const hasError = (field: any) =>
@@ -205,9 +239,13 @@ const SignIn = (props: any) => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h3">
-            Log In
+            {`Log in to ${capitalize(appName)}`}
           </Typography>
-          <form className={classes.form} onSubmit={handleSignIn}>
+          <form
+            autoComplete="off"
+            className={classes.form}
+            onSubmit={handleSignIn}
+          >
             <Typography
               align="center"
               className={classes.sugestion}
@@ -219,7 +257,7 @@ const SignIn = (props: any) => {
               error={hasError('email')}
               fullWidth
               helperText={hasError('email') ? formState.errors.email[0] : null}
-              label="Email address"
+              label="Email Address or Username"
               name="email"
               onChange={handleChange}
               type="text"
@@ -243,7 +281,7 @@ const SignIn = (props: any) => {
             <Button
               className={classes.signInButton}
               color="primary"
-              disabled={!formState.isValid}
+              disabled={submitting || !formState.isValid}
               fullWidth
               size="large"
               type="submit"
@@ -253,8 +291,20 @@ const SignIn = (props: any) => {
             </Button>
             <Typography color="textSecondary" variant="body1">
               Don&apos;t have an account?{' '}
-              <Link component={RouterLink} to="/sign-up" variant="h6">
+              <Link
+                component={RouterLink}
+                to={interpolate(routes.REGISTER, { appName })}
+                variant="h6"
+              >
                 Sign up
+              </Link>
+              <Link
+                component={RouterLink}
+                className={classes.forgotPassword}
+                to={interpolate(routes.FORGOT_PASSWORD, { appName })}
+                variant="h6"
+              >
+                Forgot Password
               </Link>
             </Typography>
           </form>

@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class AppRegistration implements Serializable {
 
     @Id
@@ -37,6 +38,9 @@ public class AppRegistration implements Serializable {
     private User user;
 
     private Date registeredAt;
+
+    @Column(nullable = false)
+    private boolean isActive = true;
 
     @PrePersist
     protected void onCreate() {
@@ -80,5 +84,13 @@ public class AppRegistration implements Serializable {
 
     public void setRegisteredAt(Date registeredAt) {
         this.registeredAt = registeredAt;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

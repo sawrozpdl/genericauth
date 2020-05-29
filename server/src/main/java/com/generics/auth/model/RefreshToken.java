@@ -1,8 +1,11 @@
 package com.generics.auth.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class RefreshToken extends GenericModel {
 
     @Column(unique = true, nullable = false, length = 128)

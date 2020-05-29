@@ -10,10 +10,9 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import GetAppIcon from '@material-ui/icons/GetApp';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
-import AchiveIcon from '@material-ui/icons/ArchiveOutlined';
 
 const useStyles = makeStyles(() => ({
   menu: {
@@ -22,7 +21,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function GenericMoreButton(props: any) {
+const GenericMoreButton = (props: any) => {
   const classes = useStyles();
   const moreRef = useRef(null);
   const [openMenu, setOpenMenu] = useState(false);
@@ -58,9 +57,9 @@ function GenericMoreButton(props: any) {
       >
         <MenuItem>
           <ListItemIcon>
-            <GetAppIcon />
+            <RefreshIcon />
           </ListItemIcon>
-          <ListItemText primary="Import" />
+          <ListItemText primary="Refresh" />
         </MenuItem>
         <MenuItem>
           <ListItemIcon>
@@ -74,16 +73,10 @@ function GenericMoreButton(props: any) {
           </ListItemIcon>
           <ListItemText primary="Export" />
         </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <AchiveIcon />
-          </ListItemIcon>
-          <ListItemText primary="Achive" />
-        </MenuItem>
       </Menu>
     </>
   );
-}
+};
 
 GenericMoreButton.propTypes = {
   className: PropTypes.string,

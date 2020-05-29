@@ -9,5 +9,5 @@ ENV JAR_NAME generics-1.0.0.jar
 
 COPY build/libs/${JAR_NAME} ${JAR_NAME}
 
-CMD [ "sh", "-c", "java -Djava.security.egd=file:/dev/./urandom ${JAVA_OPTS} -jar ${JAR_NAME}" ]
+CMD [ "sh", "-c", "java ${JAVA_OPTS} -jar ${JAR_NAME}" ]
     

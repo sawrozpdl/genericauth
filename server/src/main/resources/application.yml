@@ -19,19 +19,20 @@ spring:
     removeAbandonedTimeout: 60
   jackson:
     serialization:
-      fail-on-empty-beans: false
+      fail_on_empty_beans: false
   jpa:
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
+#        show_sql: true
+#        format_sql: true
         id:
           new_generator_mappings: false
 
 server:
-  port: ${PORT:8080}
+  port: ${PORT:9090}
   env: ${SPRING_ENV:development}
   secret: wd^=I3w0%/{ecrX8o)XZQo{_&L@8m#6iD
   error:
@@ -39,10 +40,10 @@ server:
       enabled: false
 
 smtp:
-  port: 587
-  server: smtp-relay.sendinblue.com
-  username: sarojpaudyal53@gmail.com
-  password: Fk2MYfbSrHxs1BEU
+  port: ${SMTP_PORT:587}
+  server: ${SMTP_SERVER:smtp.gmail.com}
+  username: ${SMTP_LOGIN:username@gmail.com}
+  password: ${SMTP_PASSWORD:password}
 
 aws:
   region: ${AWS_REGION:null}
