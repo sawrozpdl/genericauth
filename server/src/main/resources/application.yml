@@ -19,7 +19,7 @@ spring:
     removeAbandonedTimeout: 60
   jackson:
     serialization:
-      failOnEmptyBeans: false
+      fail_on_empty_beans: false
   jpa:
     hibernate:
       ddl-auto: update
