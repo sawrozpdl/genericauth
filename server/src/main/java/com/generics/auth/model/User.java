@@ -58,15 +58,15 @@ public class User extends GenericModel {
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     private Location location;
 
-    @OneToMany(mappedBy = "user", fetch=FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch=FetchType.LAZY)
     @JsonIgnoreProperties({"app", "user"})
     private Set<AppRegistration> registrations = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", fetch=FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch=FetchType.LAZY)
     @JsonIgnoreProperties({"user", "app", "role"})
     private Set<UserRole> roles = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", fetch=FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch=FetchType.LAZY)
     private Set<RefreshToken> refreshTokens = new HashSet<>();
 
     public User() {}
@@ -82,6 +82,11 @@ public class User extends GenericModel {
     protected void onCreate() {
         super.onCreate();
         this.location = new Location();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return  ((User) obj).getEmail().equals(this.getEmail());
     }
 
     public String getUsername() {

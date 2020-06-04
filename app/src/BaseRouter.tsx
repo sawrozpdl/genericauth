@@ -22,6 +22,7 @@ import {
 } from './views';
 import UserContext from './context/UserContext';
 import roles from './constants/roles';
+import { interpolate } from './utils/string';
 
 const BaseRouter: React.FC = () => {
   const userCtx: any = useContext(UserContext);
@@ -45,7 +46,7 @@ const BaseRouter: React.FC = () => {
       <RouteWithLayout
         component={HistoryView}
         exact
-        allow={[roles.ADMIN]}
+        allow={[roles.USER]}
         layout={MainLayout}
         path={routes.HISTORY}
       />
@@ -109,9 +110,15 @@ const BaseRouter: React.FC = () => {
         component={NotFoundView}
         exact
         allow={[]}
-        layout={MinimalLayout}
+        layout={user && user.email ? MainLayout : MinimalLayout}
         path={routes.NOT_FOUND}
       />
+      {user && (
+        <Redirect
+          from={routes.USER_PROFILE}
+          to={interpolate(routes.USER_ACCOUNT, { username: user.username })}
+        />
+      )}
       <Redirect to={routes.NOT_FOUND} />
     </Switch>
   );

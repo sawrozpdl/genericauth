@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -184,6 +185,7 @@ public class AppUserController {
 
     }
 
+    @Transactional
     @DeleteMapping("/api/apps/{appName}/users/{username}")
     public void removeUserFromApp(HttpServletRequest request, @PathVariable String username, @PathVariable String appName) {
         User activeUser = authenticationService.authorizeRequest(request, appName, new String[] {Roles.ADMIN.name()}, username);

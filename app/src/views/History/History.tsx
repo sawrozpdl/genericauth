@@ -64,7 +64,7 @@ const History = () => {
     }
   }, [appName]);
 
-  const [query, setQuery] = useState({ page: 1, size: 10, search: '' });
+  const [query, setQuery] = useState({ page: 0, size: 10, search: '' });
   const [page] = useState({ totalPages: 1, last: true, first: true });
 
   // const handleSearch = (value: string): boolean | void =>

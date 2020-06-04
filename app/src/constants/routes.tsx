@@ -1,17 +1,17 @@
 const routes = {
   HOME: '/',
   APPS: '/apps',
+  USERS: '/users',
   NOT_FOUND: '/404',
-  USERS: '/:appName/users',
+  HISTORY: '/history',
   CREATE_APP: '/create',
   APP_HOME: '/:appName',
+  DASHBOARD: '/dashboard',
   LOGIN: '/:appName/login',
+  USER_PROFILE: '/account',
+  USER_SETTINGS: '/settings',
   REGISTER: '/:appName/register',
-  DASHBOARD: '/:appName/dashboard',
-  HISTORY: '/:appName/history',
-  USER_PROFILE: '/:appName/:username',
-  USER_ACCOUNT: '/:appName/:username/account',
-  USER_SETTINGS: '/:appName/:username/settings',
+  USER_ACCOUNT: '/account/:username',
   FORGOT_PASSWORD: '/:appName/forgot-password',
 };
 

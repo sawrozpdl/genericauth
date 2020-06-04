@@ -45,7 +45,7 @@ const Topbar = (props: any): any => {
   const userCtx: any = useContext(UserContext);
   const { user, logout } = userCtx;
 
-  const { appName } = props.match.params;
+  const { activeApp: appName } = user;
 
   const classes: any = useStyles();
   return (

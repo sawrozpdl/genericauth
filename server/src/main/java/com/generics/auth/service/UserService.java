@@ -92,7 +92,7 @@ public class UserService {
         if (userRepository.existsById(id))
             userRepository.deleteById(id);
 
-        throw new HttpException(Error.missing("User", "id", id), HttpStatus.NOT_FOUND);
+        else throw new HttpException(Error.missing("User", "id", id), HttpStatus.NOT_FOUND);
     }
 
     public Page<User> getAllUsersInApp(String appName, String search, boolean active, RequestFilter filter) {

@@ -206,7 +206,7 @@ const CreateApp = (props: any) => {
       if (user.username) return;
       if (!query.token) {
         history.push(routes.HOME);
-        toast.info('Plese verify your email for creating app!');
+        toast.info('Plese verify your email for creating an app!');
         return;
       }
       try {
