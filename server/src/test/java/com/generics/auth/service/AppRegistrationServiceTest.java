@@ -90,7 +90,6 @@ public class AppRegistrationServiceTest {
     public void registersUser() {
         App createdApp = appService.createApp(app);
         User createdUser = userService.createUser(user, createdApp);
-        System.out.println(createdApp);
 
         appRegistrationService.registerUser(createdApp,createdUser);
 

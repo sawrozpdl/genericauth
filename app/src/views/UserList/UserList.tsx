@@ -10,13 +10,12 @@ import { interpolate, toNormalCase, downloadCsv } from '../../utils/string';
 import Loading from '../../components/Loading';
 import toast from '../../utils/toast';
 import Pagination from '../../components/Pagination';
-import { Modal } from '../../components/Modal';
+import { Modal } from '../../components';
 import UserDetails from '../CreateApp/UserDetails';
 import { handleError } from '../../utils/error';
 import roles from '../../constants/roles';
 import { disableUser } from '../../services/user';
 import { collectObject, withoutAttrs } from '../../utils/object';
-import routes from '../../constants/routes';
 import GenericTable from '../../components/GenericTable';
 import columns from './columns';
 
@@ -81,8 +80,6 @@ const UserList = (props: any) => {
   const classes = useStyles();
 
   const userCtx: any = useContext(UserContext);
-  const { appName: viewingApp } = props.match.params;
-  const { history } = props;
   const { user } = userCtx;
   const { activeApp: appName } = user;
   const [loading, setLoading] = useState(true);
@@ -160,10 +157,6 @@ const UserList = (props: any) => {
     !page.first && setQuery({ ...query, page: query.page - 1 });
 
   useEffect(() => {
-    if (appName !== viewingApp) {
-      toast.info(`Please login to ${viewingApp} for that!`);
-      return history.push(routes.HOME);
-    }
     fetchUsers();
 
     // eslint-disable-next-line

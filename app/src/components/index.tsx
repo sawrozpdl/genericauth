@@ -1,3 +1,10 @@
+export { default as Logo } from './Logo';
+export { default as Modal } from './Modal';
+export { default as Loading } from './Loading';
+export { default as Pagination } from './Pagination';
 export { default as SearchInput } from './SearchInput';
 export { default as StatusBullet } from './StatusBullet';
+export { default as GenericTable } from './GenericTable';
+export { default as LoadingScreen } from './LoadingScreen';
 export { default as RouteWithLayout } from './RouteWithLayout';
+export { default as GenericMoreButton } from './GenericMoreButton';

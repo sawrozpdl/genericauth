@@ -89,7 +89,7 @@ public class AppController {
 
     @GetMapping("/api/apps/{appName}")
     public App getAppByName(HttpServletRequest request, @PathVariable String appName) {
-        authenticationService.authorizeRequest(request, appName,  new String[] {Roles.ADMIN.name()}, null);
+        authenticationService.authorizeRequest(request, appName,  new String[] {Roles.USER.name()}, null);
         App app = appService.geAppByName(appName);
         Lazy.filterApp(app, false);
         return app;

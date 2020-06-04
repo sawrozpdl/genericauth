@@ -16,8 +16,6 @@ import { fetchApp, fetchUsersInApp } from '../../services/app';
 import UserContext from '../../context/UserContext';
 import { handleError } from '../../utils/error';
 import Loading from '../../components/Loading';
-import toast from '../../utils/toast';
-import routes from '../../constants/routes';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
@@ -29,21 +27,13 @@ const useStyles = makeStyles((theme: any) => ({
 const Dashboard = (props: any) => {
   const classes = useStyles();
 
-  const { appName } = props.match.params;
-
-  const { history } = props;
-
   const userCtx: any = useContext(UserContext);
-  const { activeApp } = userCtx.user;
+  const { activeApp: appName } = userCtx.user;
 
   const [loading, setLoading] = useState(true);
   const [app, setApp] = useState(null);
 
   const fetchAppsAndUsers = useCallback(async () => {
-    if (appName !== activeApp) {
-      toast.info(`Please login to ${appName} for that!`);
-      return history.push(routes.HOME);
-    }
     try {
       setLoading(true);
       const app = await fetchApp(appName);

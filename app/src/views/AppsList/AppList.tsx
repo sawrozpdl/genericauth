@@ -99,7 +99,7 @@ const AppList = (props: any) => {
         handleNext={handleNextPageClick}
         handlePrevious={handlePreviousPageClick}
         page={query.page}
-        disabled={loading}
+        disabled={loading || !page.content}
         totalPages={page.totalPages || 1}
         isFirst={page.first}
         isLast={page.last}

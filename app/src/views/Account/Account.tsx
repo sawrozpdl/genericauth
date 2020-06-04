@@ -35,7 +35,9 @@ const Account = (props: any) => {
   const classes = useStyles();
 
   const { history } = props;
-  const { username, appName } = props.match.params;
+  const { username } = props.match.params;
+
+  const appName = activeUser.activeApp;
 
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -51,6 +53,7 @@ const Account = (props: any) => {
       );
     } catch (error) {
       handleError(error);
+      history.goBack();
     } finally {
       setLoading(false);
       if (user && !user.email) history.push(routes.NOT_FOUND);
@@ -69,8 +72,12 @@ const Account = (props: any) => {
     const toDisable = user;
     try {
       await disableUser(toDisable, hard);
-      fetchAndSetUser();
       toast.success(`${actionName} successfull!`);
+      if (hard) {
+        history.push(routes.USERS);
+      } else {
+        fetchAndSetUser();
+      }
     } catch (error) {
       handleError(error);
     }

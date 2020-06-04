@@ -4,7 +4,7 @@ import { Router, Switch } from 'react-router-dom';
 import { ThemeProvider, makeStyles } from '@material-ui/styles';
 
 import validate from 'validate.js';
-import validators from './common/validators';
+import { checked } from './utils/object';
 
 import { createTheme } from './theme/create';
 
@@ -58,7 +58,7 @@ const App: React.FC = (props: any) => {
 
   validate.validators = {
     ...validate.validators,
-    ...validators,
+    checked,
   };
   const { settings } = useSettings();
   return (

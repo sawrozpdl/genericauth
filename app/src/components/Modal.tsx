@@ -51,7 +51,7 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
-export const Modal = (props: any) => {
+const Modal = (props: any) => {
   const { header, children, footer, handleClose, open } = props;
 
   return (
@@ -68,3 +68,5 @@ export const Modal = (props: any) => {
     </Dialog>
   );
 };
+
+export default Modal;

@@ -25,7 +25,7 @@ public class AppService {
     }
 
     public Page<App> getAllApps(RequestFilter filter) {
-        return appRepository.findAll(PageRequest.of(filter.page, filter.size));
+        return appRepository.findAll(filter.search, PageRequest.of(filter.page, filter.size));
     }
 
     public App geAppByName(String name) {

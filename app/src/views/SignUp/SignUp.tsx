@@ -429,7 +429,11 @@ const SignUp = (props: any) => {
             </Button>
             <Typography color="textSecondary" variant="body1">
               Have an account?{' '}
-              <Link component={RouterLink} to="/sign-in" variant="h6">
+              <Link
+                component={RouterLink}
+                to={interpolate(routes.LOGIN, { appName })}
+                variant="h6"
+              >
                 Sign in
               </Link>
             </Typography>

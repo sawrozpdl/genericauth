@@ -66,7 +66,7 @@ public class PostInit implements ApplicationRunner {
     }
 
     private void setSuperAdmin() {
-        godApp = appService.createApp(new App("hamroauth", true));
+        godApp = appService.createApp(new App("floorgang", true));
         godAdmin = userService.createUser(
                 new User("supersauce",
                         "sarojpaudyal53@gmail.com",

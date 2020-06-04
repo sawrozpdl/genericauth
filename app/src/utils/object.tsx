@@ -41,3 +41,9 @@ export const withAttrs = (obj: any, attrs: any) => {
 
 export const getObjectById = (objects: any, id: any) =>
   objects.find((object: any) => object.id === +id);
+
+export const checked = (value: any, options: any) => {
+  if (value !== true) {
+    return options.message || 'must be checked';
+  }
+};

@@ -1,0 +1,58 @@
+* [33m61f70f1[m[33m ([m[1;36mHEAD -> [m[1;32mdev[m[33m, [m[1;31morigin/dev[m[33m)[m finish dashboard arc
+* [33mab2767f[m docker fixes
+* [33m4a0f1a3[m complete dashboard components
+* [33m6340531[m Refactor dashboard
+* [33mff9fce5[m fixed logout bug
+* [33md485f13[m add update feature for user
+* [33meba9e71[m absolute user page
+* [33m0cf0edc[m complete user add for admin
+* [33m66dc908[m fix test case
+* [33m408f5af[m forgot password feature
+* [33m530f1f8[m fix email smtp
+* [33macf8898[m Complete create app arc
+* [33m0c97acc[m generic pagination added
+* [33m40bf2c8[m fix app build issue
+* [33mbb9e88b[m complete basic server and app integration
+* [33md588e32[m Complete basic authentication appside
+* [33m24a7c06[m app test fix
+* [33m2c90abc[m Refactor components
+* [33mce5a338[m verify endpoint added
+* [33m8018eca[m Add create app apge
+* [33maeac26d[m Refactor some components
+* [33m368a3a5[m add homepage
+* [33mb847e02[m add toasts and stuff
+* [33mfbcfe8d[m Refactor components
+* [33mf25d1ca[m fix imported components
+* [33m12d3d44[m Add basic components
+* [33m3a41cea[m hotfix test react
+*   [33m719e411[m Merge pull request #5 from sawrozpdl/complete-basic-crud
+[32m|[m[33m\[m  
+[32m|[m * [33m5c89ec2[m[33m ([m[1;31morigin/complete-basic-crud[m[33m, [m[1;32mcomplete-basic-crud[m[33m)[m Add basic authentication
+[32m|[m * [33m00d1649[m add controllers for app and app registrations
+[32m|[m * [33mcf0ae00[m react app init
+[32m|[m * [33ma4d6911[m complete models and error json
+[32m|[m[32m/[m  
+* [33me882812[m domain change
+* [33mf8b06a1[m add tests
+* [33mbc75971[m port fix
+* [33m7246bb6[m hotfix env
+* [33mb954bde[m ci cd setup
+*   [33med4e170[m Merge pull request #3 from sawrozpdl/setup-ci-cd
+[34m|[m[35m\[m  
+[34m|[m * [33m4b8b491[m[33m ([m[1;31morigin/setup-ci-cd[m[33m, [m[1;32msetup-ci-cd[m[33m)[m setup docker and envs
+[34m|[m[34m/[m  
+* [33me03997e[m[33m ([m[1;32mfinish-basic-crud[m[33m)[m drop nb
+*   [33m5750b83[m Merge pull request #2 from sawrozpdl/set-basic-crud
+[36m|[m[1;31m\[m  
+[36m|[m * [33m35dd146[m[33m ([m[1;31morigin/set-basic-crud[m[33m, [m[1;32mset-basic-crud[m[33m)[m add yarn
+* [1;31m|[m [33m97d2c51[m Merge pull request #1 from sawrozpdl/set-basic-crud
+[1;32m|[m[1;31m\[m[1;31m|[m 
+[1;32m|[m * [33m40c0675[m registration api added
+[1;32m|[m * [33m53f36d3[m create repositories and app service
+[1;32m|[m * [33m98c8c46[m Add app support models and services
+[1;32m|[m * [33m8f49772[m error handling and user fetch
+[1;32m|[m[1;32m/[m  
+* [33m7d63aed[m complete model classes
+* [33m48976f0[m add models in server
+* [33m0e6a7bd[m lint stage verify
+* [33me1b7133[m Project structure setup
