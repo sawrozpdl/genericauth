@@ -6,6 +6,7 @@ import routes from '../constants/routes';
 import roles from '../constants/roles';
 import { interpolate } from '../utils/string';
 import LoadingScreen from './LoadingScreen';
+import { capitalize } from '@material-ui/core';
 
 const RouteWithLayout = (props: any) => {
   const { layout: Layout, allow, component: Component, ...rest } = props;
@@ -24,6 +25,8 @@ const RouteWithLayout = (props: any) => {
     }
     return <Redirect to={redirectTo} />;
   }
+
+  if (user && user.activeApp) document.title = capitalize(user.activeApp);
 
   return (
     <Route

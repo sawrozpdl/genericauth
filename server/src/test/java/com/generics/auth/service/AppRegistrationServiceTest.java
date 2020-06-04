@@ -21,7 +21,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@DataJpaTest
 public class AppRegistrationServiceTest {
 
     @Mock
@@ -41,25 +40,6 @@ public class AppRegistrationServiceTest {
 
     @InjectMocks
     UserService userService;
-
-    @TestConfiguration
-    public static class AppRegistrationServiceTestContextConfiguration {
-
-        @Bean
-        public AppRegistrationService appRegistrationService() {
-            return new AppRegistrationService();
-        }
-
-        @Bean
-        public AppService appService() {
-            return new AppService();
-        }
-
-        @Bean
-        public UserService userService() {
-            return new UserService();
-        }
-    }
 
     App app;
     User user;
@@ -83,7 +63,8 @@ public class AppRegistrationServiceTest {
         Mockito.when(appRegistrationRepository.save(registration))
                 .thenReturn(registration);
 
-        Mockito.when(appRegistrationRepository.findByUserNameAndAppName("saw", "testapp")).thenReturn(java.util.Optional.of(registration));
+        Mockito.when(appRegistrationRepository.findByUserNameAndAppName("saw",
+                "testapp")).thenReturn(java.util.Optional.of(registration));
     }
 
     @Test
@@ -93,7 +74,9 @@ public class AppRegistrationServiceTest {
 
         appRegistrationService.registerUser(createdApp,createdUser);
 
-        AppRegistration registration = appRegistrationService.getAppRegistrationByAppNameAndUsername(createdUser.getUsername(), createdApp.getName());
+        AppRegistration registration = appRegistrationService
+                .getAppRegistrationByAppNameAndUsername(createdUser.getUsername(),
+                        createdApp.getName());
 
         Assert.assertEquals(registration.getApp(), createdApp);
         Assert.assertEquals(registration.getUser(), user);

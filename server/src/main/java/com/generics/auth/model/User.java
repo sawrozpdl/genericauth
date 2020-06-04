@@ -84,6 +84,11 @@ public class User extends GenericModel {
         this.location = new Location();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return  ((User) obj).getEmail().equals(this.getEmail());
+    }
+
     public String getUsername() {
         return username;
     }
