@@ -110,7 +110,7 @@ const BaseRouter: React.FC = () => {
         component={NotFoundView}
         exact
         allow={[]}
-        layout={MinimalLayout}
+        layout={user && user.email ? MainLayout : MinimalLayout}
         path={routes.NOT_FOUND}
       />
       {user && (

@@ -52,9 +52,7 @@ const RecentEvents = (props: any) => {
       />
       <Divider />
       <GenericTable
-        data={filteredEvents
-          .slice(Math.max(filteredEvents.length - 6, 0))
-          .reverse()}
+        data={filteredEvents.slice(0, Math.min(filteredEvents.length, 6))}
         columns={getColumns(appName, users, false)}
         selection={false}
       >
