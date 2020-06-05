@@ -136,6 +136,7 @@ const Home: React.FC = (props: any) => {
         params: {
           id: new Buffer(email).toString('base64'),
           actionName: 'Create App',
+          actionDescription: 'to register a new app',
           redirectTo: APP_CREATE_URL,
         },
       });
@@ -152,7 +153,7 @@ const Home: React.FC = (props: any) => {
     }
   };
 
-  const hasError = (field: any) =>
+  const hasError = (field: any): boolean =>
     formState.touched[field] && formState.errors[field] ? true : false;
   const classes: any = useStyles();
 
@@ -176,16 +177,17 @@ const Home: React.FC = (props: any) => {
               <Box mt={3}>
                 <Typography variant="body1" color="textSecondary">
                   A generic authentication service which provides API interfaces
-                  which can be intergrated easily to almost every application
-                  &amp; is easy to use &amp; also provides generic login/signup
-                  forms, generic mail system &amp; the list goes on
+                  which can be integrated easily to almost every application
+                  &amp; is easy to use &amp; also provides generic
+                  login/register forms, generic mail system &amp; the list goes
+                  on
                 </Typography>
               </Box>
               <Box mt={3}>
                 <Grid container spacing={3}>
                   <Grid item>
                     <Typography variant="h1" color="secondary">
-                      100+
+                      5+
                     </Typography>
                     <Typography variant="overline" color="textSecondary">
                       Apps Using
@@ -201,7 +203,7 @@ const Home: React.FC = (props: any) => {
                   </Grid>
                   <Grid item>
                     <Typography variant="h1" color="secondary">
-                      10k+
+                      100+
                     </Typography>
                     <Typography variant="overline" color="textSecondary">
                       Users

@@ -44,7 +44,7 @@ const AppsToolbar = (props: any) => {
             history.push(routes.CREATE_APP);
           }}
         >
-          Create App
+          <h4>Create App</h4>
         </Button>
       </div>
     </div>

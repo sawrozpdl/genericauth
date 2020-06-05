@@ -29,9 +29,9 @@ public class ApiController {
     public Object verify(@RequestParam String id,
                          @RequestParam String redirectTo,
                          @RequestParam String actionName,
-                         HttpServletRequest request) {
+                         @RequestParam String actionDescription) {
         String email = Gen.base64Decode(id);
-        return verifyService.verifyEmail(email, redirectTo, actionName, request);
+        return verifyService.verifyEmail(email, redirectTo, actionName, actionDescription);
     }
 
     @PostMapping("/api/authenticate")

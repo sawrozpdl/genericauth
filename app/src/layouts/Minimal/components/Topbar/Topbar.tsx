@@ -86,7 +86,7 @@ const Topbar = (props: any): any => {
           underline="none"
           variant="body2"
         >
-          Apps
+          <h4>Apps</h4>
         </Link>
         <Divider className={classes.divider} />
         <Button color="primary" variant="contained" size="small">
@@ -99,7 +99,7 @@ const Topbar = (props: any): any => {
             underline="none"
             variant="body2"
           >
-            API
+            <h4>API</h4>
           </Link>
         </Button>
       </Toolbar>

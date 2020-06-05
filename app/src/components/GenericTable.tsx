@@ -9,6 +9,7 @@ import {
   CardContent,
   Checkbox,
   Table,
+  Typography,
   TableBody,
   TableCell,
   TableHead,
@@ -30,6 +31,12 @@ const useStyles = makeStyles((theme: any) => ({
   avatar: {
     marginRight: theme.spacing(2),
   },
+  fallback: {
+    width: '84%',
+    textAlign: 'center',
+    position: 'absolute',
+    marginTop: theme.spacing(2.5),
+  },
   actions: {
     justifyContent: 'flex-end',
   },
@@ -41,6 +48,7 @@ const GenericTable = (props: any) => {
     data,
     columns,
     selection,
+    fallbackText,
     selectedItems,
     setSelectedItems,
     ...rest
@@ -107,12 +115,21 @@ const GenericTable = (props: any) => {
                   )}
                   {columns.map((elem: any) => {
                     return (
-                      <TableCell key={elem.Header}>{elem.Header}</TableCell>
+                      <TableCell key={elem.Header}>
+                        <h4>{elem.Header}</h4>
+                      </TableCell>
                     );
                   })}
                 </TableRow>
               </TableHead>
               <TableBody>
+                {!data.length ? (
+                  <div className={classes.fallback}>
+                    <Typography variant="body2">{fallbackText} </Typography>{' '}
+                  </div>
+                ) : (
+                  ''
+                )}
                 {data.map((row: any) => (
                   <TableRow
                     className={classes.tableRow}
@@ -156,6 +173,7 @@ const GenericTable = (props: any) => {
 GenericTable.propTypes = {
   children: PropTypes.any,
   className: PropTypes.string,
+  fallbackText: PropTypes.string,
   selection: PropTypes.bool,
   data: PropTypes.array,
   columns: PropTypes.array,

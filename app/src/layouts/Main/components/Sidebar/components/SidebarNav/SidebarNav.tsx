@@ -64,7 +64,7 @@ const SidebarNav = (props: any) => {
                 to={page.href}
               >
                 <div className={classes.icon}>{page.icon}</div>
-                {page.title}
+                <h4>{page.title}</h4>
               </Button>
             </ListItem>
           )

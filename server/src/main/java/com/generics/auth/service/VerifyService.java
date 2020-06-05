@@ -21,15 +21,15 @@ public class VerifyService {
     @Autowired
     ResourceLoader resourceLoader;
 
-    public Object verifyEmail(String email, String redirect, String action, HttpServletRequest request) {
+    public Object verifyEmail(String email, String redirect, String action, String actionDescription) {
         String token = tokenService.createFor(email);
-//        String[] reqInfo = Http.getInfo(request);
         try {
             String redirectUrl = String.format("%s?token=%s", redirect, token);
             Resource resource = resourceLoader.getResource("classpath:templates/verify.html");
             String body = Str.asString(resource);
 
             String[] args = {"action_name::" + action,
+                    "action_description::" + actionDescription,
                     "user_name::" + email.split("@")[0],
                     "action_url::" + redirectUrl,
                     "browser_name::" + "reqInfo[1]",

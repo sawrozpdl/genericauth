@@ -78,7 +78,7 @@ const AppList = (props: any) => {
       ) : (
         <div className={classes.content}>
           {query.search && (
-            <Typography variant="caption" className={classes.searchLabel}>{`
+            <Typography variant="body2" className={classes.searchLabel}>{`
           Showing results for search query: ${query.search}`}</Typography>
           )}
           <Grid

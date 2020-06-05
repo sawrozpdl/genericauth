@@ -39,6 +39,10 @@ const useStyles = makeStyles((theme: any) => ({
   content: {
     marginTop: theme.spacing(2),
   },
+  searchLabel: {
+    color: theme.palette.text.secondary,
+    marginBottom: theme.spacing(2),
+  },
 }));
 
 const userSchema = {
@@ -250,11 +254,18 @@ const UserList = (props: any) => {
         onAddUserClick={(): void => setShowAddUser(true)}
       />
       <div className={classes.content}>
+        {query.search && (
+          <Typography variant="body2" className={classes.searchLabel}>{`
+          Showing results for search query: ${query.search}`}</Typography>
+        )}
         {loading ? (
           <Loading height={500} />
         ) : (
           <GenericTable
             data={page.content}
+            fallbackText={`No results found${
+              query.search ? ` for search: ${query.search}` : ''
+            }`}
             columns={columns}
             selection={true}
             selectedItems={selectedUsers}

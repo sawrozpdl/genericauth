@@ -225,7 +225,8 @@ const SignIn = (props: any) => {
       accessToken: false,
       params: {
         id: new Buffer(email).toString('base64'),
-        actionName: 'Forgot Password',
+        actionName: 'Recover Password',
+        actionDescription: 'to change your password',
         redirectTo: window.location.href.split('?')[0],
       },
     });
