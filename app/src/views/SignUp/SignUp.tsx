@@ -18,7 +18,7 @@ import {
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Container from '@material-ui/core/Container';
 import http from '../../utils/http';
-import { interpolate } from '../../utils/string';
+import { interpolate, truncate } from '../../utils/string';
 import routes from '../../constants/routes';
 import toast from '../../utils/toast';
 import { USERS_URL } from '../../constants/endpoints';
@@ -283,7 +283,7 @@ const SignUp = (props: any) => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h3">
-            {`Register for ${capitalize(appName)}`}
+            {`Register for ${truncate(capitalize(appName), 15)}`}
           </Typography>
           <form
             autoComplete="off"

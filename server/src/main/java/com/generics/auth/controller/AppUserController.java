@@ -9,6 +9,7 @@ import com.generics.auth.security.AuthenticationService;
 import com.generics.auth.service.*;
 import com.generics.auth.object.RequestFilter;
 import com.generics.auth.utils.Error;
+import com.generics.auth.utils.Http;
 import com.generics.auth.utils.Lazy;
 import com.generics.auth.utils.Str;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,6 +129,15 @@ public class AppUserController {
                            @PathVariable String username,
                            @RequestParam String roleName) {
         User activeUser = authenticationService.authorizeRequest(request, appName, new String[] {Roles.ADMIN.name()}, username);
+
+        if (roleName.length() < 3) {
+            throw new HttpException("Invalid role name", HttpStatus.BAD_REQUEST);
+        }
+
+        if (roleName.equals(Roles.GUEST.name()) || roleName.equals((Roles.USER.name()))) {
+            throw new HttpException("Native roles can't be added!", HttpStatus.BAD_REQUEST);
+        }
+
         User user = userService.getUserByUsernameForApp(username, appName);
         App app = appService.geAppByName(appName);
         Role role = roleService.getOrCreateRole(new Role(roleName));
@@ -149,24 +159,24 @@ public class AppUserController {
         App app = appService.geAppByName(appName);
 
         Set<UserRole> userRoles = user.getRoles();
-        AtomicBoolean deleted = new AtomicBoolean(false);
+        final UserRole[] toDelete = {null};
+
         userRoles.forEach(userRole -> {
-            if (userRole.getApp().getName().equals(appName)) {
-                if (userRole.getRole().getName().equals(roleName)) {
-                    userRoleService.deleteUserRole(userRole.getId());
-                    deleted.set(true);
-                }
-            }
+            if (userRole.getApp().getName().equals(appName)
+                    && userRole.getRole().getName().equals(roleName))
+                toDelete[0] = userRole;
         });
 
-        if (deleted.get())
+        if (toDelete[0] != null) {
+            System.out.println(toDelete[0].getId());
+            userRoleService.deleteUserRole(toDelete[0].getId());
             eventService.track(Str.interpolate(Models.USER, "id", activeUser.getId()),
                     Events.DEMOTED,
                     Str.interpolate(Models.USER, "id", user.getId()),
                     app);
+        }
         else
             throw new HttpException(Error.missing("UserRole", "name", roleName), HttpStatus.NOT_FOUND);
-
     }
 
     @PostMapping("/api/apps/{appName}/users/{username}/disable")

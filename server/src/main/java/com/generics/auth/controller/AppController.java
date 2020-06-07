@@ -74,6 +74,7 @@ public class AppController {
         User adminUser = requestUser;
         if (adminUser.getId() == null)
             adminUser = userService.createUser(user, createdApp);
+
         Role adminRole = roleService.getOrCreateRole(new Role(Roles.ADMIN.name()));
         Role userRole = roleService.getOrCreateRole(new Role(Roles.USER.name()));
         userRoleService.createUserRole(new UserRole(createdApp, adminRole, adminUser));

@@ -53,6 +53,10 @@ const steps = [
 const userSchema = {
   username: {
     presence: { allowEmpty: false, message: 'is required' },
+    format: {
+      pattern: /^[a-z0-9_-]{3,16}$/,
+      message: 'Username is not valid',
+    },
     length: {
       minimum: 3,
       maximum: 32,
@@ -84,6 +88,10 @@ const userSchema = {
 const appSchema = {
   appName: {
     presence: { allowEmpty: false, message: 'is required' },
+    format: {
+      pattern: /^[a-z0-9_-]{3,20}$/,
+      message: 'App name is not valid',
+    },
     length: {
       maximum: 32,
       minimum: 3,

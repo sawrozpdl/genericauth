@@ -16,7 +16,7 @@ import Container from '@material-ui/core/Container';
 import Avatar from '@material-ui/core/Avatar';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import routes from '../../constants/routes';
-import { interpolate } from '../../utils/string';
+import { interpolate, parseQuery, truncate } from '../../utils/string';
 import http from '../../utils/http';
 import toast from '../../utils/toast';
 import { LOGIN_URL } from '../../constants/endpoints';
@@ -151,6 +151,10 @@ const SignIn = (props: any) => {
   const userCtx: any = useContext(UserContext);
   const { setUser } = userCtx;
 
+  const query = parseQuery(props.location.search);
+
+  const { ap } = query;
+
   const classes: any = useStyles();
 
   const [submitting, setSubmitting] = useState(false);
@@ -239,7 +243,7 @@ const SignIn = (props: any) => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h3">
-            {`Log in to ${capitalize(appName)}`}
+            {`Log in to ${truncate(capitalize(appName), 15)}`}
           </Typography>
           <form
             autoComplete="off"
@@ -293,7 +297,18 @@ const SignIn = (props: any) => {
               Don&apos;t have an account?{' '}
               <Link
                 component={RouterLink}
-                to={interpolate(routes.REGISTER, { appName })}
+                onClick={() => {
+                  +ap === 1
+                    ? toast.info(
+                        "Registration isn't allowed for private apps, Please contact the admin"
+                      )
+                    : console.log('');
+                }}
+                to={
+                  +ap !== 1
+                    ? interpolate(routes.REGISTER, { appName })
+                    : '?ap=1'
+                }
                 variant="h6"
               >
                 Sign up

@@ -69,4 +69,4 @@ const Modal = (props: any) => {
   );
 };
 
-export default Modal;
+export { Modal as default, DialogContent, DialogActions, DialogTitle };

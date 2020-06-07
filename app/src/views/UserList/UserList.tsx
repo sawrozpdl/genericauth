@@ -18,6 +18,7 @@ import { disableUser } from '../../services/user';
 import { collectObject, withoutAttrs } from '../../utils/object';
 import GenericTable from '../../components/GenericTable';
 import columns from './columns';
+import alert from '../../utils/alert';
 
 const EXCLUDE_ATTRS: string[] = [
   'roles',
@@ -203,17 +204,23 @@ const UserList = (props: any) => {
     if (selectedUsers.includes(user.id)) {
       return toast.info(`${actionName} of self is not allowed!`);
     }
-    const toDisable = collectObject(page.content, selectedUsers, 'id');
-    try {
-      for (let i = 0; i < toDisable.length; i++) {
-        await disableUser(toDisable[i], hard);
+    alert(
+      `Confirm ${actionName}`,
+      `Are you sure about this ${actionName.toLowerCase()}?`,
+      async () => {
+        const toDisable = collectObject(page.content, selectedUsers, 'id');
+        try {
+          for (let i = 0; i < toDisable.length; i++) {
+            await disableUser(toDisable[i], hard);
+          }
+          toast.success(`${actionName} successful!`);
+          setSelectedUsers([]);
+          fetchUsers();
+        } catch (error) {
+          handleError(error);
+        }
       }
-      toast.success(`${actionName} successfull!`);
-      setSelectedUsers([]);
-      fetchUsers();
-    } catch (error) {
-      handleError(error);
-    }
+    );
   };
 
   const handleExportClick = async (): Promise<void> => {

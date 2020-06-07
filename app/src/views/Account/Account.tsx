@@ -15,6 +15,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import BlockIcon from '@material-ui/icons/Block';
 import toast from '../../utils/toast';
 import RoleDetails from './components/RoleDetails';
+import alert from '../../utils/alert';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
@@ -46,7 +47,7 @@ const Account = (props: any) => {
   const fetchAndSetUser = useCallback(async () => {
     try {
       const userData = await fetchUserForApp(username, appName);
-      setUser(userData);
+      setUser(() => ({ ...userData }));
       setCanEdit(
         userData.email === activeUser.email ||
           activeUser.activeRoles.includes(roles.ADMIN)
@@ -59,20 +60,23 @@ const Account = (props: any) => {
       if (user && !user.email) history.push(routes.NOT_FOUND);
     }
     //eslint-disable-next-line
-  }, [username, appName]);
+  }, [username]);
 
   useEffect(() => {
     fetchAndSetUser();
   }, [fetchAndSetUser]);
 
-  const handleDisable = async (actionName: string, hard = false) => {
+  const handleDisable = async (
+    actionName: string,
+    hard = false
+  ): Promise<void> => {
     if (user.email === activeUser.email) {
       return toast.info(`${actionName} of self is not allowed!`);
     }
     const toDisable = user;
     try {
       await disableUser(toDisable, hard);
-      toast.success(`${actionName} successfull!`);
+      toast.success(`${actionName} successful!`);
       if (hard) {
         history.push(routes.USERS);
       } else {
@@ -87,12 +91,28 @@ const Account = (props: any) => {
 
   const handleDeactivateClick = async () => {
     if (!isAdmin) return;
-    await handleDisable(user.activeInApp ? 'Deactivation' : 'Activation');
+    const action = user.activeInApp ? 'Deactivation' : 'Activation';
+    alert(
+      `Confirm ${action}`,
+      `Are you sure you want to ${
+        user.activeInApp ? 'deactivate' : 'activate'
+      } this account?`,
+      async () => {
+        await handleDisable(action);
+      }
+    );
   };
 
   const handleDeleteClick = async () => {
     if (!isAdmin) return;
-    await handleDisable('Deletion', true);
+    const action = 'Deletion';
+    alert(
+      `Confirm ${action}`,
+      `Are you sure you want to delete this account?`,
+      async () => {
+        await handleDisable(action, true);
+      }
+    );
   };
 
   const onComponentUpdate = async () => {

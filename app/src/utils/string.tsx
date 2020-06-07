@@ -103,3 +103,6 @@ export const downloadCsv = (rows: any, name: string) => {
 
   link.click();
 };
+
+export const truncate = (str: string, num: number): string =>
+  str.length > num ? str.slice(0, num) + '...' : str;

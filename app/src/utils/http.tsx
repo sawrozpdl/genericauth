@@ -63,18 +63,17 @@ function clearUnauthorizedRequestQueue() {
 /**
  * Clear tokens and redirect to login page.
  */
-function clearLocalAuth() {
-  //authService.logout();
+async function clearLocalAuth() {
+  await authService.logout();
 }
 
 async function errorResponseHandler(err: any) {
   const originalRequest = err.config;
   const code = err.response && err.response.status;
-
-  if (originalRequest['__isRetryRequest']) {
-    clearLocalAuth();
+  if (originalRequest.headers.Authorization.split(' ')[0] === 'Refresh') {
+    await clearLocalAuth();
   } else if (code === HttpStatus.UNAUTHORIZED) {
-    originalRequest.__isRetryRequest = true;
+    originalRequest.params.__isRetryRequest = true;
     try {
       const refreshToken = tokenService.getRefreshToken();
       if (!refreshToken) {
@@ -106,7 +105,7 @@ async function errorResponseHandler(err: any) {
         return retryRequest;
       }
     } catch (error) {
-      clearLocalAuth();
+      await clearLocalAuth();
     }
   }
 

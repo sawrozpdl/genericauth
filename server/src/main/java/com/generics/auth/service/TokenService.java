@@ -1,12 +1,12 @@
 package com.generics.auth.service;
 
 import com.generics.auth.exception.HttpException;
+import com.generics.auth.model.App;
+import com.generics.auth.model.Credential;
 import com.generics.auth.model.User;
 import com.generics.auth.model.UserRole;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.generics.auth.utils.Str;
+import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -23,20 +23,42 @@ public class TokenService {
     @Autowired
     private UserService userService;
 
-    public Claims getClaims(String token) {
-        try {
-            return Jwts.parser()
-                    .setSigningKey(secret)
-                    .parseClaimsJws(token)
-                    .getBody();
+    @Autowired
+    private AppService appService;
 
+    public Claims getClaims(String token, String secret) {
+        try {
+            JwtParser parser = Jwts.parser();
+            if (secret == null) {
+                int i = token.lastIndexOf('.');
+                token = token.substring(0, i+1);
+                return parser.parseClaimsJwt(token).getBody();
+            }
+            else {
+                parser.setSigningKey(secret);
+                return parser.parseClaimsJws(token).getBody();
+            }
         } catch (JwtException je) {
             throw new HttpException("Invalid or Bad token", HttpStatus.UNAUTHORIZED);
         }
     }
 
+    public String getSecretForApp(String appName) {
+        App app = appService.geAppByName(appName);
+        Credential credential = app.getCredential();
+        return credential.getClientSecret();
+    }
+
+    @SuppressWarnings("unchecked")
     public User parseToken(String token) {
-        Claims claims = getClaims(token);
+        Claims _claims = getClaims(token, null);
+        String fromApp = (String) _claims.get("appName");
+
+        String signingSecret = secret;
+        if (fromApp != null)
+            signingSecret = getSecretForApp(fromApp);
+
+        Claims claims = getClaims(token, signingSecret);
         if (new Date().compareTo(claims.getExpiration()) >= 0)
             throw new HttpException("Token has expired", HttpStatus.UNAUTHORIZED);
         String email = claims.getSubject();
@@ -83,11 +105,13 @@ public class TokenService {
             });
             claims.put("roles", roles);
 
+            String signingSecret = getSecretForApp(appName);
+
             return Jwts.builder()
                     .setClaims(claims)
                     .setIssuedAt(new Date())
                     .setExpiration(getExpiryDate(isAccessToken))
-                    .signWith(SignatureAlgorithm.HS256, secret).compact();
+                    .signWith(SignatureAlgorithm.HS256, signingSecret).compact();
         }
         catch (Exception e) {
             throw new HttpException("Failed to generate token", HttpStatus.INTERNAL_SERVER_ERROR);
