@@ -48,6 +48,16 @@ public class AppController {
     AuthenticationService authenticationService;
 
 
+    /**
+     * Return all apps based on given filter
+     *
+     * @param page page number to get
+     * @param size size of items in the response
+     * @param search search query to be taken into account
+     * @param sort sort option to include
+     * @param active active record inclusion
+     * @return Apps that match the given filters
+     */
     @GetMapping("/api/apps")
     public Page<App> getApps(@RequestParam(defaultValue = "0") Integer page,
                              @RequestParam(defaultValue = "10") Integer size,
@@ -61,6 +71,15 @@ public class AppController {
         return appsPage;
     }
 
+    /**
+     * Create/Register an app with a verified token
+     *
+     * @param request authenticated request
+     * @param appName name of app to be created
+     * @param appPrivacy privacy setting of the app to be created
+     * @param user admin user for the app
+     * @return app registration object which has the app and user in it
+     */
     @PostMapping("/api/apps")
     @Transactional
     public AppRegistration createApp(HttpServletRequest request,
@@ -88,6 +107,13 @@ public class AppController {
         return appRegistrationService.registerUser(createdApp, adminUser);
     }
 
+    /**
+     * Get app by given name
+     *
+     * @param request authenticated request
+     * @param appName name of the required app
+     * @return app, if found
+     */
     @GetMapping("/api/apps/{appName}")
     public App getAppByName(HttpServletRequest request, @PathVariable String appName) {
         authenticationService.authorizeRequest(request, appName,  new String[] {Roles.USER.name()}, null);
@@ -96,6 +122,14 @@ public class AppController {
         return app;
     }
 
+    /**
+     * Updates an app to the given app in request body
+     *
+     * @param request authenticated request
+     * @param appName name of app to update
+     * @param app app data to put
+     * @return app if app exists and update is successful
+     */
     @PutMapping("/api/apps/{appName}")
     public App updateAppByName(HttpServletRequest request,@PathVariable String appName, @RequestBody App app) {
         User requestUser = authenticationService.authorizeRequest(request, appName,  new String[] {Roles.ADMIN.name()}, null);
@@ -107,11 +141,27 @@ public class AppController {
         return updatedApp;
     }
 
+    /**
+     * Login to the given 'appName'
+     *
+     * @param appName name to app to log in to
+     * @param request raw request
+     * @return tokens if login is successful
+     */
     @PostMapping("/api/apps/{appName}/login")
-    public Object login(@PathVariable String appName, HttpServletRequest request, HttpServletResponse response) {
+    public Object login(@PathVariable String appName, HttpServletRequest request) {
         return authenticationService.loginRequest(request, appName);
     }
 
+    /**
+     * Logout from given app
+     *
+     * @param appName name of app to logout from
+     * @param username username who is requesting the logout
+     * @param request authenticated request
+     * @param response response object for clearing cookies
+     * @return JSON response
+     */
     @PostMapping("/api/apps/{appName}/users/{username}/logout")
     public Object logout(@PathVariable String appName,@PathVariable String username, HttpServletRequest request, HttpServletResponse response) {
         App app = appService.geAppByName(appName);
@@ -123,12 +173,26 @@ public class AppController {
        return authenticationService.logoutRequest(request, response, appName);
     }
 
+    /**
+     * Update location of given appName
+     *
+     * @param request authenticated request
+     * @param appName name of app to update the location
+     * @param location location to put in the app
+     * @return location object which was put into DB
+     */
     @PutMapping("/api/apps/{appName}/location")
     public Location updateAppLocation(HttpServletRequest request,@PathVariable String  appName, @RequestBody Location location) {
         authenticationService.authorizeRequest(request, "hamroauth", new String[] {Roles.SUPER_ADMIN.name()}, null);
         return locationService.updateLocation(location.getId(), location);
     }
 
+    /**
+     * Delete an app with the app name provided
+     *
+     * @param request authenticated request
+     * @param appName name of app to be deleted
+     */
     @DeleteMapping(value = "/api/apps/{appName}")
     public void deleteAppByName(HttpServletRequest request,@PathVariable String appName) {
         authenticationService.authorizeRequest(request, "hamroauth", new String[] {Roles.SUPER_ADMIN.name()}, null);

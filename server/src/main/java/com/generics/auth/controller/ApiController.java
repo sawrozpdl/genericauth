@@ -25,6 +25,15 @@ public class ApiController {
     @Autowired
     AuthenticationService authenticationService;
 
+    /**
+     * Send a 'actionName' verification token to the given email
+     *
+     * @param id base64 encoded email for verification
+     * @param redirectTo url to send the token as redirectTo?token=RESULTING_TOKEN
+     * @param actionName name of the action user invokes to perform
+     * @param actionDescription description of the action to be included in email template
+     * @return Json response regarding the result
+     */
     @PostMapping("/api/verify")
     public Object verify(@RequestParam String id,
                          @RequestParam String redirectTo,
@@ -34,11 +43,24 @@ public class ApiController {
         return verifyService.verifyEmail(email, redirectTo, actionName, actionDescription);
     }
 
+    /**
+     * Authorizes a user with the given token
+     *
+     * @param request authenticated request
+     * @return User if the token is valid one
+     */
     @PostMapping("/api/authenticate")
-    public Object authorize(HttpServletRequest request) {
+    public Object authenticate(HttpServletRequest request) {
         return authenticationService.authenticateRequest(request);
     }
 
+    /**
+     * Change the password of user if valid token provided in the request
+     *
+     * @param passwordBody request body with new password
+     * @param request authenticated request
+     * @return JSON success message if success
+     */
     @PostMapping("/api/change-password")
     public Object changePassword(@RequestBody PasswordBody passwordBody, HttpServletRequest request) {
         User user = authenticationService.authorizeRequest(request, null, null, null);

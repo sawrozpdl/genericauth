@@ -46,6 +46,18 @@ public class AppUserController {
     @Autowired
     AuthenticationService authenticationService;
 
+    /**
+     * Get users that are registered in given app name
+     *
+     * @param request authenticated request
+     * @param appName name of the app the users will be from
+     * @param page page of data to fetch
+     * @param size size of data to include in the page
+     * @param search search query if any
+     * @param sort sort method if any
+     * @param active get active users or not
+     * @return users matching such queries
+     */
     @GetMapping("/api/apps/{appName}/users")
     public Page<User> usersInApp(HttpServletRequest request,
                                  @PathVariable String appName,
@@ -67,6 +79,14 @@ public class AppUserController {
         return usersPage;
     }
 
+    /**
+     * Get single user from given appName if found
+     *
+     * @param request authenticated request
+     * @param appName name of app the user will be from
+     * @param username username of the user
+     * @return user if found in the app
+     */
     @GetMapping("/api/apps/{appName}/users/{username}")
     public User userInApp(HttpServletRequest request, @PathVariable String appName, @PathVariable String username) {
         authenticationService.authorizeRequest(request, appName, new String[] {Roles.USER.name()}, null);
@@ -82,6 +102,14 @@ public class AppUserController {
         return user;
     }
 
+    /**
+     * Register given user to the app
+     *
+     * @param request authenticated request
+     * @param appName name of the app to register
+     * @param user user to register into
+     * @return registration object if registration was successful
+     */
     @PostMapping("/api/apps/{appName}/users")
     public AppRegistration register(HttpServletRequest request, @PathVariable String appName, @RequestBody User user) {
         App app = appService.geAppByName(appName);
@@ -106,6 +134,15 @@ public class AppUserController {
         return  appRegistrationService.registerUser(app, newUser);
     }
 
+    /**
+     * Updates user by username and appName with given user in body
+     *
+     * @param request authenticated request
+     * @param appName name of app the user is in
+     * @param username username of the user
+     * @param user user object to put into
+     * @return user if the update was successful
+     */
     @PutMapping("/api/apps/{appName}/users/{username}")
     public User updateUser(HttpServletRequest request,
                            @PathVariable String appName,
@@ -123,6 +160,14 @@ public class AppUserController {
         return updated;
     }
 
+    /**
+     * Add roles into given user of given appName
+     *
+     * @param request authenticated request
+     * @param appName name of the app
+     * @param username username of the user to promote
+     * @param roleName name of the role to add
+     */
     @PostMapping("/api/apps/{appName}/users/{username}/roles")
     public void promote(HttpServletRequest request,
                            @PathVariable String appName,
@@ -149,6 +194,14 @@ public class AppUserController {
                 app);
     }
 
+    /**
+     * Remove roles into given user of given appName
+     *
+     * @param request authenticated request
+     * @param appName name of the app
+     * @param username username of the user to demote
+     * @param roleName name of the role to remove
+     */
     @DeleteMapping("/api/apps/{appName}/users/{username}/roles")
     public void demote(HttpServletRequest request,
                         @PathVariable String appName,
@@ -179,6 +232,13 @@ public class AppUserController {
             throw new HttpException(Error.missing("UserRole", "name", roleName), HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Disables the registration of the user in given appName
+     *
+     * @param request authenticated request
+     * @param username username of the user to disable
+     * @param appName name of the app the user exists in
+     */
     @PostMapping("/api/apps/{appName}/users/{username}/disable")
     public void disableUserFromApp(HttpServletRequest request, @PathVariable String username, @PathVariable String appName) {
         User activeUser = authenticationService.authorizeRequest(request, appName, new String[] {Roles.ADMIN.name()}, username);
@@ -195,6 +255,13 @@ public class AppUserController {
 
     }
 
+    /**
+     * Removes given user from given appName
+     *
+     * @param request authenticated request
+     * @param username username of the user
+     * @param appName name of the app to remove user from
+     */
     @Transactional
     @DeleteMapping("/api/apps/{appName}/users/{username}")
     public void removeUserFromApp(HttpServletRequest request, @PathVariable String username, @PathVariable String appName) {

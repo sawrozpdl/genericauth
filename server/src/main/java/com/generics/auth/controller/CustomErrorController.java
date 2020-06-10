@@ -22,12 +22,24 @@ public class CustomErrorController implements ErrorController {
     @Autowired
     private ErrorAttributes errorAttributes;
 
+    /**
+     * Custom error controller
+     *
+     * @param request raw request
+     * @param response response to get status from
+     * @return ErrorJson
+     */
     @RequestMapping(value = PATH)
     ErrorJson error(WebRequest request, HttpServletResponse response) {
         boolean debug = env.equals("development");
         return new ErrorJson(response.getStatus(), errorAttributes.getErrorAttributes(request, debug));
     }
 
+    /**
+     * Get path of error endpoint
+     *
+     * @return path of error endpoint
+     */
     @Override
     public String getErrorPath() {
         return PATH;

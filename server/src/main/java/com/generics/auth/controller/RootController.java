@@ -19,12 +19,22 @@ public class RootController {
     @Value("${spring.version}")
     String apiVersion;
 
+    /**
+     * Redirect to /api
+     *
+     * @param httpServletResponse response to redirect to /api
+     */
     @GetMapping("/")
     public void index(HttpServletResponse httpServletResponse) {
         httpServletResponse.setHeader("Location", "/api");
         httpServletResponse.setStatus(302);
     }
 
+    /**
+     * Display API info
+     *
+     * @return JSON response with API details
+     */
     @GetMapping("/api")
     public Object api() {
         return new Object() {
