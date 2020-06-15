@@ -16,6 +16,7 @@ import {
   Settings as SettingsView,
   SignUp as SignUpView,
   SignIn as SignInView,
+  Policy as PolicyView,
   ForgotPassword as ForgotPasswordView,
   NotFound as NotFoundView,
   CreateApp as CreateAppView,
@@ -112,6 +113,13 @@ const BaseRouter: React.FC = () => {
         allow={[]}
         layout={user && user.email ? MainLayout : MinimalLayout}
         path={routes.NOT_FOUND}
+      />
+      <RouteWithLayout
+        component={PolicyView}
+        exact
+        allow={[]}
+        layout={MinimalLayout}
+        path={routes.POLICY}
       />
       {user && (
         <Redirect

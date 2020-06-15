@@ -6,6 +6,7 @@ const routes = {
   HISTORY: '/history',
   CREATE_APP: '/create',
   APP_HOME: '/:appName',
+  POLICY: '/policy',
   DASHBOARD: '/dashboard',
   LOGIN: '/:appName/login',
   USER_PROFILE: '/account',

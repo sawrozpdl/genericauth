@@ -10,6 +10,7 @@ const SignIn = React.lazy(() => import('./SignIn'));
 const SignUp = React.lazy(() => import('./SignUp'));
 const UserList = React.lazy(() => import('./UserList'));
 const CreateApp = React.lazy(() => import('./CreateApp'));
+const Policy = React.lazy(() => import('./Policy/Policy'));
 const ForgotPassword = React.lazy(() => import('./ForgotPassword'));
 
 export {
@@ -22,6 +23,7 @@ export {
   SignIn,
   CreateApp,
   SignUp,
+  Policy,
   ForgotPassword,
   UserList,
 };
