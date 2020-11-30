@@ -225,8 +225,8 @@ const Home: React.FC = (props: any) => {
                   variant="body1"
                   className={classes.typoSend}
                 >
-                  We will send you &apos;IAM&apos; link to the email and you are
-                  almost there!
+                  We will send you an &apos;IAM&apos; link to the email and you
+                  can follow up!
                 </Typography>
                 <form
                   autoComplete="off"
