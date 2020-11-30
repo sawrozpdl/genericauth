@@ -1,6 +1,6 @@
 import config from '../config';
 
-export const GITHUB_URL = 'https://www.github.com/sawrozpdl/genericauth';
+export const GITHUB_URL = '#';
 
 export const APP_CREATE_URL = `${config.app.baseUrl}${config.app.endpoints.createApp}`;
 
