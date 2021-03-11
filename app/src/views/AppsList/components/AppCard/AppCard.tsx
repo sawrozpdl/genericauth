@@ -61,7 +61,10 @@ const AppCard = (props: any) => {
   const classes: any = useStyles();
 
   const handleAppClick = () =>
-    history.push(interpolate(routes.LOGIN, { appName: app.name }) + '?ap=1');
+    history.push(
+      interpolate(routes.LOGIN, { appName: app.name }) +
+        `?ap=${app.private ? 1 : 0}`
+    );
 
   return (
     <Card

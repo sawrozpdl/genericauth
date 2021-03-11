@@ -9,6 +9,7 @@ import { Main as MainLayout, Minimal as MinimalLayout } from './layouts';
 
 import {
   Dashboard as DashboardView,
+  AppDetail as AppDetailView,
   History as HistoryView,
   AppList as AppListView,
   UserList as UserListView,
@@ -16,7 +17,6 @@ import {
   Settings as SettingsView,
   SignUp as SignUpView,
   SignIn as SignInView,
-  Policy as PolicyView,
   ForgotPassword as ForgotPasswordView,
   NotFound as NotFoundView,
   CreateApp as CreateAppView,
@@ -43,6 +43,13 @@ const BaseRouter: React.FC = () => {
         allow={[roles.ADMIN]}
         layout={MainLayout}
         path={routes.DASHBOARD}
+      />
+      <RouteWithLayout
+        component={AppDetailView}
+        exact
+        allow={[roles.ADMIN]}
+        layout={MainLayout}
+        path={routes.MANAGE_APP}
       />
       <RouteWithLayout
         component={HistoryView}
@@ -113,13 +120,6 @@ const BaseRouter: React.FC = () => {
         allow={[]}
         layout={user && user.email ? MainLayout : MinimalLayout}
         path={routes.NOT_FOUND}
-      />
-      <RouteWithLayout
-        component={PolicyView}
-        exact
-        allow={[]}
-        layout={MinimalLayout}
-        path={routes.POLICY}
       />
       {user && (
         <Redirect

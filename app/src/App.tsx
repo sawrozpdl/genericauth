@@ -1,18 +1,17 @@
-import React, { useEffect, useContext } from 'react';
 import { CssBaseline } from '@material-ui/core';
 import { Router, Switch } from 'react-router-dom';
+import React, { useEffect, useContext } from 'react';
 import { ThemeProvider, makeStyles } from '@material-ui/styles';
 
 import validate from 'validate.js';
-import { checked } from './utils/object';
-
-import { createTheme } from './theme/create';
-
 import { createBrowserHistory } from 'history';
+
 import BaseRouter from './BaseRouter';
-import UserContext from './context/UserContext';
-import useSettings from './hooks/useSettings';
+import { checked } from './utils/object';
 import { fetchUser } from './services/user';
+import { createTheme } from './theme/create';
+import useSettings from './hooks/useSettings';
+import UserContext from './context/UserContext';
 
 const browserHistory = createBrowserHistory();
 

@@ -36,7 +36,9 @@ const Dashboard = (props: any) => {
   const fetchAppsAndUsers = useCallback(async () => {
     try {
       setLoading(true);
-      const app = await fetchApp(appName);
+      const app = await fetchApp(appName, {
+        detail: true,
+      });
       const usersPage = await fetchUsersInApp(appName, { size: 1000 });
       const inUsersPage = await fetchUsersInApp(appName, {
         size: 1000,

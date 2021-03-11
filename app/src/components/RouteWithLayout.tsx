@@ -1,12 +1,13 @@
-import React, { useContext } from 'react';
-import { Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import UserContext from '../context/UserContext';
-import routes from '../constants/routes';
-import roles from '../constants/roles';
-import { interpolate } from '../utils/string';
-import LoadingScreen from './LoadingScreen';
+import React, { useContext } from 'react';
 import { capitalize } from '@material-ui/core';
+import { Route, Redirect } from 'react-router-dom';
+
+import roles from '../constants/roles';
+import routes from '../constants/routes';
+import LoadingScreen from './LoadingScreen';
+import { interpolate } from '../utils/string';
+import UserContext from '../context/UserContext';
 
 const RouteWithLayout = (props: any) => {
   const { layout: Layout, allow, component: Component, ...rest } = props;

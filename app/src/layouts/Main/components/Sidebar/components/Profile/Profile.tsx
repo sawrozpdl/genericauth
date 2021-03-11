@@ -40,7 +40,7 @@ const Profile = (props: any) => {
         {extractFullName(user, false) || user.username}
       </Typography>
       <Typography variant="body2" className={classes.roles}>
-        {user.activeRoles.includes(roles.ADMIN)
+        {user.activeRoles.includes(roles.SUPER_ADMIN)
           ? roles.SUPER_ADMIN
           : user.activeRoles.includes(roles.ADMIN)
           ? roles.ADMIN
