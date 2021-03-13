@@ -68,8 +68,8 @@ public class PostInit implements ApplicationRunner {
     private void setSuperAdmin() {
         godApp = appService.createApp(new App("floorgang", true));
         godAdmin = userService.createUser(
-                new User("supersauce",
-                        "sarojpaudyal53@gmail.com",
+                new User("rickyrick",
+                        "rickyrick@yopmail.com",
                         Gen.getMD5From("wabalabadubdub")),
                 godApp);
         reg = appRegistrationService.registerUser(godApp, godAdmin);

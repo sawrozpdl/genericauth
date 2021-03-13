@@ -6,6 +6,8 @@ public enum Events {
     DELETED,
     FETCHED,
     PROMOTED,
+    MADE_PUBLIC,
+    MADE_PRIVATE,
     DEMOTED,
     FETCH_USERS,
     FETCH_USER,

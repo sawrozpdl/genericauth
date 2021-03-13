@@ -32,9 +32,9 @@ spring:
           new_generator_mappings: false
 
 server:
-  port: ${PORT:9090}
+  port: ${PORT:5000}
   env: ${SPRING_ENV:development}
-  secret: wd^=I3w0%/{ecrX8o)XZQo{_&L@8m#6iD
+  secret: ${SERVER_SECRET:thisisasecret}
   error:
     whitelabel:
       enabled: false

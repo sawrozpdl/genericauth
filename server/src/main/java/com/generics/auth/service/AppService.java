@@ -66,6 +66,15 @@ public class AppService {
         throw new HttpException(Error.missing("App", "name", name), HttpStatus.NOT_FOUND);
     }
 
+    public App updateAppPrivacy(String name, Boolean isPublic) {
+        Optional<App> app = appRepository.findByName(name);
+        if (app.isPresent()) {
+            app.get().setPrivate(isPublic);
+            return appRepository.save(app.get());
+        }
+        throw new HttpException(Error.missing("App", "name", name), HttpStatus.NOT_FOUND);
+    }
+
     public void deleteAppByName(String name) {
         if (appRepository.existsByName(name))
             appRepository.deleteByName(name);

@@ -141,6 +141,27 @@ public class AppController {
     }
 
     /**
+     * Updates an app to the given app in request body
+     *
+     * @param request authenticated request
+     * @param appName name of app to update
+     * @param isPublic app privacy to set
+     * @return app if app exists and update is successful
+     */
+    @PostMapping("/api/apps/{appName}/privacy")
+    public Object toggleAppPrivacy(HttpServletRequest request,@PathVariable String appName,@RequestParam(defaultValue = "true") Boolean isPublic) {
+        User requestUser = authenticationService.authorizeRequest(request, appName,  new String[] {Roles.ADMIN.name()}, null);
+        App updatedApp =  appService.updateAppPrivacy(appName, isPublic);
+        eventService.track(Str.interpolate(Models.USER, "id", requestUser.getId()),
+                isPublic ? Events.MADE_PUBLIC : Events.MADE_PRIVATE,
+                Str.interpolate(Models.APP, "id", updatedApp.getId()),
+                updatedApp);
+        return new Object() {
+            public final Boolean ok = true;
+        };
+    }
+
+    /**
      * Login to the given 'appName'
      *
      * @param appName name to app to log in to
@@ -199,6 +220,18 @@ public class AppController {
         authenticationService.authorizeRequest(request, appName, new String[] {Roles.ADMIN.name()}, null);
 
         return appService.updateRedirectUrl(redirectUrl.getId(), redirectUrl);
+    }
+
+    /**
+     * Get redirect url of an app by given name
+     *
+     * @param appName name of the required app
+     * @return redirect url, if the app exists
+     */
+    @GetMapping("/api/apps/{appName}/redirect-url")
+    public RedirectUrl getAppRedirectUrl(@PathVariable String appName) {
+        App app = appService.geAppByName(appName);
+        return app.getRedirectUrl();
     }
 
     /**
