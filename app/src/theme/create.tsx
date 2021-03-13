@@ -51,7 +51,7 @@ const themeConfigs = [
         paper: colors.common.white,
       },
       primary: {
-        main: colors.indigo[600],
+        main: '#7f78d2',
       },
       secondary: {
         main: '#5850EC',
@@ -62,6 +62,28 @@ const themeConfigs = [
       },
     },
     shadows: softShadows,
+  },
+  {
+    name: THEMES.REDDY,
+    palette: {
+      type: 'dark',
+      primary: {
+        main: '#ff8f00',
+      },
+      secondary: {
+        main: '#f50057',
+      },
+      background: {
+        default: '#310000',
+        paper: '#731010',
+      },
+    },
+    typography: {
+      fontFamily: 'Do Hyeon',
+    },
+    shape: {
+      borderRadius: 16,
+    },
   },
   {
     name: THEMES.DARK,
@@ -81,10 +103,10 @@ const themeConfigs = [
         paper: '#282C34',
       },
       primary: {
-        main: '#8a85ff',
+        main: '#bb8082',
       },
       secondary: {
-        main: '#8a85ff',
+        main: '#f48fb1',
       },
       text: {
         primary: '#e6e5e8',
@@ -94,31 +116,80 @@ const themeConfigs = [
     shadows: strongShadows,
   },
   {
-    name: THEMES.SPRING,
+    name: THEMES.COMIC,
     palette: {
       type: 'dark',
-      action: {
-        active: 'rgba(255, 255, 255, 0.54)',
-        hover: 'rgba(255, 255, 255, 0.04)',
-        selected: 'rgba(255, 255, 255, 0.08)',
-        disabled: 'rgba(255, 255, 255, 0.26)',
-        disabledBackground: 'rgba(255, 255, 255, 0.12)',
-        focus: 'rgba(255, 255, 255, 0.12)',
-      },
-      background: {
-        default: '#2a2d3d',
-        dark: '#222431',
-        paper: '#2a2d3d',
-      },
       primary: {
-        main: '#a67dff',
+        main: '#bd0707',
       },
       secondary: {
-        main: '#a67dff',
+        main: '#ffc510',
       },
-      text: {
-        primary: '#f6f5f8',
-        secondary: '#9699a4',
+      background: {
+        default: '#4c69f6',
+        paper: '#4c94f6',
+      },
+    },
+    typography: {
+      body1: {
+        fontFamily: 'Roboto',
+      },
+      fontFamily: 'Bangers',
+      caption: {
+        fontFamily: 'Do Hyeon',
+      },
+      overline: {
+        fontFamily: 'Do Hyeon',
+      },
+      body2: {
+        fontFamily: 'Roboto',
+      },
+    },
+  },
+  {
+    name: THEMES.HACKER,
+    palette: {
+      type: 'dark',
+      primary: {
+        main: '#0f0',
+      },
+      background: {
+        default: '#111111',
+        paper: '#212121',
+      },
+    },
+    typography: {
+      fontFamily: 'Open Sans',
+      h1: {
+        fontFamily: 'Ubuntu Mono',
+      },
+      h2: {
+        fontFamily: 'Ubuntu Mono',
+      },
+      h3: {
+        fontFamily: 'Ubuntu Mono',
+      },
+      h4: {
+        fontFamily: 'Ubuntu Mono',
+      },
+      h6: {
+        fontFamily: 'Ubuntu Mono',
+      },
+      h5: {
+        fontFamily: 'Ubuntu Mono',
+      },
+      subtitle1: {
+        fontFamily: 'Ubuntu Mono',
+      },
+      subtitle2: {
+        fontFamily: 'Ubuntu Mono',
+      },
+      button: {
+        fontFamily: 'Ubuntu Mono',
+        fontWeight: 900,
+      },
+      overline: {
+        fontFamily: 'Ubuntu Mono',
       },
     },
     shadows: strongShadows,

@@ -47,7 +47,7 @@ const History = () => {
   const fetchUsersAndApp = useCallback(async () => {
     setLoading(true);
     try {
-      const app = await fetchApp(appName);
+      const app = await fetchApp(appName, { detail: true });
       const activeUserPage = await fetchUsersInApp(appName, { size: 1000 });
       const inActiveUserPage = await fetchUsersInApp(appName, {
         size: 1000,

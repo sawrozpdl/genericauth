@@ -22,3 +22,4 @@ public interface AppRepository  extends JpaRepository<App, Integer>, JpaSpecific
     @Transactional
     void deleteByName(String name);
 }
+

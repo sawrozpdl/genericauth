@@ -14,17 +14,12 @@ const typeOptions = [
   {
     value: 1,
     title: 'Private',
-    description: 'Admins can only create users',
-  },
-  {
-    value: -1,
-    title: 'Public',
-    description: 'Anyone can signup for an account',
+    description: 'Only admins can create new users',
   },
   {
     value: 0,
-    title: 'Invite',
-    description: 'Users can signup upon an invitation from admins',
+    title: 'Public',
+    description: 'Anyone can use the sign-up page for account creation.',
   },
 ];
 
@@ -76,7 +71,8 @@ const AppDetails = (props: any) => {
       />
       <Box mt={2}>
         <Typography variant="subtitle1" color="textSecondary">
-          Apps will behave on the way these scopes
+          These settings determine the overall function/accessibility of this
+          app.
         </Typography>
       </Box>
       <Box mt={2}>

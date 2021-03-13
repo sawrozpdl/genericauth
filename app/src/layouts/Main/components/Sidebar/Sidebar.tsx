@@ -6,6 +6,7 @@ import { Divider, Drawer } from '@material-ui/core';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import HistoryIcon from '@material-ui/icons/History';
 import PeopleIcon from '@material-ui/icons/People';
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { AppsRounded } from '@material-ui/icons';
@@ -50,12 +51,23 @@ const Sidebar = (props: any) => {
 
   const classes = useStyles();
 
+  const exclusivePages = user.activeRoles.includes(roles.ADMIN)
+    ? [
+        {
+          title: 'Dashboard',
+          href: interpolate(routes.DASHBOARD, { appName }),
+          icon: <DashboardIcon />,
+        },
+        {
+          title: 'Manage App',
+          href: routes.MANAGE_APP,
+          icon: <SettingsApplicationsIcon />,
+        },
+      ]
+    : [];
+
   const pages = [
-    user.activeRoles.includes(roles.ADMIN) && {
-      title: 'Dashboard',
-      href: interpolate(routes.DASHBOARD, { appName }),
-      icon: <DashboardIcon />,
-    },
+    ...exclusivePages,
     {
       title: 'History',
       href: interpolate(routes.HISTORY, { appName }),

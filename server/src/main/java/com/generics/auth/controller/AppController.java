@@ -2,14 +2,13 @@ package com.generics.auth.controller;
 
 import com.generics.auth.constant.Events;
 import com.generics.auth.constant.Models;
-import com.generics.auth.model.*;
 import com.generics.auth.constant.Roles;
+import com.generics.auth.model.*;
+import com.generics.auth.object.RequestFilter;
 import com.generics.auth.security.AuthenticationService;
 import com.generics.auth.service.*;
-import com.generics.auth.object.RequestFilter;
 import com.generics.auth.utils.Lazy;
 import com.generics.auth.utils.Str;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
-import java.lang.reflect.Array;
 
 
 @RestController
@@ -66,7 +64,7 @@ public class AppController {
                              @RequestParam(defaultValue = "true") Boolean active) {
         Page<App> appsPage = appService.getAllApps(new RequestFilter(page, size, search, sort, active));
         appsPage.getContent().forEach(app -> {
-            Lazy.filterApp(app, true);
+            Lazy.filterApp(app, true, false);
         });
         return appsPage;
     }
@@ -115,10 +113,11 @@ public class AppController {
      * @return app, if found
      */
     @GetMapping("/api/apps/{appName}")
-    public App getAppByName(HttpServletRequest request, @PathVariable String appName) {
-        authenticationService.authorizeRequest(request, appName,  new String[] {Roles.USER.name()}, null);
+    public App getAppByName(HttpServletRequest request,@RequestParam(defaultValue = "false") Boolean detail, @PathVariable String appName) {
+        User requestUser = authenticationService.authorizeRequest(request, appName,  new String[] {Roles.USER.name()}, null);
         App app = appService.geAppByName(appName);
-        Lazy.filterApp(app, false);
+        boolean isAdmin = requestUser.getActiveRoles().contains(Roles.ADMIN.name());
+        Lazy.filterApp(app, !detail, isAdmin);
         return app;
     }
 
@@ -139,6 +138,27 @@ public class AppController {
                 Str.interpolate(Models.APP, "id", updatedApp.getId()),
                 updatedApp);
         return updatedApp;
+    }
+
+    /**
+     * Updates an app to the given app in request body
+     *
+     * @param request authenticated request
+     * @param appName name of app to update
+     * @param isPublic app privacy to set
+     * @return app if app exists and update is successful
+     */
+    @PostMapping("/api/apps/{appName}/privacy")
+    public Object toggleAppPrivacy(HttpServletRequest request,@PathVariable String appName,@RequestParam(defaultValue = "true") Boolean isPublic) {
+        User requestUser = authenticationService.authorizeRequest(request, appName,  new String[] {Roles.ADMIN.name()}, null);
+        App updatedApp =  appService.updateAppPrivacy(appName, isPublic);
+        eventService.track(Str.interpolate(Models.USER, "id", requestUser.getId()),
+                isPublic ? Events.MADE_PUBLIC : Events.MADE_PRIVATE,
+                Str.interpolate(Models.APP, "id", updatedApp.getId()),
+                updatedApp);
+        return new Object() {
+            public final Boolean ok = true;
+        };
     }
 
     /**
@@ -183,8 +203,35 @@ public class AppController {
      */
     @PutMapping("/api/apps/{appName}/location")
     public Location updateAppLocation(HttpServletRequest request,@PathVariable String  appName, @RequestBody Location location) {
-        authenticationService.authorizeRequest(request, "hamroauth", new String[] {Roles.SUPER_ADMIN.name()}, null);
+        authenticationService.authorizeRequest(request, appName, new String[] {Roles.ADMIN.name()}, null);
         return locationService.updateLocation(location.getId(), location);
+    }
+
+    /**
+     * Update location of given appName
+     *
+     * @param request authenticated request
+     * @param appName name of app to update the location
+     * @param redirectUrl redirect URLs to put in the app
+     * @return location object which was put into DB
+     */
+    @PutMapping("/api/apps/{appName}/redirect-url")
+    public RedirectUrl updateAppRedirectUrl(HttpServletRequest request,@PathVariable String  appName, @RequestBody RedirectUrl redirectUrl) {
+        authenticationService.authorizeRequest(request, appName, new String[] {Roles.ADMIN.name()}, null);
+
+        return appService.updateRedirectUrl(redirectUrl.getId(), redirectUrl);
+    }
+
+    /**
+     * Get redirect url of an app by given name
+     *
+     * @param appName name of the required app
+     * @return redirect url, if the app exists
+     */
+    @GetMapping("/api/apps/{appName}/redirect-url")
+    public RedirectUrl getAppRedirectUrl(@PathVariable String appName) {
+        App app = appService.geAppByName(appName);
+        return app.getRedirectUrl();
     }
 
     /**

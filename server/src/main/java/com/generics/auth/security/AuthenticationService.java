@@ -67,6 +67,7 @@ public class AuthenticationService {
                         if (userRole.getApp().getName().equals(appName))
                             activeRoles.add(userRole.getRole().getName());
                     });
+                    user.setActiveRoles(activeRoles);
                     if ((activeRoles.containsAll(Arrays.asList(roles)) && isAuthorized) || activeRoles.contains(Roles.ADMIN.name())) {
                         return user;
                     }

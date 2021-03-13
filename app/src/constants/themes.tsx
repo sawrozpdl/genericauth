@@ -1,6 +1,8 @@
 const themes = {
   LIGHT: 'LIGHT',
-  SPRING: 'SPRING',
+  HACKER: 'HACKER',
+  COMIC: 'COMIC',
+  REDDY: 'REDDY',
   DARK: 'DARK',
 };
 

@@ -58,6 +58,14 @@ public class App extends GenericModel {
         this.isPrivate = isPrivate;
     }
 
+    @PrePersist
+    @Override
+    protected void onCreate() {
+        super.onCreate();
+        this.location = new Location();
+        this.redirectUrl = new RedirectUrl();
+    }
+
     public boolean isPrivate() {
         return isPrivate;
     }

@@ -28,10 +28,12 @@ public class Lazy {
         user.setActiveRoles(roles);
     }
 
-    public static void filterApp(App app, boolean deepFilter) {
-        app.setCredential(null);
-        app.setRedirectUrl(null);
-        if (deepFilter) {
+    public static void filterApp(App app, boolean trim, boolean isAdmin) {
+        if (!isAdmin) {
+            app.setCredential(null);
+            app.setRedirectUrl(null);
+        }
+        if (trim) {
             app.setEvents(null);
             app.setRoles(null);
         }
