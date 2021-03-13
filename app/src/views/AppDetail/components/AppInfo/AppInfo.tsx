@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import moment from 'moment';
@@ -12,7 +12,10 @@ import {
   Divider,
   Button,
 } from '@material-ui/core';
+import Switch from '@material-ui/core/Switch';
 import { DISPLAY_DATE_FORMAT } from '../../../../constants/schemas';
+import { handleError } from '../../../../utils/error';
+import { setAppPrivacy } from '../../../../services/app';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {},
@@ -41,9 +44,23 @@ const useStyles = makeStyles((theme: any) => ({
 }));
 
 const AppInfo = (props: any) => {
-  const { className, app, ...rest } = props;
+  const { className, app, onUpdate, ...rest } = props;
 
   const classes: any = useStyles();
+
+  const [loading, setLoading] = useState(false);
+
+  const handleAppPrivacyToggle = async () => {
+    setLoading(true);
+    try {
+      await setAppPrivacy(app.name, !app.private);
+      await onUpdate();
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Card {...rest} className={clsx(classes.root, className)}>
@@ -81,6 +98,21 @@ const AppInfo = (props: any) => {
             {app.name.charAt(0).toUpperCase()}
           </Avatar>
         </div>
+        <Typography
+          className={classes.typography}
+          color="textSecondary"
+          variant="body1"
+        >
+          {'Public: '}
+          <Switch
+            checked={!app.private}
+            onChange={handleAppPrivacyToggle}
+            disabled={loading}
+            color="primary"
+            name="checkedB"
+            inputProps={{ 'aria-label': 'primary checkbox' }}
+          />
+        </Typography>
       </CardContent>
       <Divider />
       <CardActions className={classes.cardAction}>

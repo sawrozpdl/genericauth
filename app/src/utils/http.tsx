@@ -73,6 +73,9 @@ async function errorResponseHandler(err: any) {
   if (originalRequest.headers.Authorization.split(' ')[0] === 'Refresh') {
     await clearLocalAuth();
   } else if (code === HttpStatus.UNAUTHORIZED) {
+    if (originalRequest.params.__isRetryRequest) {
+      return Promise.reject(err);
+    }
     originalRequest.params.__isRetryRequest = true;
     try {
       const refreshToken = tokenService.getRefreshToken();

@@ -25,6 +25,8 @@ import { Buffer } from 'buffer';
 import UserContext from '../../context/UserContext';
 import { fetchUser } from '../../services/user';
 import { handleError } from '../../utils/error';
+import { fetchRedirectUrls } from '../../services/app';
+import { NATIVE } from '../../constants/url';
 
 const schema = {
   email: {
@@ -148,12 +150,34 @@ const SignIn = (props: any) => {
 
   const { appName } = props.match.params;
 
+  const [appUrls, setAppUrls] = useState<any>({});
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const fetchAndSetAppUrls = async () => {
+    setLoading(true);
+    try {
+      const data = await fetchRedirectUrls(appName);
+
+      setAppUrls(data);
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAndSetAppUrls();
+  }, []);
+
   const userCtx: any = useContext(UserContext);
   const { setUser } = userCtx;
 
   const query = parseQuery(props.location.search);
 
-  const { ap } = query;
+  const { ap, ref } = query;
+
+  const isFromNativeApp = ref === NATIVE;
 
   const classes: any = useStyles();
 
@@ -210,16 +234,21 @@ const SignIn = (props: any) => {
     event.preventDefault();
     setSubmitting(true);
     const { email, password } = formState.values;
-    const key = new Buffer(`${email}:${password}`).toString('base64');
+    const key = btoa(`${email}:${password}`);
     try {
       const { data } = await http.post(interpolate(LOGIN_URL, { appName }), {
         accessToken: false,
         headers: { Authorization: `Basic ${key}` },
       });
-      persist(data.refreshToken, data.refreshToken);
-      await fetchUser(setUser);
-      history.push(routes.HOME);
-      toast.success('Login successful, Welcome back!');
+      persist(data.accessToken, data.refreshToken);
+      if (isFromNativeApp) {
+        toast.info(`Redirecting you to ${appName}`);
+        history.push(`${appUrls.authCallbackUrl}?token=${data.refreshToken}`);
+      } else {
+        await fetchUser(setUser);
+        history.push(routes.HOME);
+        toast.success('Login successful, Welcome back!');
+      }
     } catch (exception) {
       handleError(exception);
     } finally {
@@ -285,7 +314,7 @@ const SignIn = (props: any) => {
             <Button
               className={classes.signInButton}
               color="primary"
-              disabled={submitting || !formState.isValid}
+              disabled={submitting || !formState.isValid || loading}
               fullWidth
               size="large"
               type="submit"

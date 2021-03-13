@@ -12,6 +12,7 @@ const config: any = {
       apps: '/apps',
       verify: '/verify',
       app: '/apps/:appName',
+      appPrivacy: '/apps/:appName/privacy',
       appLocation: '/apps/:appName/location',
       appRedirectUrl: '/apps/:appName/redirect-url',
       login: '/apps/:appName/login',

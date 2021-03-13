@@ -18,11 +18,12 @@ import {
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Container from '@material-ui/core/Container';
 import http from '../../utils/http';
-import { interpolate, truncate } from '../../utils/string';
+import { interpolate, parseQuery, truncate } from '../../utils/string';
 import routes from '../../constants/routes';
 import toast from '../../utils/toast';
 import { USERS_URL } from '../../constants/endpoints';
 import { handleError } from '../../utils/error';
+import { NATIVE } from '../../constants/url';
 
 const schema = {
   firstName: {
@@ -183,6 +184,12 @@ const SignUp = (props: any) => {
 
   const classes: any = useStyles();
 
+  const query = parseQuery(props.location.search);
+
+  const { ref } = query;
+
+  const isFromNativeApp = ref === NATIVE;
+
   interface FormState {
     isValid: boolean;
     values: any;
@@ -259,7 +266,12 @@ const SignUp = (props: any) => {
         },
       });
       toast.success('Registration successful, You may now log in!');
-      history.push(interpolate(routes.LOGIN, { appName }));
+      history.push(
+        interpolate(
+          `${routes.LOGIN}${isFromNativeApp ? `?ref=${NATIVE}` : ''}`,
+          { appName }
+        )
+      );
     } catch (error) {
       handleError(error);
     } finally {

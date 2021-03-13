@@ -1,5 +1,9 @@
 import React, { useContext, useEffect, useState, useCallback } from 'react';
+
+import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import BlockIcon from '@material-ui/icons/Block';
+import DeleteIcon from '@material-ui/icons/Delete';
 import {
   Grid,
   Card,
@@ -10,20 +14,15 @@ import {
 } from '@material-ui/core';
 import UserContext from '../../context/UserContext';
 
-import { AppInfo, AppSettings, LocationDetails } from './components';
-import { disableUser } from '../../services/user';
-import Loading from '../../components/Loading';
-import roles from '../../constants/roles';
-import { handleError } from '../../utils/error';
-import routes from '../../constants/routes';
-
-import { Button } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
-import BlockIcon from '@material-ui/icons/Block';
 import toast from '../../utils/toast';
 import alert from '../../utils/alert';
+import roles from '../../constants/roles';
+import routes from '../../constants/routes';
 import { fetchApp } from '../../services/app';
-import { Code } from '@material-ui/icons';
+import Loading from '../../components/Loading';
+import { handleError } from '../../utils/error';
+import { disableUser } from '../../services/user';
+import { AppInfo, AppSettings, LocationDetails } from './components';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
@@ -189,7 +188,7 @@ const Account = (props: any) => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item lg={8} md={6} xl={8} xs={12} spacing={4}>
+          <Grid item lg={8} md={6} xl={8} xs={12}>
             <Grid item lg={12} md={8} xl={12} xs={12}>
               <AppSettings app={app} onUpdate={onComponentUpdate} />
             </Grid>

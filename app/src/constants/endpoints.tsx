@@ -22,6 +22,8 @@ export const APPS_URL = `${config.auth.baseUrl}${config.auth.endpoints.apps}`;
 
 export const APP_URL = `${config.auth.baseUrl}${config.auth.endpoints.app}`;
 
+export const APP_PRIVACY_URL = `${config.auth.baseUrl}${config.auth.endpoints.appPrivacy}`;
+
 export const APP_LOCATION_URL = `${config.auth.baseUrl}${config.auth.endpoints.appLocation}`;
 
 export const APP_REDIRECT_URL_URL = `${config.auth.baseUrl}${config.auth.endpoints.appRedirectUrl}`;

@@ -62,7 +62,11 @@ const AppSettings = (props: any) => {
     <Card {...rest} className={clsx(classes.root, className)}>
       <form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <CardHeader
-          subheader="URLs used for auth callbacks and redirection."
+          subheader={
+            app.private
+              ? 'Only public apps can have these URLs set'
+              : 'URLs used for auth callbacks and redirection.'
+          }
           title="App URLs"
         />
         <Divider />
@@ -74,6 +78,7 @@ const AppSettings = (props: any) => {
                 label="Base URL"
                 margin="dense"
                 name="baseUrl"
+                disabled={app.private}
                 onChange={handleChange}
                 value={values.baseUrl}
                 variant="outlined"
@@ -85,6 +90,7 @@ const AppSettings = (props: any) => {
                 label="Auth Callback URL"
                 margin="dense"
                 name="authCallbackUrl"
+                disabled={app.private}
                 onChange={handleChange}
                 value={values.authCallbackUrl}
                 variant="outlined"
@@ -96,6 +102,7 @@ const AppSettings = (props: any) => {
                 label="Profile URL"
                 margin="dense"
                 name="profileUrl"
+                disabled={app.private}
                 onChange={handleChange}
                 value={values.profileUrl}
                 variant="outlined"
@@ -109,7 +116,7 @@ const AppSettings = (props: any) => {
             type="submit"
             color="primary"
             variant="outlined"
-            disabled={submitting}
+            disabled={submitting || app.private}
           >
             Update URLs
           </Button>
