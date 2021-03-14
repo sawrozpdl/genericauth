@@ -55,7 +55,7 @@ const Sidebar = (props: any) => {
     ? [
         {
           title: 'Dashboard',
-          href: interpolate(routes.DASHBOARD, { appName }),
+          href: routes.DASHBOARD,
           icon: <DashboardIcon />,
         },
         {
@@ -70,12 +70,12 @@ const Sidebar = (props: any) => {
     ...exclusivePages,
     {
       title: 'History',
-      href: interpolate(routes.HISTORY, { appName }),
+      href: routes.HISTORY,
       icon: <HistoryIcon />,
     },
     {
       title: 'Users',
-      href: interpolate(routes.USERS, { appName }),
+      href: routes.USERS,
       icon: <PeopleIcon />,
     },
     {
@@ -85,12 +85,12 @@ const Sidebar = (props: any) => {
     },
     {
       title: 'Account',
-      href: interpolate(routes.USER_ACCOUNT, { username, appName }),
+      href: routes.ACCOUNT,
       icon: <AccountBoxIcon />,
     },
     {
       title: 'Settings',
-      href: interpolate(routes.USER_SETTINGS, { username, appName }),
+      href: routes.USER_SETTINGS,
       icon: <SettingsIcon />,
     },
   ];

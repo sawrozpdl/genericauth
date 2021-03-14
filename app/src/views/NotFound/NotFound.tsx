@@ -17,6 +17,9 @@ const useStyles = makeStyles((theme: any) => ({
     maxWidth: '100%',
     width: 560,
   },
+  sub: {
+    marginTop: 20,
+  },
 }));
 
 const NotFound = () => {
@@ -27,17 +30,17 @@ const NotFound = () => {
       <Grid container justify="center" spacing={4}>
         <Grid item lg={6} xs={12}>
           <div className={classes.content}>
-            <Typography variant="h1">
-              404: The page you are looking for isn’t here
-            </Typography>
-            <Typography variant="subtitle2">
-              You either tried some shady route or you came here by mistake.
-              Whichever it is, try using the navigation
+            <Typography variant="h1">Not found</Typography>
+            <Typography variant="h5" className={classes.sub}>
+              The content you are looking for doesn't exist or has been moved
+              elsewhere.
             </Typography>
             <img
-              alt="Under development"
+              alt="Not found"
+              height={400}
+              width={400}
               className={classes.image}
-              src="/images/undraw_page_not_found_su7k.svg"
+              src="/images/error-404.svg"
             />
           </div>
         </Grid>

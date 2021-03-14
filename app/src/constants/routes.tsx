@@ -13,6 +13,7 @@ const routes = {
   USER_SETTINGS: '/settings',
   REGISTER: '/:appName/register',
   USER_ACCOUNT: '/account/:username',
+  ACCOUNT: '/account',
   FORGOT_PASSWORD: '/:appName/forgot-password',
 };
 

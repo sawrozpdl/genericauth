@@ -67,6 +67,10 @@ export const unParseQuery = (object: any) => {
     .slice(0, -1);
 };
 
+export const buildUrlWithQuery = (url: any, object: any) => {
+  return `${url}${unParseQuery(object)}`;
+};
+
 const nullCounter = (obj: any) => {
   let keyCount = 0;
   let nullCount = 0;

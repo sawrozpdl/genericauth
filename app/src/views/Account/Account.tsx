@@ -36,7 +36,7 @@ const Account = (props: any) => {
   const classes = useStyles();
 
   const { history } = props;
-  const { username } = props.match.params;
+  const { username = activeUser.username } = props.match.params;
 
   const appName = activeUser.activeApp;
 

@@ -80,6 +80,13 @@ const BaseRouter: React.FC = () => {
         path={routes.USER_ACCOUNT}
       />
       <RouteWithLayout
+        component={AccountView}
+        exact
+        allow={[roles.USER]}
+        layout={MainLayout}
+        path={routes.ACCOUNT}
+      />
+      <RouteWithLayout
         component={SettingsView}
         exact
         allow={[roles.USER]}

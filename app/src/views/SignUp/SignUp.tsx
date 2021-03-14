@@ -180,7 +180,7 @@ const useStyles = makeStyles((theme: any) => ({
 const SignUp = (props: any) => {
   const { history } = props;
 
-  const appName = props.match.params.appName;
+  const appName = props.location.search.appName;
 
   const classes: any = useStyles();
 
@@ -267,10 +267,7 @@ const SignUp = (props: any) => {
       });
       toast.success('Registration successful, You may now log in!');
       history.push(
-        interpolate(
-          `${routes.LOGIN}${isFromNativeApp ? `?ref=${NATIVE}` : ''}`,
-          { appName }
-        )
+        `${interpolate(routes.LOGIN, { appName })}${props.location.search}`
       );
     } catch (error) {
       handleError(error);
@@ -443,7 +440,9 @@ const SignUp = (props: any) => {
               Have an account?{' '}
               <Link
                 component={RouterLink}
-                to={interpolate(routes.LOGIN, { appName })}
+                to={`${interpolate(routes.LOGIN, { appName })}${
+                  props.location.search
+                }`}
                 variant="h6"
               >
                 Sign in

@@ -1,8 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Link as RouterLink, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
+import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/styles';
+import Container from '@material-ui/core/Container';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import React, { useState, useEffect, useContext } from 'react';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { Link as RouterLink, withRouter } from 'react-router-dom';
 import {
   Button,
   IconButton,
@@ -11,22 +15,23 @@ import {
   Typography,
   capitalize,
 } from '@material-ui/core';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import Container from '@material-ui/core/Container';
-import Avatar from '@material-ui/core/Avatar';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import routes from '../../constants/routes';
-import { interpolate, parseQuery, truncate } from '../../utils/string';
+
+import {
+  buildUrlWithQuery,
+  interpolate,
+  parseQuery,
+  truncate,
+} from '../../utils/string';
 import http from '../../utils/http';
 import toast from '../../utils/toast';
-import { LOGIN_URL } from '../../constants/endpoints';
+import routes from '../../constants/routes';
 import { persist } from '../../services/token';
-import { Buffer } from 'buffer';
-import UserContext from '../../context/UserContext';
 import { fetchUser } from '../../services/user';
 import { handleError } from '../../utils/error';
+import UserContext from '../../context/UserContext';
+import { LOGIN_URL } from '../../constants/endpoints';
+import { actions, NATIVE } from '../../constants/url';
 import { fetchRedirectUrls } from '../../services/app';
-import { NATIVE } from '../../constants/url';
 
 const schema = {
   email: {
@@ -243,7 +248,10 @@ const SignIn = (props: any) => {
       persist(data.accessToken, data.refreshToken);
       if (isFromNativeApp) {
         toast.info(`Redirecting you to ${appName}`);
-        history.push(`${appUrls.authCallbackUrl}?token=${data.refreshToken}`);
+        window.location.href = buildUrlWithQuery(appUrls.authCallbackUrl, {
+          token: data.refreshToken,
+          action: actions.LOGIN,
+        });
       } else {
         await fetchUser(setUser);
         history.push(routes.HOME);
@@ -333,11 +341,9 @@ const SignIn = (props: any) => {
                       )
                     : console.log('');
                 }}
-                to={
-                  +ap !== 1
-                    ? interpolate(routes.REGISTER, { appName })
-                    : '?ap=1'
-                }
+                to={`${interpolate(routes.REGISTER, { appName })}${
+                  props.location.search
+                }`}
                 variant="h6"
               >
                 Sign up

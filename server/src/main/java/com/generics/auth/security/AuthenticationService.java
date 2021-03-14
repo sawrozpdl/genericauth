@@ -86,32 +86,39 @@ public class AuthenticationService {
 
         if (header == null) error = "No Authorization credentials provided";
         else {
-            String[] str = header.split(" ");
-            String tokenTag = str[0];
-            String token = str[1];
-
             status = HttpStatus.UNAUTHORIZED;
-            error = "Invalid Authentication method, Supported: Bearer, Basic";
 
-            switch (tokenTag) {
-                case "Bearer": {
-                    User user = tokenService.parseToken(token);
-                    if (user != null)
-                        return user;
-                    error = "Invalid token or expired";
-                    break;
-                }
-                case "Refresh": {
-                    User user = tokenService.parseToken(token);
-                    if (user != null) {
-                        return new Object() {
-                            public final String accessToken = tokenService.generateToken(user,user.getActiveApp(), true);
-                        };
+            String[] str = header.split(" ");
+            if (str.length <= 1) {
+                error = "No token provided";
+            }
+            else {
+                String tokenTag = str[0];
+                String token = str[1];
+
+                error = "Invalid Authentication method, Supported: Bearer, Basic";
+
+                switch (tokenTag) {
+                    case "Bearer": {
+                        User user = tokenService.parseToken(token);
+                        if (user != null)
+                            return user;
+                        error = "Invalid token or expired";
+                        break;
                     }
-                    error = "Refresh Token invalid or expired";
-                    break;
+                    case "Refresh": {
+                        User user = tokenService.parseToken(token);
+                        if (user != null) {
+                            return new Object() {
+                                public final String accessToken = tokenService.generateToken(user,user.getActiveApp(), true);
+                            };
+                        }
+                        error = "Refresh Token invalid or expired";
+                        break;
+                    }
                 }
             }
+
         }
         throw new HttpException(error, status);
     }
