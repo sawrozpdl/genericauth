@@ -80,12 +80,14 @@ public class UserService {
     public User updateUserByUsernameForApp(String username, String appName, User user) {
         User oldUser  = getUserByUsernameForApp(username, appName);
 
-        user.setId((oldUser.getId()));
-        user.setEmail(oldUser.getEmail());
-        user.setPassword(oldUser.getPassword());
-        user.setUsername(oldUser.getUsername());
+        oldUser.setFirstName((user.getFirstName()));
+        oldUser.setMiddleName((user.getMiddleName()));
+        oldUser.setLastName((user.getLastName()));
+        oldUser.setGender((user.getGender()));
+        oldUser.setBirthDate((user.getBirthDate()));
+        oldUser.setPhoneNumber((user.getPhoneNumber()));
 
-        return userRepository.save(user);
+        return userRepository.save(oldUser);
     }
 
     public void deleteUserById(Integer id) {

@@ -9,7 +9,6 @@ import com.generics.auth.security.AuthenticationService;
 import com.generics.auth.service.*;
 import com.generics.auth.object.RequestFilter;
 import com.generics.auth.utils.Error;
-import com.generics.auth.utils.Http;
 import com.generics.auth.utils.Lazy;
 import com.generics.auth.utils.Str;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @RestController
 public class AppUserController {
@@ -67,7 +65,7 @@ public class AppUserController {
                              @RequestParam(defaultValue = "") String sort,
                              @RequestParam(defaultValue = "true") Boolean active) {
         authenticationService.authorizeRequest(request, appName, new String[] {Roles.USER.name()}, null);
-        App app = appService.geAppByName(appName);
+        App app = appService.getAppByName(appName);
         eventService.track(null,
                 Events.FETCH_USERS,
                 null,
@@ -112,7 +110,7 @@ public class AppUserController {
      */
     @PostMapping("/api/apps/{appName}/users")
     public AppRegistration register(HttpServletRequest request, @PathVariable String appName, @RequestBody User user) {
-        App app = appService.geAppByName(appName);
+        App app = appService.getAppByName(appName);
 
         if (app.isPrivate()) {
             authenticationService.authorizeRequest(request, appName, new String[] {Roles.ADMIN.name()}, null);
@@ -151,7 +149,7 @@ public class AppUserController {
         User activeUser = authenticationService.authorizeRequest(request, appName, new String[] {Roles.USER.name()}, username);
         User updated = userService.updateUserByUsernameForApp(username, appName, user);
 
-        App app = appService.geAppByName(appName);
+        App app = appService.getAppByName(appName);
         eventService.track(Str.interpolate(Models.USER, "id", activeUser.getId()),
                 Events.UPDATED,
                 Str.interpolate(Models.USER, "id", updated.getId()),
@@ -184,7 +182,7 @@ public class AppUserController {
         }
 
         User user = userService.getUserByUsernameForApp(username, appName);
-        App app = appService.geAppByName(appName);
+        App app = appService.getAppByName(appName);
         Role role = roleService.getOrCreateRole(new Role(roleName));
         userRoleService.createUserRole(new UserRole(app, role, user));
 
@@ -209,7 +207,7 @@ public class AppUserController {
                         @RequestParam String roleName) {
         User activeUser = authenticationService.authorizeRequest(request, appName, new String[] {Roles.ADMIN.name()}, username);
         User user = userService.getUserByUsernameForApp(username, appName);
-        App app = appService.geAppByName(appName);
+        App app = appService.getAppByName(appName);
 
         Set<UserRole> userRoles = user.getRoles();
         final UserRole[] toDelete = {null};
@@ -244,7 +242,7 @@ public class AppUserController {
         User activeUser = authenticationService.authorizeRequest(request, appName, new String[] {Roles.ADMIN.name()}, username);
         AppRegistration registration = appRegistrationService.getAppRegistrationByAppNameAndUsername(username, appName);
 
-        App app = appService.geAppByName(appName);
+        App app = appService.getAppByName(appName);
 
         appRegistrationService.disableAppRegistration(registration);
 
@@ -268,7 +266,7 @@ public class AppUserController {
         User activeUser = authenticationService.authorizeRequest(request, appName, new String[] {Roles.ADMIN.name()}, username);
         AppRegistration registration = appRegistrationService.getAppRegistrationByAppNameAndUsername(username, appName);
 
-        App app = appService.geAppByName(appName);
+        App app = appService.getAppByName(appName);
 
         User user = userService.getUserByUsernameForApp(username, appName);
 

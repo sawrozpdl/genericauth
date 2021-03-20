@@ -148,7 +148,7 @@ public class AuthenticationService {
                 if (user != null) {
                     AppRegistration appRegistration = appRegistrationService.getAppRegistrationByAppNameAndUsername(username, appName);
                     if (appRegistration.isActive()) {
-                        App app = appService.geAppByName(appName);
+                        App app = appService.getAppByName(appName);
                         eventService.track(Str.interpolate(Models.USER, "id", user.getId()),
                                 Events.LOGGED_IN,
                                 Str.interpolate(Models.APP, "id", app.getId()),

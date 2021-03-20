@@ -47,3 +47,16 @@ export const checked = (value: any, options: any) => {
     return options.message || 'must be checked';
   }
 };
+
+export const nullEmptyKeys = (object: any, keys?: string[]): void => {
+  if (!keys || !keys.length) {
+    keys = Object.keys(object);
+  }
+  keys.forEach((key) => {
+    if (!object[key]) {
+      object[key] = null;
+    }
+  });
+
+  return object;
+};

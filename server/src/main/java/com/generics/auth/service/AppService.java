@@ -33,7 +33,7 @@ public class AppService {
         return appRepository.findAll(filter.search, PageRequest.of(filter.page, filter.size));
     }
 
-    public App geAppByName(String name) {
+    public App getAppByName(String name) {
         Optional<App> app = appRepository.findByName(name);
         if (app.isPresent())
             return app.get();

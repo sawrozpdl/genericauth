@@ -5,7 +5,6 @@ import com.generics.auth.model.App;
 import com.generics.auth.model.Credential;
 import com.generics.auth.model.User;
 import com.generics.auth.model.UserRole;
-import com.generics.auth.utils.Str;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,7 +43,7 @@ public class TokenService {
     }
 
     public String getSecretForApp(String appName) {
-        App app = appService.geAppByName(appName);
+        App app = appService.getAppByName(appName);
         Credential credential = app.getCredential();
         return credential.getClientSecret();
     }

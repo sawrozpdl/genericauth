@@ -16,6 +16,7 @@ import {
 import { updateUser } from '../../../../services/user';
 import toast from '../../../../utils/toast';
 import { handleError } from '../../../../utils/error';
+import { nullEmptyKeys } from '../../../../utils/object';
 
 const genders = [
   { label: 'Private', value: 'PRIVATE' },
@@ -67,8 +68,9 @@ const AccountDetails = (props: any) => {
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     setSubmitting(true);
+    const newUser = nullEmptyKeys({ ...user, ...values });
     try {
-      await updateUser({ ...user, ...values });
+      await updateUser(newUser);
       toast.success('Profile updated successfully');
     } catch (error) {
       handleError(error);

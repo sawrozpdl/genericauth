@@ -115,7 +115,7 @@ public class AppController {
     @GetMapping("/api/apps/{appName}")
     public App getAppByName(HttpServletRequest request,@RequestParam(defaultValue = "false") Boolean detail, @PathVariable String appName) {
         User requestUser = authenticationService.authorizeRequest(request, appName,  new String[] {Roles.USER.name()}, null);
-        App app = appService.geAppByName(appName);
+        App app = appService.getAppByName(appName);
         boolean isAdmin = requestUser.getActiveRoles().contains(Roles.ADMIN.name());
         Lazy.filterApp(app, !detail, isAdmin);
         return app;
@@ -184,7 +184,7 @@ public class AppController {
      */
     @PostMapping("/api/apps/{appName}/users/{username}/logout")
     public Object logout(@PathVariable String appName,@PathVariable String username, HttpServletRequest request, HttpServletResponse response) {
-        App app = appService.geAppByName(appName);
+        App app = appService.getAppByName(appName);
         User requestUser = authenticationService.authorizeRequest(request, appName,  new String[] {Roles.USER.name()}, username);
         eventService.track(Str.interpolate(Models.USER, "id", requestUser.getId()),
                 Events.LOGGED_OUT,
@@ -230,7 +230,7 @@ public class AppController {
      */
     @GetMapping("/api/apps/{appName}/redirect-url")
     public RedirectUrl getAppRedirectUrl(@PathVariable String appName) {
-        App app = appService.geAppByName(appName);
+        App app = appService.getAppByName(appName);
         return app.getRedirectUrl();
     }
 
