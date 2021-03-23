@@ -14,7 +14,6 @@ import { AppsRounded } from '@material-ui/icons';
 import UserContext from '../../../../context/UserContext';
 
 import { Profile, SidebarNav } from './components';
-import { interpolate } from '../../../../utils/string';
 import routes from '../../../../constants/routes';
 import roles from '../../../../constants/roles';
 
@@ -46,8 +45,6 @@ const Sidebar = (props: any) => {
 
   const userCtx: any = useContext(UserContext);
   const { user } = userCtx;
-
-  const { username, activeApp: appName } = user;
 
   const classes = useStyles();
 

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
+
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
 import Avatar from '@material-ui/core/Avatar';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/styles';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import {
   Button,
   IconButton,
@@ -15,15 +16,15 @@ import {
   Typography,
   capitalize,
 } from '@material-ui/core';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Container from '@material-ui/core/Container';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+
 import http from '../../utils/http';
-import { interpolate, parseQuery, truncate } from '../../utils/string';
-import routes from '../../constants/routes';
 import toast from '../../utils/toast';
-import { USERS_URL } from '../../constants/endpoints';
+import routes from '../../constants/routes';
 import { handleError } from '../../utils/error';
-import { NATIVE } from '../../constants/url';
+import { USERS_URL } from '../../constants/endpoints';
+import { interpolate, truncate } from '../../utils/string';
 
 const schema = {
   firstName: {
@@ -183,13 +184,6 @@ const SignUp = (props: any) => {
   const appName = props.location.search.appName;
 
   const classes: any = useStyles();
-
-  const query = parseQuery(props.location.search);
-
-  const { ref } = query;
-
-  const isFromNativeApp = ref === NATIVE;
-
   interface FormState {
     isValid: boolean;
     values: any;

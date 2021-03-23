@@ -21,8 +21,6 @@ spring:
     serialization:
       fail_on_empty_beans: false
   jpa:
-    hibernate:
-      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect

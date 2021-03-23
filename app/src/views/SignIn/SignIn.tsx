@@ -1,12 +1,13 @@
+import { Link as RouterLink, withRouter } from 'react-router-dom';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
+
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
 import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/styles';
 import Container from '@material-ui/core/Container';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import React, { useState, useEffect, useContext } from 'react';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { Link as RouterLink, withRouter } from 'react-router-dom';
 import {
   Button,
   IconButton,
@@ -158,7 +159,7 @@ const SignIn = (props: any) => {
   const [appUrls, setAppUrls] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(false);
 
-  const fetchAndSetAppUrls = async () => {
+  const fetchAndSetAppUrls = useCallback(async () => {
     setLoading(true);
     try {
       const data = await fetchRedirectUrls(appName);
@@ -169,11 +170,11 @@ const SignIn = (props: any) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [appName]);
 
   useEffect(() => {
     fetchAndSetAppUrls();
-  }, []);
+  }, [fetchAndSetAppUrls]);
 
   const userCtx: any = useContext(UserContext);
   const { setUser } = userCtx;
