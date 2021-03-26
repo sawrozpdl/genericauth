@@ -94,7 +94,7 @@ jobs:
       
       - aws-s3/sync:
           from: build
-          to: "s3://www.hamroauth.ml/"
+          to: "s3://www.hamroauth.cf/"
           arguments: |
             --acl public-read \
             --cache-control "max-age=86400"
@@ -105,6 +105,8 @@ workflows:
   deploy_server:
     jobs:
       - server_heroku_push:
+          context:
+            - aws
           filters:
             branches:
               only:
@@ -113,6 +115,8 @@ workflows:
   deploy_app:
     jobs:
       - app_s3_sync:
+          context:
+            - aws
           filters:
             branches:
               only:
