@@ -37,7 +37,7 @@ public class VerifyService {
 
             body = Str.format(body, args);
 
-            mailService.send(email, action, body);
+            mailService.send(email, action, body, "Hamro Auth <no-reply@hamroauth.ml>");
             return new Object() {
                 public final String message = "Mail Sent!";
                 public final boolean ok = true;

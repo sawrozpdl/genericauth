@@ -24,7 +24,8 @@ public class MailService {
     @Value("${smtp.password}")
     private String password;
 
-    public void send(String to, String subject, String text) throws MessagingException {
+    public void send(String to, String subject, String text, String from) throws MessagingException {
+        System.out.println(username + password + to);
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
         mailSender.setHost(host);
@@ -41,7 +42,7 @@ public class MailService {
         MimeMessage msg = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(msg, "utf-8");
         helper.setTo(to);
-        helper.setFrom("Hamro Auth <no-reply@hamroauth.ml>");
+        helper.setFrom(from);
         helper.setSubject(subject);
         helper.setText(text, true);
 
