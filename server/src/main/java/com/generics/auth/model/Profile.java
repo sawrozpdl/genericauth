@@ -11,8 +11,7 @@ public class Profile extends GenericModel {
     @Column(columnDefinition = "TEXT")
     private String address;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @OneToOne(mappedBy= "profile", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
     private User user;
 
     public Profile() {}

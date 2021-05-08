@@ -33,6 +33,9 @@ public class AppUserController {
     EventService eventService;
 
     @Autowired
+    ProfileService profileService;
+
+    @Autowired
     RoleService roleService;
 
     @Autowired
@@ -156,6 +159,24 @@ public class AppUserController {
                 app);
 
         return updated;
+    }
+
+    /**
+     * Update location of given user
+     *
+     * @param request authenticated request
+     * @param appName name of app the user is in
+     * @param username username of the user
+     * @param profile Profile object
+     * @return updated location object
+     */
+    @PutMapping("/api/apps/{appName}/users/{username}/profile")
+    public Profile updateUserProfile(HttpServletRequest request,
+                                      @PathVariable String appName,
+                                      @PathVariable String username,
+                                      @RequestBody Profile profile) {
+        authenticationService.authorizeRequest(request, appName, new String[] {Roles.USER.name()}, username);
+        return profileService.updateProfile(profile.getId(), profile);
     }
 
     /**

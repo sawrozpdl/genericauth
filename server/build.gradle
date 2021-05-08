@@ -20,6 +20,10 @@ bootJar {
 	version =  "1.0.0"
 }
 
+bootRun {
+
+}
+
 repositories {
 	mavenCentral()
 }

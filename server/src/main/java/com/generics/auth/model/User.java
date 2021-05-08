@@ -51,7 +51,9 @@ public class User extends GenericModel {
 
     private transient ArrayList<String> activeRoles;
 
-    @OneToOne(mappedBy= "user", cascade = CascadeType.ALL, fetch= FetchType.LAZY, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, fetch= FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "profile_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"user"})
     private Profile profile;
 
     @OneToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY, orphanRemoval = true)
@@ -82,6 +84,7 @@ public class User extends GenericModel {
     protected void onCreate() {
         super.onCreate();
         this.location = new Location();
+        this.profile = new Profile();
     }
 
     @Override

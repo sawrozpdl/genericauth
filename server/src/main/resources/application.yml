@@ -1,4 +1,5 @@
 spring:
+  env: ${SPRING_ENV:development}
   app-name: Generic Auth
   version: 1.0.0
   datasource:
@@ -24,6 +25,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        ddl-auto: none
 #        show_sql: true
 #        format_sql: true
         id:

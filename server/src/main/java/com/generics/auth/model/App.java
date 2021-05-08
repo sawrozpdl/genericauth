@@ -145,4 +145,12 @@ public class App extends GenericModel {
     public void setRoles(Set<UserRole> roles) {
         this.roles = roles;
     }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
 }
