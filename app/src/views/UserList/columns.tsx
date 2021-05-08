@@ -43,7 +43,10 @@ const columns = [
       const { activeApp: appName } = props.original;
       return (
         <div className={classes.nameContainer}>
-          <Avatar className={classes.avatar} src={props.original.avatarUrl}>
+          <Avatar
+            className={classes.avatar}
+            src={props.original?.profile?.avatarUrl}
+          >
             {extractInitials(props.original, false) || 'A'}
           </Avatar>
           <Typography variant="body1">

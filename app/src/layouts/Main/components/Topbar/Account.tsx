@@ -71,7 +71,11 @@ const Account = (props: any) => {
         component={ButtonBase}
         onClick={handleOpen}
       >
-        <Avatar alt="User" className={classes.avatar} src={user.avatarUrl}>
+        <Avatar
+          alt="User"
+          className={classes.avatar}
+          src={user?.profile?.avatarUrl}
+        >
           {extractInitials(user, false) || 'A'}
         </Avatar>
         <Hidden smDown>

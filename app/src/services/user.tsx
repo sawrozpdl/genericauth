@@ -6,6 +6,7 @@ import {
   DISABLE_USER_URL,
   USER_ROLES_URL,
   CHANGE_PASSWORD_URL,
+  PROFILE_URL,
 } from '../constants/endpoints';
 import { interpolate } from '../utils/string';
 
@@ -60,7 +61,7 @@ export const promoteUser = async (
   else await http.post(toHit, config);
 };
 
-export const updateUser = async (user: any) => {
+export const updateUser = async (user: any): Promise<void> => {
   const { username, activeApp: appName } = user;
 
   await http.put(interpolate(USER_PROFILE_URL, { username, appName }), {
@@ -68,7 +69,15 @@ export const updateUser = async (user: any) => {
   });
 };
 
-export const changePassword = async (password: string) => {
+export const updateProfile = async (user: any): Promise<void> => {
+  const { username, activeApp: appName, profile } = user;
+
+  await http.put(interpolate(PROFILE_URL, { username, appName }), {
+    body: profile,
+  });
+};
+
+export const changePassword = async (password: string): Promise<void> => {
   await http.post(CHANGE_PASSWORD_URL, {
     body: { password },
   });

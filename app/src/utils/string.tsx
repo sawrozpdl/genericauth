@@ -110,3 +110,16 @@ export const downloadCsv = (rows: any, name: string) => {
 
 export const truncate = (str: string, num: number): string =>
   str.length > num ? str.slice(0, num) + '...' : str;
+
+export const getBase64 = (file: any): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (): void => {
+      resolve(reader.result);
+    };
+    reader.readAsDataURL(file);
+    reader.onerror = (error: any): void => {
+      reject(error);
+    };
+  });
+};

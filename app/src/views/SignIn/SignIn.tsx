@@ -140,7 +140,7 @@ const useStyles = makeStyles((theme: any) => ({
   socialIcon: {
     marginRight: theme.spacing(1),
   },
-  sugestion: {
+  suggestion: {
     marginTop: theme.spacing(2),
   },
   textField: {
@@ -290,7 +290,7 @@ const SignIn = (props: any) => {
           >
             <Typography
               align="center"
-              className={classes.sugestion}
+              className={classes.suggestion}
               color="textSecondary"
               variant="body1"
             ></Typography>

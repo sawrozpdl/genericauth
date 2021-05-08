@@ -6,6 +6,9 @@ const config: any = {
       createApp: '/create',
     },
   },
+  lambda: {
+    imageUploader: process.env.REACT_APP_IMAGE_UPLOADER,
+  },
   auth: {
     baseUrl: process.env.REACT_APP_AUTH_BASE_URL,
     endpoints: {
@@ -20,6 +23,7 @@ const config: any = {
       appUsers: '/apps/:appName/users',
       authenticate: '/authenticate',
       changePassword: '/change-password',
+      profile: '/apps/:appName/users/:username/profile',
       userProfile: '/apps/:appName/users/:username',
       userRoles: '/apps/:appName/users/:username/roles',
       disableUser: '/apps/:appName/users/:username/disable',

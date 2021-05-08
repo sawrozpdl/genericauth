@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import moment from 'moment';
@@ -17,8 +17,13 @@ import {
   extractFullName,
   getProfileCompleteness,
   extractInitials,
+  getBase64,
 } from '../../../../utils/string';
 import { DISPLAY_DATE_FORMAT } from '../../../../constants/schemas';
+import FileUploadButton from '../../../../components/FileUploadButton';
+import { uploadImage } from '../../../../services/lambda';
+import toast from '../../../../utils/toast';
+import { updateProfile } from '../../../../services/user';
 
 const useStyles = makeStyles((theme: any) => ({
   root: {},
@@ -47,11 +52,54 @@ const useStyles = makeStyles((theme: any) => ({
 }));
 
 const AccountProfile = (props: any) => {
-  const { className, user, canEdit, ...rest } = props;
+  const { className, user, onUpdate, canEdit, ...rest } = props;
 
   const classes: any = useStyles();
 
   const profleCompleteness = Math.floor(getProfileCompleteness(user));
+
+  const [uploading, setUploading] = useState(false);
+  const [removing, setRemoving] = useState(false);
+
+  const handleUploadPFP = async (image: any): Promise<void> => {
+    setUploading(true);
+
+    const base64Data = await getBase64(image);
+
+    try {
+      const { url: avatarUrl } = await uploadImage(
+        base64Data,
+        `${user.id}.png`,
+        'pfp'
+      );
+
+      await updateProfile({ ...user, profile: { ...user.profile, avatarUrl } });
+      toast.success('Image uploaded!');
+
+      onUpdate();
+    } catch (_) {
+      toast.error('Failed to upload the image!');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleRemovePFP = async (): Promise<void> => {
+    setRemoving(true);
+    try {
+      await updateProfile({
+        ...user,
+        profile: { ...user.profile, avatarUrl: null },
+      });
+      toast.success('PFP removed!');
+
+      onUpdate();
+    } catch (_) {
+      toast.error('Failed to remove the image!');
+    } finally {
+      setRemoving(false);
+    }
+  };
 
   return (
     <Card {...rest} className={clsx(classes.root, className)}>
@@ -85,7 +133,7 @@ const AccountProfile = (props: any) => {
               {moment().format('hh:mm A')}
             </Typography>
           </div>
-          <Avatar className={classes.avatar} src={user.avatarUrl}>
+          <Avatar className={classes.avatar} src={user.profile.avatarUrl}>
             {extractInitials(user) || 'A'}
           </Avatar>
         </div>
@@ -102,14 +150,21 @@ const AccountProfile = (props: any) => {
           {' '}
           <Divider />
           <CardActions className={classes.cardAction}>
-            <Button
+            <FileUploadButton
+              onSelect={handleUploadPFP}
               className={classes.uploadButton}
               color="primary"
               variant="outlined"
+              label={uploading ? 'Uploading.....' : 'Upload picture'}
+              disabled={uploading || removing}
+            />
+            <Button
+              variant="outlined"
+              disabled={uploading || removing}
+              onClick={handleRemovePFP}
             >
-              Upload picture
+              {removing ? 'Removing......' : 'Remove picture'}
             </Button>
-            <Button variant="outlined">Remove picture</Button>
           </CardActions>
         </>
       )}

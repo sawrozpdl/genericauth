@@ -33,7 +33,11 @@ const Profile = (props: any) => {
 
   return (
     <div {...rest} className={clsx(classes.root, className)}>
-      <Avatar alt="Person" className={classes.avatar} src={user.avatar}>
+      <Avatar
+        alt="Person"
+        className={classes.avatar}
+        src={user?.profile?.avatarUrl}
+      >
         {extractInitials(user, false) || 'A'}
       </Avatar>
       <Typography className={classes.name} variant="h4">

@@ -181,7 +181,7 @@ const useStyles = makeStyles((theme: any) => ({
 const SignUp = (props: any) => {
   const { history } = props;
 
-  const appName = props.location.search.appName;
+  const { appName } = props.match.params;
 
   const classes: any = useStyles();
   interface FormState {

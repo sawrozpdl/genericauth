@@ -32,4 +32,8 @@ export const APP_USERS_URL = `${config.auth.baseUrl}${config.auth.endpoints.appU
 
 export const USER_PROFILE_URL = `${config.auth.baseUrl}${config.auth.endpoints.userProfile}`;
 
+export const PROFILE_URL = `${config.auth.baseUrl}${config.auth.endpoints.profile}`;
+
 export const DISABLE_USER_URL = `${config.auth.baseUrl}${config.auth.endpoints.disableUser}`;
+
+export const IMAGE_UPLOADER_URL = `${config.lambda.imageUploader}`;
