@@ -17,7 +17,7 @@
     "@types/react-dom": "^16.9.6",
     "@types/react-router-dom": "^5.1.4",
     "axios": "^0.21.1",
-    "chart.js": "^2.9.3",
+    "chart.js": "^2.9.4",
     "lodash": "^4.17.19",
     "moment": "^2.26.0",
     "nprogress": "^0.2.0",
