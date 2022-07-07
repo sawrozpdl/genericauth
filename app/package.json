@@ -19,7 +19,7 @@
     "axios": "^0.21.1",
     "chart.js": "^2.9.3",
     "lodash": "^4.17.19",
-    "moment": "^2.26.0",
+    "moment": "^2.29.4",
     "nprogress": "^0.2.0",
     "react": "^16.13.1",
     "react-chartjs-2": "^2.9.0",
